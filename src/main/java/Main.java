@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        Document doc = Jsoup.connect("https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Images_in_HTML").get();
+        Document doc = Jsoup.connect("https://www.formsite.com/templates/industry/").get();
 
         //Variable que almacena todos los elementos que empiezan por la etiqueta p de parrafos
         Elements parrafos = doc.getElementsByTag("p");
@@ -32,6 +32,37 @@ public class Main {
             }
         }
         System.out.println("Cantidad de imagenes dentro de parrafos: " + contadorImg);
+
+
+        //4. indicar la cantidad de formularios (form) que contiene el HTML por categorizando por el método implementado POST o GET.
+
+        Elements forms = doc.getElementsByTag("form");
+        int contFormGet = 0;
+        int contFormPost = 0;
+
+        for(Element form : forms) {
+
+            if (form.attributes().get("method").equalsIgnoreCase("get"))
+            {
+                contFormGet++;
+            }
+            else if(form.attributes().get("method").equalsIgnoreCase("post"))
+            {
+                contFormPost++;
+            }
+        }
+
+        System.out.println("Cantidad de formularios con metodo GET de la pagina: " + contFormGet);
+        System.out.println("Cantidad de formularios con metodo POST de la pagina: " + contFormPost);
+
+
+
+
+
+
+
     }
+
+
 
 }
