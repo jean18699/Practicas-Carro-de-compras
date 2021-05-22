@@ -56,6 +56,30 @@ public class Main {
         System.out.println("Cantidad de formularios con metodo POST de la pagina: " + contFormPost);
 
 
+        //5. Para cada formulario mostrar los campos del tipo input y su respectivo tipo que contiene en el documento HTML.
+        System.out.println("Todos los forms y sus campos input junto a sus atributos y tipo de input implementado: ");
+
+        for(Element form : forms) {
+
+            System.out.println("\n"+form.tag());
+            for(Element child : form.children())
+            {
+
+                if(child.tag().toString().equalsIgnoreCase("input"))
+                    System.out.println(child);
+
+            }
+
+           // System.out.println(form.getElementsByTag("input"));
+            /*if (form.attributes().get("method").equalsIgnoreCase("get"))
+            {
+                contFormGet++;
+            }
+            else if(form.attributes().get("method").equalsIgnoreCase("post"))
+            {
+                contFormPost++;
+            }*/
+        }
 
 
 
