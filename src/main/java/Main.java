@@ -4,7 +4,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClients;                                                                                     //JEAN CARLOS GEORGE ISC   2017-0167
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -24,7 +24,6 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-
 
         Scanner urlScan = new Scanner(System.in);
 
