@@ -100,21 +100,20 @@ public class Main {
 
         System.out.println("\n");
 
+
         /*6. Para cada formulario parseado, identificar que el método de envío del formulario sea POST y enviar una petición al servidor con el
         parámetro llamado asignatura y valor practica1 y un header llamado
         matricula con el valor correspondiente a matrícula asignada. Debe
         mostrar la respuesta por la salida estándar.*/
-
-
 
         System.out.println("RESPUESTA OBTENIDA POR EL SERVIDOR AL ENVIAR PETICION A LOS FORMULARIOS POST: \n");
 
         HttpPost post;
         String formURL;
 
-        //Aqui se agregan los parametros del request POST
-        List<NameValuePair> parametros = new ArrayList<>();
-        parametros.add(new BasicNameValuePair("asignatura", "practica1"));
+        //Aqui se agregan los parametros a la peticion POST
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("asignatura", "practica1"));
 
         for(Element form : forms) {
 
@@ -124,8 +123,8 @@ public class Main {
                 formURL = form.absUrl("action");
 
                 post = new HttpPost(formURL);
-                post.addHeader("matricula","20170167");
-                post.setEntity(new UrlEncodedFormEntity(parametros));
+                post.addHeader("matricula","20170167"); //Headers agregados a la peticion
+                post.setEntity(new UrlEncodedFormEntity(params));
 
                 //Imprimiendo la respuesta
                 try (CloseableHttpClient cliente = HttpClients.createDefault();
@@ -137,65 +136,6 @@ public class Main {
                 System.out.println("\n");
             }
         }
-
-
-
-/*
-        HttpClient client = HttpClient.newHttpClient();
-
-        var values = new HashMap<String, String>() {{
-            put("asignatura", "practica1");
-
-        }};
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString())
-                .uri(URI.create(url))
-                .headers("matricula","20170167")
-                .build();
-
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
-
-        System.out.println(response.body());
-
-*/
-     /*   //peticion de tipo POST
-        HttpPost request = new HttpPost(url);
-
-        //Asignacion de parametros a la peticion
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("asignatura", "practica1"));
-
-        //Agregamos formato para formulario
-        UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, "UTF-8");
-        request.setEntity(ent);
-
-        //Agreganis Header personalizado a la peticion
-        request.addHeader("matricula","2017-0167");
-
-        //Declaramos el cliente para ejecutar la peticion
-        HttpClient cliente = new DefaultHttpClient();
-
-        //Declaramos la variable que tendra la respuesta del servidor
-        org.apache.http.HttpResponse response = cliente.execute(request);
-
-        //Leer la respuesta obtenida luego de realizar la peticion
-        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 2048);
-
-        //Si hubo respuesta, imprimirla
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            String lineaRespuesta; //La respuesta se devolvera separada por lineas
-            while ((lineaRespuesta = reader.readLine()) != null) {
-                System.out.println(lineaRespuesta);
-                sb.append(lineaRespuesta);
-            }
-
-        }
-*/
-
-
 
     }
 
