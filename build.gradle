@@ -9,6 +9,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
@@ -18,5 +19,7 @@ dependencies {
 
     // jsoup HTML parser library @ https://jsoup.org/
     implementation 'org.jsoup:jsoup:1.13.1'
+
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.1'
 
 }

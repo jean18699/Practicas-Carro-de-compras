@@ -1,15 +1,39 @@
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
+import java.io.*;
+
+import java.net.URISyntaxException;
+
+import java.util.ArrayList;
+
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
 
-        Document doc = Jsoup.connect("https://www.formsite.com/templates/industry/").get();
+
+        Scanner urlScan = new Scanner(System.in);
+
+        String url = null;
+
+        System.out.println("Ingrese una URL valida, de lo contrario el programa terminara: ");
+        url = urlScan.nextLine();
+        Document doc = Jsoup.connect(url).get();
+
 
         //Variable que almacena todos los elementos que empiezan por la etiqueta p de parrafos
         Elements parrafos = doc.getElementsByTag("p");
@@ -57,31 +81,119 @@ public class Main {
 
 
         //5. Para cada formulario mostrar los campos del tipo input y su respectivo tipo que contiene en el documento HTML.
-        System.out.println("Todos los forms y sus campos input junto a sus atributos y tipo de input implementado: ");
+        System.out.println("Todos los forms y sus sus tipos de inputs implementados: ");
+
+        int contInput = 0;
+        for(Element form : forms) {
+
+            System.out.println("\n" + form.tag());
+            for (Element child : form.children()) {
+
+                if (child.tag().toString().equalsIgnoreCase("input"))
+                {
+                    contInput++;
+                    System.out.println("Input #" + contInput + " Tipo: " + child.attr("type"));
+                }
+            }
+
+        }
+
+        System.out.println("\n");
+
+        /*6. Para cada formulario parseado, identificar que el método de envío del formulario sea POST y enviar una petición al servidor con el
+        parámetro llamado asignatura y valor practica1 y un header llamado
+        matricula con el valor correspondiente a matrícula asignada. Debe
+        mostrar la respuesta por la salida estándar.*/
+
+
+
+        System.out.println("RESPUESTA OBTENIDA POR EL SERVIDOR AL ENVIAR PETICION A LOS FORMULARIOS POST: \n");
+
+        HttpPost post;
+        String formURL;
+
+        //Aqui se agregan los parametros del request POST
+        List<NameValuePair> parametros = new ArrayList<>();
+        parametros.add(new BasicNameValuePair("asignatura", "practica1"));
 
         for(Element form : forms) {
 
-            System.out.println("\n"+form.tag());
-            for(Element child : form.children())
+            //Tomando todos los forms que tengan el metodo post de la pagina
+            if(form.attributes().get("method").equalsIgnoreCase("post"))
             {
+                formURL = form.absUrl("action");
 
-                if(child.tag().toString().equalsIgnoreCase("input"))
-                    System.out.println(child);
+                post = new HttpPost(formURL);
+                post.addHeader("matricula","20170167");
+                post.setEntity(new UrlEncodedFormEntity(parametros));
 
+                //Imprimiendo la respuesta
+                try (CloseableHttpClient cliente = HttpClients.createDefault();
+                     CloseableHttpResponse response = cliente.execute(post)) {
+
+                         System.out.println(EntityUtils.toString(response.getEntity()));
+                }
+
+                System.out.println("\n");
             }
-
-           // System.out.println(form.getElementsByTag("input"));
-            /*if (form.attributes().get("method").equalsIgnoreCase("get"))
-            {
-                contFormGet++;
-            }
-            else if(form.attributes().get("method").equalsIgnoreCase("post"))
-            {
-                contFormPost++;
-            }*/
         }
 
 
+
+/*
+        HttpClient client = HttpClient.newHttpClient();
+
+        var values = new HashMap<String, String>() {{
+            put("asignatura", "practica1");
+
+        }};
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString())
+                .uri(URI.create(url))
+                .headers("matricula","20170167")
+                .build();
+
+        HttpResponse<String> response = client.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body());
+
+*/
+     /*   //peticion de tipo POST
+        HttpPost request = new HttpPost(url);
+
+        //Asignacion de parametros a la peticion
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("asignatura", "practica1"));
+
+        //Agregamos formato para formulario
+        UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, "UTF-8");
+        request.setEntity(ent);
+
+        //Agreganis Header personalizado a la peticion
+        request.addHeader("matricula","2017-0167");
+
+        //Declaramos el cliente para ejecutar la peticion
+        HttpClient cliente = new DefaultHttpClient();
+
+        //Declaramos la variable que tendra la respuesta del servidor
+        org.apache.http.HttpResponse response = cliente.execute(request);
+
+        //Leer la respuesta obtenida luego de realizar la peticion
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 2048);
+
+        //Si hubo respuesta, imprimirla
+        if (response != null) {
+            StringBuilder sb = new StringBuilder();
+            String lineaRespuesta; //La respuesta se devolvera separada por lineas
+            while ((lineaRespuesta = reader.readLine()) != null) {
+                System.out.println(lineaRespuesta);
+                sb.append(lineaRespuesta);
+            }
+
+        }
+*/
 
 
 
