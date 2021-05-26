@@ -1,8 +1,15 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
-group 'org.example'
+//Se agrega esto para poder digitar en la salida estandar utilizando graddle run
+run {
+    standardInput = System.in
+}
+
+mainClassName = 'org.isc.Main'
+
+group 'org.isc'
 version '1.0-SNAPSHOT'
 
 repositories {
