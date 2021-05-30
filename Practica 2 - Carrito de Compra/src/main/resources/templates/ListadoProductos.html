@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--Bootstrap -->
+   <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
+     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+
+    <h3 align="center">Listado de Productos</h3>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+        <thead class="thead-light">
+            <tr align="center">
+                <th scope="col">Producto</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Accion</th>
+            </tr>
+        </thead>
+        <tbody  class="table-hover">
+            <tr align="center" th:each="producto : ${productos}">
+                <td scope="row" th:text="${producto.id}">1</td>
+                <td th:text="${producto.nombre}">Pasola</td>
+                <td th:text="${producto.precio}">1000</td>
+                <td align="center">
+                    <button type="button" style="hidden:true;" class="btn-sm btn-primary">Agregar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</body>
+</html>
