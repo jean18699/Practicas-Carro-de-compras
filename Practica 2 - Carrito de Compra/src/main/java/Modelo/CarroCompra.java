@@ -1,5 +1,6 @@
 package Modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarroCompra {
@@ -12,6 +13,7 @@ public class CarroCompra {
     {
         contador = contador+1;
         id = contador;
+        listaProductos = new ArrayList<>();
     }
 
     public long getId() {
@@ -28,5 +30,22 @@ public class CarroCompra {
 
     public void setListaProductos(List<Producto> listaProductos) {
         this.listaProductos = listaProductos;
+    }
+
+    public void addProducto(Producto producto)
+    {
+        this.listaProductos.add(producto);
+    }
+
+    public double getTotalProductos() {
+
+        double total = 0;
+
+        for(int i = 0; i < listaProductos.size(); i++)
+        {
+            total += (listaProductos.get(i).getPrecioTotal());
+        }
+
+        return total;
     }
 }

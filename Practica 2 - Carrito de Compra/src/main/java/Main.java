@@ -1,4 +1,5 @@
 import Controladores.TiendaControlador;
+import Servicios.TiendaService;
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -6,6 +7,8 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 public class Main {
 
     public static void main(String[] args) {
+
+        System.out.println(TiendaService.getInstancia().getUsuarioByNombreUsuario("admin").getNombre());
 
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config -> {

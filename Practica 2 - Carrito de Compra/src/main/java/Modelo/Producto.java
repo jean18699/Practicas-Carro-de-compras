@@ -8,6 +8,7 @@ public class Producto {
     private static long contador = 0;
     private long id;
     private String nombre;
+    private int cantidad;
     private double precio;
 
 
@@ -32,6 +33,10 @@ public class Producto {
         return precio;
     }
 
+    public double getPrecioTotal() {
+        return precio * cantidad;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -42,5 +47,13 @@ public class Producto {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--Bootstrap -->
+   <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
+     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+
+    <h3 class="h3" align="center">Carrito de compras</h3>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+        <thead class="thead-light">
+            <tr align="center">
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio($RD)</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio Total($RD)</th>
+
+                <th scope="col">Accion</th>
+            </tr>
+        </thead>
+        <tbody  class="table-hover">
+            <tr align="center" th:each="producto : ${productosCarrito}">
+                <td th:text="${producto.nombre}">Pasola</td>
+                <td th:text="${producto.getPrecio()}">1000</td>
+                <td th:text="${producto.cantidad}" >1</td>
+                <td th:text="${producto.getPrecioTotal()}">1000</td>
+                <form th:action="@{/admin/carrito/agregar}" method="post">
+                    <td align="center">
+                        <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="row" >
+        <div class="col-8"></div>
+
+        <div class="col-3">
+
+            <h5 th:text="'Total:   ' + ${totalCarrito}">Total</h5>
+        </div>
+
+    </div>
+
+</body>
+</html>

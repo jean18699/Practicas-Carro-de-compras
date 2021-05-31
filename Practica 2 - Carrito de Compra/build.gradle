@@ -22,5 +22,8 @@ dependencies {
     //plantilla thymeleaf
     compile 'org.thymeleaf:thymeleaf:3.0.5.RELEASE'
 
+    //Procesamiento JSON.
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+
 
 }

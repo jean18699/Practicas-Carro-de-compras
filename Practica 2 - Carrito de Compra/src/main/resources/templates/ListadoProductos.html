@@ -21,26 +21,36 @@
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
-    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
-        <thead class="thead-light">
-            <tr align="center">
-                <th scope="col">Producto</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Accion</th>
-            </tr>
-        </thead>
-        <tbody  class="table-hover">
-            <tr align="center" th:each="producto : ${productos}">
-                <td scope="row" th:text="${producto.id}">1</td>
-                <td th:text="${producto.nombre}">Pasola</td>
-                <td th:text="${producto.precio}">1000</td>
-                <td align="center">
-                    <button type="button" style="hidden:true;" class="btn-sm btn-primary">Agregar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <form th:action="@{/admin/carrito/agregar}" method="post">
+        <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr align="center">
+                    <th scope="col">Producto</th>
+                    <th scope="col">Precio(RD$)</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody  class="table-hover">
+                <tr align="center" th:each="producto : ${productos}">
+                    <td th:text="${producto.nombre}">Pasola</td>
+                    <td th:text="${producto.precio}">1000</td>
+                    <td>
+                        <input name="cantidadProducto" th:value="${producto.cantidad}" class="input-group-sm" type="number" min="1" placeholder="1"/>
+                    </td>
+
+                        <td align="center">
+
+                             <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Agregar</button>
+
+                        </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+    </form>
+
 
 
 </body>
