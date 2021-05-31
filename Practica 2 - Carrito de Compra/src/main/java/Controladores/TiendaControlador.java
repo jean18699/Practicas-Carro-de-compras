@@ -7,8 +7,8 @@ import Servicios.TiendaService;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import io.javalin.plugin.rendering.template.JavalinVelocity;
 
-import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +20,7 @@ public class TiendaControlador {
     public TiendaControlador(Javalin app){
         this.app = app;
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
+
     }
 
 
@@ -58,6 +59,8 @@ public class TiendaControlador {
         app.post("/carrito/agregar/",ctx -> {
 
 
+
+
             if(ctx.sessionAttribute("usuario") == null)
             {
                 ctx.result("Usuario no logeado");
@@ -65,8 +68,8 @@ public class TiendaControlador {
             {
                 Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Producto producto = TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto")));
-                System.out.println(ctx.formParam("cantidadProducto"));
-                producto.setCantidad(Integer.parseInt(ctx.formParam("cantidadProducto")));
+                int cantidad = Integer.parseInt(ctx.formParamMap().get("cantidad").get(Integer.parseInt(ctx.formParam("idProducto"))-1));
+                producto.setCantidad(cantidad);
 
                 TiendaService.getInstancia().addProductoCarritoUsuario(usuario,producto);
                 //System.out.println(TiendaService.getInstancia().getCarritoUsuario(usuario).getListaProductos());
@@ -89,14 +92,13 @@ public class TiendaControlador {
                 Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Producto producto = TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto")));
                 TiendaService.getInstancia().deleteProductoCarritoUsuario(usuario,producto);
-                ctx.redirect("/"+usuario.getUsuario()+"/carrito");
+                ctx.redirect("/carrito");
             }
 
 
         });
 
         app.get("/carrito", ctx -> {
-
 
             if(ctx.sessionAttribute("usuario") == null)
             {
@@ -128,7 +130,7 @@ public class TiendaControlador {
 
 
                 Map<String, Object> modelo = new HashMap<>();
-                modelo.put("productosRegistrados", TiendaService.getInstancia().getListaProductos());
+                modelo.put("productos", TiendaService.getInstancia().getListaProductos());
                // modelo.put("totalCarrito", usuario.getCarrito().getListaProductos().size());
 
                 //enviando al sistema de plantilla.
@@ -136,6 +138,29 @@ public class TiendaControlador {
          /*   }*/
 
         });
+
+        /*app.get("/editarProducto/:producto", ctx -> {
+
+            Producto producto = TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("producto")));
+
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("producto", producto);
+            ctx.render("/templates/CRUD_Productos.html", modelo);
+
+        });*/
+        app.get("/editarProducto", ctx -> {
+
+            System.out.println(ctx.formParam("editarProducto"));
+            Producto producto = TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("editarProducto")));
+
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("producto", producto);
+            ctx.render("/templates/CRUD_Productos.html", modelo);
+
+        });
+
 
 
     }

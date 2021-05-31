@@ -22,6 +22,9 @@ dependencies {
     //plantilla thymeleaf
     compile 'org.thymeleaf:thymeleaf:3.0.5.RELEASE'
 
+    //plantilla velocity
+    compile "org.apache.velocity:velocity-engine-core:2.1"
+
     //Procesamiento JSON.
     compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
 

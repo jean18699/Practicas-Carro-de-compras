@@ -44,7 +44,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
-    <form th:action="@{/carrito/agregar}" method="post">
+    <form th:action="@{/carrito/agregar}" method="post" th:object="${producto}">
         <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
             <thead class="thead-light">
                 <tr align="center">
@@ -59,7 +59,7 @@
                     <td th:text="${producto.nombre}">Pasola</td>
                     <td th:text="${producto.precio}">1000</td>
                     <td>
-                        <input name="cantidadProducto" th:value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
+                        <input name="cantidad" th:value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
                     </td>
 
                         <td align="center">

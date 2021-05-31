@@ -28,7 +28,10 @@ public class TiendaService {
         //Agregando productos
         productos.add(new Producto("Computadora",  1000));
         productos.add(new Producto("Martillo",  512));
-
+        productos.add(new Producto("Gasolina",  1500));
+        productos.add(new Producto("Motor",  2000));
+        productos.add(new Producto("Tornillo",  1300));
+        productos.add(new Producto("Anillo",  400));
     }
 
 

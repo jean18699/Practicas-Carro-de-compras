@@ -51,7 +51,7 @@
 
 <div class="row">&nbsp;</div>
 
-<form th:action="@{/listarProductos}" method="post">
+<form th:action="@{/editarProducto}" method="get">
     <table style="width: 65%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
         <thead class="thead-light">
         <tr align="center">
@@ -61,15 +61,16 @@
         </tr>
         </thead>
         <tbody  class="table-hover">
-        <tr align="center" th:each="producto : ${productosRegistrados}">
-            <td th:text="${producto.nombre}">Pasola</td>
+        <tr align="center" th:each="producto : ${productos}">
+            <td th:text="${producto.id}">Pasola</td>
             <td th:text="${producto.precio}">1000</td>
-
             <td align="center">
-
-                <button name="idProducto" th:value="${producto}" type="submit" class="btn-sm btn-success">Editar</button>
-                <button name="idProducto" th:value="${producto}" type="submit" class="btn-sm btn-danger">Eliminar</button>
-
+               <!-- <form th:action="@{'/editarProducto/'+${producto.id}}" method="get">
+                    <button name="idProducto"  type="submit" class="btn-sm btn-success">Editar</button>
+                </form>
+                <button name="EliminarProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+            -->
+                <button name="editarProducto" th:value="${producto.id}" type="submit" class="btn-sm">Editar</button>
             </td>
 
         </tr>

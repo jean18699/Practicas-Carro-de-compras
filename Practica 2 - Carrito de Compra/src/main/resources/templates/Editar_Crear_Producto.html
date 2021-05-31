@@ -5,8 +5,8 @@
     <title>Title</title>
 
     <!--Bootstrap -->
-   <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
-     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 
 </head>
 <body>
@@ -39,39 +39,20 @@
     <div class="row">&nbsp;</div>
 
 
-    <h3 align="center">Listado de Productos</h3>
+    <h3 align="center">CRUD Productos</h3>
 
     <div class="row">&nbsp;</div>
+    <div class="row">&nbsp</div>
     <div class="row">&nbsp;</div>
 
-    <form th:action="@{/carrito/agregar}" method="post" th:object="${producto}">
-        <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
-            <thead class="thead-light">
-                <tr align="center">
-                    <th scope="col">Producto</th>
-                    <th scope="col">Precio(RD$)</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Accion</th>
-                </tr>
-            </thead>
-            <tbody  class="table-hover">
-                <tr align="center" th:each="producto : ${productos}">
-                    <td th:text="${producto.nombre}">Pasola</td>
-                    <td th:text="${producto.precio}">1000</td>
-                    <td>
-                        <input name="cantidad" th:value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
-                    </td>
+    <form th:action="@{/controlProductos}" method="post">
+        <div class="form-group">
+            <label for="nombreProducto">Nombre</label>
+            <input type="text" class="form-control" id="nombreProducto" th:value="${producto.id}" th:placeholder="${producto.id}">
 
-                        <td align="center">
-
-                             <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Agregar</button>
-
-                        </td>
-
-                </tr>
-            </tbody>
-
-        </table>
+            <label for="precioProducto">Precio</label>
+            <input type="text" class="form-control" id="precioProducto" th:value="${producto.precio}" th:placeholder="${producto.precio}">
+        </div>
     </form>
 
 
