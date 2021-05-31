@@ -11,6 +11,29 @@
 </head>
 <body>
 
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button type="button" class=navbar-toggler></button>
+                <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  href="/listarProductos">Comprar</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  th:text="'Carrito(' + ${totalCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
@@ -21,6 +44,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
+    <form th:action="@{/carrito/eliminar}" method="post">
     <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
         <thead class="thead-light">
             <tr align="center">
@@ -38,14 +62,13 @@
                 <td th:text="${producto.getPrecio()}">1000</td>
                 <td th:text="${producto.cantidad}" >1</td>
                 <td th:text="${producto.getPrecioTotal()}">1000</td>
-                <form th:action="@{/admin/carrito/agregar}" method="post">
-                    <td align="center">
-                        <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
-                    </td>
-                </form>
+                <td align="center">
+                    <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                </td>
             </tr>
         </tbody>
     </table>
+    </form>
 
     <div class="row" >
         <div class="col-8"></div>
