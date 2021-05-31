@@ -11,6 +11,29 @@
 </head>
 <body>
 
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button type="button" class=navbar-toggler></button>
+                <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  href="/listarProductos">Comprar</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  th:text="'Carrito(' + ${totalCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
@@ -21,7 +44,7 @@
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
-    <form th:action="@{/admin/carrito/agregar}" method="post">
+    <form th:action="@{/carrito/agregar}" method="post">
         <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
             <thead class="thead-light">
                 <tr align="center">
@@ -36,7 +59,7 @@
                     <td th:text="${producto.nombre}">Pasola</td>
                     <td th:text="${producto.precio}">1000</td>
                     <td>
-                        <input name="cantidadProducto" th:value="${producto.cantidad}" class="input-group-sm" type="number" min="1" placeholder="1"/>
+                        <input name="cantidadProducto" th:value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
                     </td>
 
                         <td align="center">

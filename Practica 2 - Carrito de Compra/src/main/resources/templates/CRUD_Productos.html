@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--Bootstrap -->
+    <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <button type="button" class=navbar-toggler></button>
+            <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <b><a class="nav-link"  href="/listarProductos">Comprar</a></b>
+                </li>
+                <li th:if="${usuario == 'admin'}" class="nav-item active">
+                    <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
+                </li>
+                <li th:if="${usuario == 'admin'}" class="nav-item active">
+                    <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
+                </li>
+                <li class="nav-item active">
+                    <b><a class="nav-link"  th:text="'Carrito(' + ${totalCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp;</div>
+
+
+<h3 align="center">CRUD Productos</h3>
+
+<div class="row">&nbsp;</div>
+<div class="row">&nbsp
+    <div class="col-2">&nbsp;</div>
+    <div class="col-2">
+        <button type="button" class="btn btn-secondary">Agregar producto</button>
+    </div>
+</div>
+
+<div class="row">&nbsp;</div>
+
+<form th:action="@{/listarProductos}" method="post">
+    <table style="width: 65%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+        <thead class="thead-light">
+        <tr align="center">
+            <th scope="col">Producto</th>
+            <th scope="col">Precio(RD$)</th>
+            <th scope="col">Accion</th>
+        </tr>
+        </thead>
+        <tbody  class="table-hover">
+        <tr align="center" th:each="producto : ${productosRegistrados}">
+            <td th:text="${producto.nombre}">Pasola</td>
+            <td th:text="${producto.precio}">1000</td>
+
+            <td align="center">
+
+                <button name="idProducto" th:value="${producto}" type="submit" class="btn-sm btn-success">Editar</button>
+                <button name="idProducto" th:value="${producto}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+</form>
+
+
+
+</body>
+</html>

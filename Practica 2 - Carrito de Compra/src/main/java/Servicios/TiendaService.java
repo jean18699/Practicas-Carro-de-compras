@@ -39,15 +39,15 @@ public class TiendaService {
         return instancia;
     }
 
-    public void crearUsuario(String usuario, String nombre, String password)
+    public Usuario crearUsuario(Usuario usuario)
     {
-        if(existeUsuario(usuario))
+        if(existeUsuario(usuario.getUsuario()))
         {
-            return;
+            return null;
         }else
         {
-            Usuario nuevoUsuario = new Usuario(usuario,nombre,password);
-            usuarios.add(nuevoUsuario);
+            usuarios.add(usuario);
+            return usuario;
         }
     }
 
@@ -94,6 +94,16 @@ public class TiendaService {
             usuario.getCarrito().addProducto(producto);
         }
     }
+
+    public void deleteProductoCarritoUsuario(Usuario usuario, Producto producto)
+    {
+        if(existeUsuario(usuario.getUsuario()) && usuario.existeProductoCarrito(producto.getId()))
+        {
+            usuario.getCarrito().deleteProducto(producto);
+        }
+    }
+
+
 
     public CarroCompra getCarritoUsuario(Usuario usuario)
     {
