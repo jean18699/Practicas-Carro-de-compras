@@ -22,6 +22,7 @@ public class TiendaService {
         usuarios = new ArrayList<>();
         ventas = new ArrayList<>();
 
+
         //Agregando el admin
         usuarios.add(new Usuario("admin","Usuario Admin","admin"));
 
@@ -34,6 +35,29 @@ public class TiendaService {
         productos.add(new Producto("Anillo",  400));
     }
 
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public List<VentasProductos> getVentas() {
+        return ventas;
+    }
+
+    public void setVentas(List<VentasProductos> ventas) {
+        this.ventas = ventas;
+    }
 
     public static TiendaService getInstancia(){
         if(instancia==null){
@@ -150,6 +174,7 @@ public class TiendaService {
     public void realizarVenta(VentasProductos venta)
     {
         this.ventas.add(venta);
+
     }
 
 

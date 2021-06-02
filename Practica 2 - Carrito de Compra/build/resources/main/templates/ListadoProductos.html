@@ -17,7 +17,7 @@
                 <button type="button" class=navbar-toggler></button>
                 <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <b><a class="nav-link"  href="/listaProductos">Comprar</a></b>
+                        <b><a class="nav-link"  th:href="@{/listaProductos}">Comprar</a></b>
                     </li>
                     <li th:if="${usuario == 'admin'}" class="nav-item active">
                         <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>

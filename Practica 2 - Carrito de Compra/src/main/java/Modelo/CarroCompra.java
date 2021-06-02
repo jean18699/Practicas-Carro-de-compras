@@ -48,15 +48,4 @@ public class CarroCompra {
         }
     }
 
-    public double getTotalProductos() {
-
-        double total = 0;
-
-        for(int i = 0; i < listaProductos.size(); i++)
-        {
-            total += (listaProductos.get(i).getPrecioTotal());
-        }
-
-        return total;
-    }
 }

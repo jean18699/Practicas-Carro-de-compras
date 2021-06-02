@@ -1,5 +1,7 @@
 package Modelo;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class VentasProductos {
@@ -8,13 +10,15 @@ public class VentasProductos {
     private long id;
     private String nombreCliente;
     private List<Producto> listaProductos;
+    private LocalDate fechaCompra;
 
-    public VentasProductos(String nombreCliente, List<Producto> listaProductos)
+    public VentasProductos(String nombreCliente, List<Producto> listaProductos, LocalDate fechaCompra)
     {
         contador = contador + 1;
         this.id = contador;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
+        this.fechaCompra = fechaCompra;
     }
 
     public long getId() {
@@ -40,4 +44,25 @@ public class VentasProductos {
     public void setListaProductos(List<Producto> listaProductos) {
         this.listaProductos = listaProductos;
     }
+
+    public LocalDate getFechaCompra() {
+        return fechaCompra;
+    }
+
+    public void setFechaCompra(LocalDate fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
+    public double getTotalVenta()
+    {
+        double total = 0;
+
+        for(int i = 0; i < listaProductos.size(); i++)
+        {
+            total += (listaProductos.get(i).getPrecioTotal());
+        }
+
+        return total;
+    }
+
 }
