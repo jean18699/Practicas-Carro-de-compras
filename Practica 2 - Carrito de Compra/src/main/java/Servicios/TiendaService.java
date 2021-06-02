@@ -125,6 +125,10 @@ public class TiendaService {
         }
     }
 
+    public void deleteProducto(Producto producto)
+    {
+        getListaProductos().remove(producto);
+    }
 
 
     public CarroCompra getCarritoUsuario(Usuario usuario)

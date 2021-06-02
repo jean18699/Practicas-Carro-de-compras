@@ -50,29 +50,26 @@
 </div>
 
 <div class="row">&nbsp;</div>
-
-    <table style="width: 65%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
-        <thead class="thead-light">
-        <tr align="center">
-            <th scope="col">Producto</th>
-            <th scope="col">Precio(RD$)</th>
-            <th scope="col">Accion</th>
-        </tr>
-        </thead>
-        <tbody  class="table-hover">
-        <tr align="center" th:each="producto : ${productos}">
-            <td th:text="${producto.nombre}">Pasola</td>
-            <td th:text="${producto.precio}">1000</td>
-            <td>
-                <form th:action="@{/editarProducto}" method="post">
-                    <button name="idProducto" th:value="${producto.id}"  type="submit" class="btn-sm btn-primary">Editar</button>
-                </form>
-                <form th:action="@{/editarProducto}" method="post">
-                    <button name="eliminarProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
-                </form>
-        </tr>
-        </tbody>
-    </table>
+    <form th:action="@{/editarProducto}" method="post">
+        <table style="width: 65%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+            <thead class="thead-light">
+            <tr align="center">
+                <th scope="col">Producto</th>
+                <th scope="col">Precio(RD$)</th>
+                <th scope="col">Accion</th>
+            </tr>
+            </thead>
+            <tbody  class="table-hover">
+            <tr align="center" th:each="producto : ${productos}">
+                <td th:text="${producto.nombre}">Pasola</td>
+                <td th:text="${producto.precio}">1000</td>
+                <td>
+                        <button name="idProducto" th:value="${producto.id}"  type="submit" class="btn-sm btn-primary">Editar</button>
+                        <button name="eliminarProducto" th:value="${producto.id}" th:formaction="@{/controlProductos/eliminarProducto}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+            </tr>
+            </tbody>
+        </table>
+    </form>
 
 
 

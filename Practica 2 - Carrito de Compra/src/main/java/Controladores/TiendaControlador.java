@@ -150,6 +150,18 @@ public class TiendaControlador {
 
         });
 
+        app.post("/controlProductos/eliminarProducto", ctx -> {
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.result("Usuario no logeado");
+            }else
+            {
+                TiendaService.getInstancia().deleteProducto(TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("eliminarProducto"))));
+                ctx.redirect("/controlProductos");
+            }
+
+        });
 
 
         app.post("/editarProducto", ctx -> {
