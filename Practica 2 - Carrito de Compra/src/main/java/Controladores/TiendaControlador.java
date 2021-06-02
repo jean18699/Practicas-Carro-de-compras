@@ -7,7 +7,6 @@ import Servicios.TiendaService;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
-import io.javalin.plugin.rendering.template.JavalinVelocity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,13 +65,19 @@ public class TiendaControlador {
             {
                 Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
 
+                ctx.formParamMap().forEach((key, lista) -> {
+                    System.out.println(String.format("[%s] = [%s]", key, String.join(",", lista)));
+                });
+                System.out.println(ctx.formParam("cantidad"));
+
                Producto producto = new Producto(
                        TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getNombre(),
                        TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getPrecio()
                );
                producto.setId(TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getId());
+
                producto.setCantidad(
-                       Integer.parseInt(ctx.formParamMap().get("cantidad").get(Integer.parseInt(ctx.formParam("idProducto"))-1))
+                       Integer.parseInt(ctx.formParam("cantidad"))
                );
 
                 TiendaService.getInstancia().addProductoCarritoUsuario(usuario,producto);
@@ -163,6 +168,37 @@ public class TiendaControlador {
 
         });
 
+        app.get("/agregarProducto", ctx -> {
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.result("Usuario no logeado");
+            }else
+            {
+               // TiendaService.getInstancia().deleteProducto(TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("eliminarProducto"))));
+                ctx.render("/templates/Crear_Producto.html");
+            }
+
+        });
+
+        app.post("/agregarProducto/crear", ctx -> {
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.result("Usuario no logeado");
+            }else
+            {
+                Producto producto = new Producto(
+                        ctx.formParam("nombreProducto"),
+                        Double.parseDouble(ctx.formParam("precioProducto"))
+                );
+
+                TiendaService.getInstancia().addNuevoProducto(producto);
+                ctx.redirect("/controlProductos");
+            }
+
+        });
+
 
         app.post("/editarProducto", ctx -> {
 
@@ -183,7 +219,7 @@ public class TiendaControlador {
 
             modelo.put("cantidadCarrito", carrito.getListaProductos().size());
             modelo.put("producto", producto);
-            ctx.render("/templates/Editar_Crear_Producto.html", modelo);
+            ctx.render("/templates/Editar_Producto.html", modelo);
 
         });
 

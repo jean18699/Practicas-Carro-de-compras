@@ -128,6 +128,23 @@ public class TiendaService {
     public void deleteProducto(Producto producto)
     {
         getListaProductos().remove(producto);
+
+        //Eliminando el producto quitado de los carritos de los usuarios
+        for(int i = 0; i < usuarios.size();i++)
+        {
+            for(int j = 0; j < usuarios.get(i).getCarrito().getListaProductos().size();j++)
+            {
+               if(usuarios.get(i).getCarrito().getListaProductos().get(j).getId() == producto.getId())
+               {
+                   usuarios.get(i).getCarrito().getListaProductos().remove(j);
+               }
+            }
+        }
+    }
+
+    public void addNuevoProducto(Producto producto)
+    {
+        getListaProductos().add(producto);
     }
 
 
