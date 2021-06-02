@@ -38,13 +38,33 @@
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
-
     <h3 class="h3" align="center">Carrito de compras</h3>
 
     <div class="row">&nbsp;</div>
     <div class="row">&nbsp;</div>
 
-    <form th:action="@{/carrito/eliminar}" method="post">
+    <div class="row justify-content-center">
+        <form style="width: 74%;" class="border border-secondary rounded"  th:action="@{/agregarProducto/crear}" method="post">
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div style="border-bottom: gray" class="col-12">
+                    <h5 class="h5"><strong>Datos del Cliente</strong></h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <label for="nombreCliente" class="form-label"><b>Nombre del Cliente:</b></label>
+                    <input form="accion" type="text" id="nombreCliente"  class="form-control" name="nombreCliente" fullwidth required>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+        </form>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <form id="accion"  th:action="@{carrito/comprar}" method="post">
     <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
         <thead class="thead-light">
             <tr align="center">
@@ -68,7 +88,6 @@
             </tr>
         </tbody>
     </table>
-    </form>
 
     <div class="row" >
         <div class="col-8"></div>
@@ -77,8 +96,14 @@
 
             <h5 th:text="'Total:   ' + ${totalCarrito}">Total</h5>
         </div>
-
     </div>
-
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div style="text-align: center; margin-top: 20px;">
+            <button name="procesarCompra"  type="submit" class="btn btn- btn-primary">Procesar Compra</button>
+            <button name="limpiarCarrito" type="submit" th:action="@{/carrito/limpiar}" class="btn btn-secondary">Limpiar Carrito</button>
+        </div>
+    </div>
+    </form>
 </body>
 </html>

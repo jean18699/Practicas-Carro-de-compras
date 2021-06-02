@@ -3,6 +3,7 @@ package Controladores;
 import Modelo.CarroCompra;
 import Modelo.Producto;
 import Modelo.Usuario;
+import Modelo.VentasProductos;
 import Servicios.TiendaService;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
@@ -106,6 +107,42 @@ public class TiendaControlador {
                 ctx.redirect("/carrito");
             }
         });
+
+        app.post("/carrito/limpiar/",ctx -> {
+
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.result("Usuario no logeado");
+            }else
+            {
+                Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                TiendaService.getInstancia().limpiarCarrito(usuario);
+                ctx.redirect("/carrito");
+            }
+        });
+
+        app.post("/carrito/comprar/",ctx -> {
+
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.result("Usuario no logeado");
+            }else
+            {
+
+                Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+
+                VentasProductos nuevaVenta = new VentasProductos(
+                        ctx.formParam("nombreCliente"),
+                        usuario.getCarrito().getListaProductos()
+                );
+
+                TiendaService.getInstancia().limpiarCarrito(usuario);
+                ctx.redirect("/carrito");
+            }
+        });
+
 
         app.get("/carrito", ctx -> {
 

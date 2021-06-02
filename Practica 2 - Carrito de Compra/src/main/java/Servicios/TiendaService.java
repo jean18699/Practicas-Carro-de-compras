@@ -147,6 +147,12 @@ public class TiendaService {
         getListaProductos().add(producto);
     }
 
+    public void realizarVenta(VentasProductos venta)
+    {
+        this.ventas.add(venta);
+    }
+
+
 
     public CarroCompra getCarritoUsuario(Usuario usuario)
     {
@@ -165,4 +171,11 @@ public class TiendaService {
     }
 
 
+    public void limpiarCarrito(Usuario usuario) {
+
+        for(int i = 0; i < usuario.getCarrito().getListaProductos().size();i++)
+        {
+            usuario.getCarrito().getListaProductos().clear();
+        }
+    }
 }
