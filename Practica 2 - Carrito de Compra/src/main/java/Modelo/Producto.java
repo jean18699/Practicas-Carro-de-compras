@@ -18,6 +18,7 @@ public class Producto {
         this.id = contador; //generador de ID
         this.nombre = nombre;
         this.precio = precio;
+        cantidad = 1;
 
     }
 
@@ -56,4 +57,10 @@ public class Producto {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+    public void addCantidad(int cantidad) {
+        this.cantidad += cantidad;
+    }
+
+
 }

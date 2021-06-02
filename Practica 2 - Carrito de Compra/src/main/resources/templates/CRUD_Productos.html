@@ -17,7 +17,7 @@
             <button type="button" class=navbar-toggler></button>
             <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <b><a class="nav-link"  href="/listarProductos">Comprar</a></b>
+                    <b><a class="nav-link"  href="/listaProductos">Comprar</a></b>
                 </li>
                 <li th:if="${usuario == 'admin'}" class="nav-item active">
                     <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
@@ -26,7 +26,7 @@
                     <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
                 </li>
                 <li class="nav-item active">
-                    <b><a class="nav-link"  th:text="'Carrito(' + ${totalCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    <b><a class="nav-link"  th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
                 </li>
 
             </ul>
@@ -51,7 +51,6 @@
 
 <div class="row">&nbsp;</div>
 
-<form th:action="@{/editarProducto}" method="get">
     <table style="width: 65%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
         <thead class="thead-light">
         <tr align="center">
@@ -62,22 +61,19 @@
         </thead>
         <tbody  class="table-hover">
         <tr align="center" th:each="producto : ${productos}">
-            <td th:text="${producto.id}">Pasola</td>
+            <td th:text="${producto.nombre}">Pasola</td>
             <td th:text="${producto.precio}">1000</td>
-            <td align="center">
-               <!-- <form th:action="@{'/editarProducto/'+${producto.id}}" method="get">
-                    <button name="idProducto"  type="submit" class="btn-sm btn-success">Editar</button>
+            <td>
+                <form th:action="@{/editarProducto}" method="post">
+                    <button name="idProducto" th:value="${producto.id}"  type="submit" class="btn-sm btn-primary">Editar</button>
                 </form>
-                <button name="EliminarProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
-            -->
-                <button name="editarProducto" th:value="${producto.id}" type="submit" class="btn-sm">Editar</button>
-            </td>
-
+                <form th:action="@{/editarProducto}" method="post">
+                    <button name="eliminarProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                </form>
         </tr>
         </tbody>
-
     </table>
-</form>
+
 
 
 

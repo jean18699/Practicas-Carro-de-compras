@@ -36,9 +36,16 @@ public class CarroCompra {
     {
         this.listaProductos.add(producto);
     }
+
     public void deleteProducto(Producto producto)
     {
-        this.listaProductos.remove(producto);
+        for(int i = 0; i <  listaProductos.size(); i ++)
+        {
+            if(listaProductos.get(i).getId() == producto.getId())
+            {
+                listaProductos.remove(listaProductos.get(i));
+            }
+        }
     }
 
     public double getTotalProductos() {

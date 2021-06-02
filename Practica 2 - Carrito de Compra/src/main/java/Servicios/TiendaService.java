@@ -90,18 +90,37 @@ public class TiendaService {
     }
 
 
-    public void addProductoCarritoUsuario(Usuario usuario, Producto producto)
+    public boolean addProductoCarritoUsuario(Usuario usuario, Producto producto)
     {
-        if(existeUsuario(usuario.getUsuario()) && !usuario.existeProductoCarrito(producto.getId()))
+        //Si ya tiene el producto en el carrito, se le agrega la nueva cantidad
+        if(existeUsuario(usuario.getUsuario()) && usuario.existeProductoCarrito(producto.getId()))
+        {
+            for(int i = 0; i < usuario.getCarrito().getListaProductos().size();i++)
+            {
+                if(usuario.getCarrito().getListaProductos().get(i).getId() == producto.getId())
+                {
+                    usuario.getCarrito().getListaProductos().get(i).addCantidad(producto.getCantidad());
+
+                    return true;
+                }
+            }
+        }
+        //Si no lo tiene, se le agrega
+        else if(existeUsuario(usuario.getUsuario()) && !usuario.existeProductoCarrito(producto.getId()))
         {
             usuario.getCarrito().addProducto(producto);
+
+            return true;
         }
+        return false;
     }
 
     public void deleteProductoCarritoUsuario(Usuario usuario, Producto producto)
     {
         if(existeUsuario(usuario.getUsuario()) && usuario.existeProductoCarrito(producto.getId()))
         {
+
+
             usuario.getCarrito().deleteProducto(producto);
         }
     }
