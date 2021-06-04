@@ -25,6 +25,7 @@ public class TiendaService {
 
         //Agregando el admin
         usuarios.add(new Usuario("admin","Administrador","admin"));
+        usuarios.add(new Usuario("jean18699","Administrador","abc"));
 
         //Agregando productos
         productos.add(new Producto("Computadora",  1000));

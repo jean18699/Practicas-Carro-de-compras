@@ -28,14 +28,17 @@
                     <li class="nav-item active">
                         <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
                     </li>
-                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                    <li th:if="${usuarioActual == 'admin'}" class="nav-item active">
                         <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
                     </li>
-                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                    <li th:if="${usuarioActual == 'admin'}" class="nav-item active">
                         <b><a class="nav-link" th:href="@{/controlProductos}">Administrar Productos</a></b>
                     </li>
                     <li class="nav-item active">
                         <b><a class="nav-link" th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
                     </li>
                 </ul>
             </div>
@@ -52,7 +55,7 @@
     <div class="row">&nbsp;</div>
 
     <!--Creacion de nuevo usuario -->
-    <div th:if="${usuario == 'admin'}" class="row justify-content-center">
+    <div th:if="${usuarioActual == 'admin'}" class="row justify-content-center">
         <form style="width: 74%;" class="border border-secondary rounded" th:action="@{/listaUsuarios/crear}" onsubmit="return validar()" method="post">
             <div class="row">&nbsp;</div>
             <div class="row">
@@ -99,7 +102,7 @@
             <tr align="center">
                 <th scope="col">Usuario</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Accion</th>
+                <th th:if="${usuarioActual == 'admin'}" scope="col">Accion</th>
             </tr>
             </thead>
             <tbody class="table-hover">
@@ -107,7 +110,7 @@
 
                 <td th:text="${usuario.usuario}">Pasola</td>
                 <td th:text="${usuario.nombre}">1000</td>
-                <td align="center">
+                <td th:if="${usuarioActual == 'admin'}" align="center">
                     <button th:if="${usuario.usuario != 'admin'}" name="eliminarUsuario" th:value="${usuario.usuario}" type="submit" class="btn-sm btn-danger">
                         Eliminar
                     </button>

@@ -31,7 +31,9 @@
                     <li class="nav-item active">
                         <b><a class="nav-link"  th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
                     </li>
-
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -68,45 +70,50 @@
     <div class="row">&nbsp;</div>
 
     <form id="accion"  th:action="@{carrito/comprar}" method="post">
-    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
-        <thead class="thead-light">
-            <tr align="center">
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio($RD)</th>
-                <th scope="col">Cantidad</th>
-                <th scope="col">Precio Total($RD)</th>
+        <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr align="center">
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio($RD)</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio Total($RD)</th>
 
-                <th scope="col">Accion</th>
-            </tr>
-        </thead>
-        <tbody  class="table-hover">
-            <tr align="center" th:each="producto : ${productosCarrito}">
-                <td th:text="${producto.nombre}">Pasola</td>
-                <td th:text="${producto.getPrecio()}">1000</td>
-                <td th:text="${producto.cantidad}" >1</td>
-                <td th:text="${producto.getPrecioTotal()}">1000</td>
-                <td align="center">
-                    <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody  class="table-hover">
+                <tr align="center" th:each="producto : ${productosCarrito}">
+                    <td th:text="${producto.nombre}">Pasola</td>
+                    <td th:text="${producto.getPrecio()}">1000</td>
+                    <td th:text="${producto.cantidad}" >1</td>
+                    <td th:text="${producto.getPrecioTotal()}">1000</td>
+                    <td align="center">
+                        <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <div class="row" >
-        <div class="col-8"></div>
+        <div class="row" >
+            <div class="col-8"></div>
 
-        <div class="col-3">
+            <div class="col-3">
 
-            <h5 th:text="'Total:   ' + ${totalCarrito}">Total</h5>
+                <h5 th:text="'Total:   ' + ${totalCarrito}">Total</h5>
+            </div>
         </div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div style="text-align: center; margin-top: 20px;">
-            <button name="procesarCompra"  type="submit" class="btn btn- btn-primary">Procesar Compra</button>
-            <button name="limpiarCarrito" type="submit" th:action="@{/carrito/limpiar}" class="btn btn-secondary">Limpiar Carrito</button>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div style="text-align: center; margin-top: 20px;">
+                <button name="procesarCompra"  type="submit" class="btn btn- btn-primary">Procesar Compra</button>
+                <button name="limpiarCarrito" form="placeholder" type="submit" th:formaction="@{/carrito/limpiar}" class="btn btn-secondary">Limpiar Carrito</button>
+            </div>
         </div>
-    </div>
     </form>
+
+<form id="placeholder" method="post">
+
+</form>
+
 </body>
 </html>
