@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!--Bootstrap -->
+    <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+    <!--Jquery-->
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <button type="button" class=navbar-toggler></button>
+                <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/listaProductos}">Comprar</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/controlProductos}">Administrar Productos</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+
+    <h3 align="center">Lista de Usuarios</h3>
+
+    <div class="row">&nbsp;</div>
+
+    <!--Creacion de nuevo usuario -->
+    <div th:if="${usuario == 'admin'}" class="row justify-content-center">
+        <form style="width: 74%;" class="border border-secondary rounded" th:action="@{/listaUsuarios/crear}" onsubmit="return validar()" method="post">
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div style="border-bottom: gray" class="col-12">
+                    <h5 class="h5"><strong>Creacion de Usuario</strong></h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-6">
+                    <label  for="input-usuario" class="form-label"><b>Nombre de Usuario:</b></label>
+                    <input id="input-usuario" type="text"  class="form-control" name="nombreUsuario" fullwidth required>
+                </div>
+                <div class="col-6">
+                    <label for="nombreCliente" class="form-label"><b>Nombre del Cliente:</b></label>
+                    <input type="text" id="nombreCliente" class="form-control" minlength="1" name="nombreCliente" fullwidth required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="password" class="form-label"><b>Contrase&ntilde;a:</b></label>
+                    <input type="password" id="password" class="form-control"  minlength="3" name="password" fullwidth required>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div align="right"  class="row">
+                <div class="col-12">
+                    <button name="agregarUsuario" th:formaction="@{/listaUsuarios/crear}" type="submit"
+                            class="btn-sm btn-success">Agregar nuevo usuario
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">&nbsp;</div>
+        </form>
+    </div>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <form th:action="@{/listaUsuarios/eliminar}" method="post">
+        <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+            <thead class="thead-light">
+            <tr align="center">
+                <th scope="col">Usuario</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Accion</th>
+            </tr>
+            </thead>
+            <tbody class="table-hover">
+            <tr align="center" th:each="usuario : ${usuarios}">
+
+                <td th:text="${usuario.usuario}">Pasola</td>
+                <td th:text="${usuario.nombre}">1000</td>
+                <td align="center">
+                    <button th:if="${usuario.usuario != 'admin'}" name="eliminarUsuario" th:value="${usuario.usuario}" type="submit" class="btn-sm btn-danger">
+                        Eliminar
+                    </button>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+
+    <script>
+        //Codigo en Jquery para evitar espacios en el campo de digitar nombre de usuario
+        $(document).ready(function(){
+        $('#input-usuario').keypress(function( e ) {
+                if(e.which === 32)
+                    return false;
+            });
+        });
+
+        //Codigo para validar el formulario
+        function validar()
+        {
+            if($('#nombreCliente').val() == " ")
+            {
+                alert("Debe ingresar un nombre");
+                return false;
+            }
+        }
+
+    </script>
+
+
+</body>
+</html>

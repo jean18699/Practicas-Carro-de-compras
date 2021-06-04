@@ -24,7 +24,7 @@ public class TiendaService {
 
 
         //Agregando el admin
-        usuarios.add(new Usuario("admin","Usuario Admin","admin"));
+        usuarios.add(new Usuario("admin","Administrador","admin"));
 
         //Agregando productos
         productos.add(new Producto("Computadora",  1000));
@@ -44,7 +44,17 @@ public class TiendaService {
     }
 
     public List<Usuario> getUsuarios() {
-        return usuarios;
+         return usuarios;
+      /*  ArrayList<Usuario> listaUsuarios = new ArrayList<>(); //Creo una nueva lista para almacenar todos los usuarios menos el Admin.
+
+        for(Usuario usuario : usuarios)
+        {
+            if(!usuario.getUsuario().equalsIgnoreCase("admin"))
+            {
+                listaUsuarios.add(usuario);
+            }
+        }*/
+
     }
 
     public void setUsuarios(List<Usuario> usuarios) {
@@ -74,6 +84,26 @@ public class TiendaService {
         }else
         {
             usuarios.add(usuario);
+
+            System.out.println(usuarios);
+            return usuario;
+        }
+    }
+
+    public Usuario eliminarUsuario(Usuario usuario)
+    {
+        if(!existeUsuario(usuario.getUsuario()))
+        {
+            return null;
+        }else
+        {
+            for(int i = 0; i < usuarios.size();i++)
+            {
+                if(usuarios.get(i).getUsuario().equalsIgnoreCase(usuario.getUsuario()))
+                {
+                    usuarios.remove(i);
+                }
+            }
             return usuario;
         }
     }

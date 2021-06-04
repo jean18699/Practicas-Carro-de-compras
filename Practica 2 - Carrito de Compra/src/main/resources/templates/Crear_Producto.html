@@ -18,6 +18,9 @@
                     <li class="nav-item active">
                         <b><a class="nav-link"  href="/listaProductos">Comprar</a></b>
                     </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                    </li>
                     <li th:if="${usuario == 'admin'}" class="nav-item active">
                         <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
                     </li>
@@ -64,7 +67,7 @@
         <div class="row">
             <div class="col-12">
                 <label for="precioProducto" class="form-label"><b>Precio</b></label>
-                <input type="text" id="precioProducto"  class="form-control" name="precioProducto" fullwidth required>
+                <input type="number" id="precioProducto"  class="form-control" name="precioProducto" min="1" fullwidth required>
             </div>
         </div>
 

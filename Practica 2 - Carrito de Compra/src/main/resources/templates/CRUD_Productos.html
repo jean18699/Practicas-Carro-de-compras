@@ -19,6 +19,9 @@
                 <li class="nav-item active">
                     <b><a class="nav-link"  href="/listaProductos">Comprar</a></b>
                 </li>
+                <li class="nav-item active">
+                    <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                </li>
                 <li th:if="${usuario == 'admin'}" class="nav-item active">
                     <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
                 </li>

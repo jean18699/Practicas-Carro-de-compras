@@ -19,10 +19,13 @@
                 <li class="nav-item active">
                     <b><a class="nav-link" href="/listaProductos">Comprar</a></b>
                 </li>
-                <li th:if="${usuario == 'admin'}" class="nav-item active">
+                <li class="nav-item active">
+                    <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                </li>
+                <li th:if="${usuario.usuario == 'admin'}" class="nav-item active">
                     <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
                 </li>
-                <li th:if="${usuario == 'admin'}" class="nav-item active">
+                <li th:if="${usuario.usuario == 'admin'}" class="nav-item active">
                     <b><a class="nav-link" th:href="@{/controlProductos}">Administrar Productos</a></b>
                 </li>
                 <li class="nav-item active">

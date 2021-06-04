@@ -58,6 +58,71 @@ public class TiendaControlador {
             ctx.render("/templates/ListadoProductos.html", modelo);
         });
 
+        app.get("/listaUsuarios", ctx -> {
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("usuarios", TiendaService.getInstancia().getUsuarios());
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                modelo.put("cantidadCarrito", 0);
+            }else
+            {
+                modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarritoUsuario(TiendaService.getInstancia().
+                        getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"))).getListaProductos().size());
+                modelo.put("usuario",ctx.sessionAttribute("usuario"));
+            }
+
+            //enviando al sistema de plantilla.
+            ctx.render("/templates/ListaUsuarios.html", modelo);
+        });
+
+        app.post("/listaUsuarios/crear", ctx -> {
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.redirect("/autenticar");
+            }else if(!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin"))
+            {
+                ctx.result("Sin autorizacion");
+            }else
+            {
+                Usuario nuevoUsuario = new Usuario(
+                        ctx.formParam("nombreUsuario"),
+                        ctx.formParam("nombreCliente"),
+                        ctx.formParam("password")
+                );
+               if(TiendaService.getInstancia().crearUsuario(nuevoUsuario) == null)
+               {
+                   ctx.result("Este usuario ya esta registrado...");
+               };
+            }
+            ctx.redirect("/listaUsuarios");
+        });
+
+        app.post("/listaUsuarios/eliminar", ctx -> {
+
+            if(ctx.sessionAttribute("usuario") == null)
+            {
+                ctx.redirect("/autenticar");
+            }else if(!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin"))
+            {
+                ctx.result("Sin autorizacion");
+            }else
+            {
+
+
+                if(TiendaService.getInstancia().eliminarUsuario(TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("eliminarUsuario"))) == null)
+                {
+                    ctx.result("Este usuario no se encuentra registrado...");
+                };
+            }
+
+            ctx.redirect("/listaUsuarios");
+
+        });
+
+
         app.get("/ventas", ctx -> {
 
 
@@ -91,10 +156,6 @@ public class TiendaControlador {
             {
                 Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
 
-                ctx.formParamMap().forEach((key, lista) -> {
-                    System.out.println(String.format("[%s] = [%s]", key, String.join(",", lista)));
-                });
-                System.out.println(ctx.formParam("cantidad"));
 
                Producto producto = new Producto(
                        TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getNombre(),
@@ -201,6 +262,7 @@ public class TiendaControlador {
 
 
                 Map<String, Object> modelo = new HashMap<>();
+                modelo.put("usuario", usuario);
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("productosCarrito", carrito.getListaProductos());
                 modelo.put("totalCarrito", totalCarrito);
@@ -216,13 +278,17 @@ public class TiendaControlador {
 
             if(ctx.sessionAttribute("usuario") == null)
             {
-                ctx.result("Usuario no logeado");
+                ctx.redirect("/autenticar");
+            }else if(!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin"))
+            {
+                ctx.result("Sin autorizacion");
             }else
             {
                 Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 CarroCompra carrito = TiendaService.getInstancia().getCarritoUsuario(usuario);
                 Map<String, Object> modelo = new HashMap<>();
 
+                modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("productos", TiendaService.getInstancia().getListaProductos());
 
@@ -236,7 +302,10 @@ public class TiendaControlador {
 
             if(ctx.sessionAttribute("usuario") == null)
             {
-                ctx.result("Usuario no logeado");
+                ctx.redirect("/autenticar");
+            }else if(!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin"))
+            {
+                ctx.result("Sin autorizacion");
             }else
             {
                 TiendaService.getInstancia().deleteProducto(TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("eliminarProducto"))));
@@ -249,11 +318,20 @@ public class TiendaControlador {
 
             if(ctx.sessionAttribute("usuario") == null)
             {
-                ctx.result("Usuario no logeado");
+                ctx.redirect("/autenticar");
+            }else if(!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin"))
+            {
+                ctx.result("Sin autorizacion");
             }else
             {
-               // TiendaService.getInstancia().deleteProducto(TiendaService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("eliminarProducto"))));
-                ctx.render("/templates/Crear_Producto.html");
+                Usuario usuario = TiendaService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                CarroCompra carrito = TiendaService.getInstancia().getCarritoUsuario(usuario);
+                Map<String, Object> modelo = new HashMap<>();
+
+                modelo.put("usuario", usuario.getUsuario());
+                modelo.put("cantidadCarrito", carrito.getListaProductos().size());
+                modelo.put("productos", TiendaService.getInstancia().getListaProductos());
+                ctx.render("/templates/Crear_Producto.html",modelo);
             }
 
         });
