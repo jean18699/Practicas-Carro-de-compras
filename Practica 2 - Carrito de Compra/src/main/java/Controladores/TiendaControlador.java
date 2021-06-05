@@ -64,7 +64,7 @@ public class TiendaControlador {
 
         app.get("/listaProductos", ctx -> {
 
-
+            //Cargando productos para cualquier persona que entre al sistema, con o sin autenticar.
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos", TiendaService.getInstancia().getListaProductos());
 
