@@ -30,7 +30,7 @@ public class TiendaControlador {
 
         app.get("/", ctx -> {
 
-            ctx.redirect("/iniciarSesion");
+            ctx.redirect("/listaProductos");
 
         });
 
