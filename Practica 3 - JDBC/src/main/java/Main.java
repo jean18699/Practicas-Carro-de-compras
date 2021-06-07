@@ -1,14 +1,24 @@
 import Controladores.TiendaControlador;
+import Servicios.BootStrapServices;
+import Servicios.DataBaseServices;
 import Servicios.TiendaService;
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
 import io.javalin.plugin.openapi.OpenApiPlugin;
 
+import java.sql.SQLException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
-        System.out.println(TiendaService.getInstancia().getUsuarioByNombreUsuario("admin").getNombre());
+        //Iniciando el servicio
+        BootStrapServices.startDb();
+
+        //Prueba de Conexión.
+        DataBaseServices.getInstancia().testConexion();
+
+        BootStrapServices.crearTablas();
 
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config -> {
