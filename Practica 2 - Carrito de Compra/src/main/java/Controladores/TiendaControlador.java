@@ -28,6 +28,12 @@ public class TiendaControlador {
 
     public void aplicarRutas() throws NumberFormatException {
 
+        app.get("/", ctx -> {
+
+            ctx.redirect("/iniciarSesion");
+
+        });
+
         app.get("/iniciarSesion", ctx -> {
 
             if (ctx.sessionAttribute("usuario") == null) {

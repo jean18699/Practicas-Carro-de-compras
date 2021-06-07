@@ -12,7 +12,6 @@ public class Main {
 
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config -> {
-            config.addStaticFiles("/publico"); //desde la carpeta de resources
             config.addStaticFiles("/bootstrap-5.0.1-dist"); //desde la carpeta de resources
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
