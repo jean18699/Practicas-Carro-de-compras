@@ -22,7 +22,6 @@ public class UsuarioService {
     public UsuarioService()
     {
         usuarios = new ArrayList<>();
-        getUsuarios();
     }
 
     public static UsuarioService getInstancia(){
@@ -35,9 +34,11 @@ public class UsuarioService {
     public List<Usuario> getUsuarios() {
 
         Connection con = null;
-
+        List<Usuario> usuarios = null;
+        
         try
         {
+            usuarios = new ArrayList<>();
             String query = "select usuario,nombre,password from USUARIOS";
             con = DataBaseServices.getInstancia().getConexion();
             PreparedStatement prepareStatement = con.prepareStatement(query);
@@ -88,8 +89,8 @@ public class UsuarioService {
             prepareStatement.setString(3, usuario.getPassword());
 
             //
-            ResultSet fila = prepareStatement.executeQuery();
-            ok = (fila != null) ;
+            int fila = prepareStatement.executeUpdate();
+            ok = fila > 0 ;
 
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioService.class.getName()).log(Level.SEVERE, null, ex);
@@ -119,8 +120,8 @@ public class UsuarioService {
 
             prepareStatement.setString(1, usuario.getUsuario());
 
-            ResultSet fila = prepareStatement.executeQuery();
-            ok = (fila != null) ;
+            int fila = prepareStatement.executeUpdate();
+            ok = fila > 0;
 
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioService.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,6 +185,7 @@ public class UsuarioService {
                 usuario1.setUsuario(rs.getString("usuario"));
                 usuario1.setNombre(rs.getString("nombre"));
                 usuario1.setPassword(rs.getString("password"));
+                System.out.println(usuario1.getNombre());
             }
 
         } catch (SQLException ex) {

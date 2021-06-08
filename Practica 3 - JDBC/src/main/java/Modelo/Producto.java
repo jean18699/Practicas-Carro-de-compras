@@ -22,6 +22,10 @@ public class Producto {
 
     }
 
+    public Producto() {
+
+    }
+
     public long getId() {
         return id;
     }

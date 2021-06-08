@@ -48,7 +48,7 @@ public class TiendaControlador {
         app.post("/autenticar", ctx -> {
 
             if (UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")) != null) {
-                    System.out.println(ctx.formParam("nombreUsuario"));
+
                 if (!UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")).getPassword().equals(ctx.formParam("password"))) {
                     ctx.redirect("/iniciarSesion");
                 } else {
@@ -78,8 +78,8 @@ public class TiendaControlador {
             if (ctx.sessionAttribute("usuario") == null) {
                 modelo.put("cantidadCarrito", 0);
             } else {
-                modelo.put("cantidadCarrito", UsuarioService.getInstancia().getCarritoUsuario(UsuarioService.getInstancia().
-                        getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"))).getListaProductos().size());
+                /*modelo.put("cantidadCarrito", UsuarioService.getInstancia().getCarritoUsuario(UsuarioService.getInstancia().
+                        getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"))).getListaProductos().size());*/
                 modelo.put("usuario", ctx.sessionAttribute("usuario"));
             }
 
@@ -100,9 +100,9 @@ public class TiendaControlador {
                 if (ctx.sessionAttribute("usuario") == null) {
                     modelo.put("cantidadCarrito", 0);
                 } else {
-                    modelo.put("cantidadCarrito", UsuarioService.getInstancia().getCarritoUsuario(UsuarioService.getInstancia().
+                    /*modelo.put("cantidadCarrito", UsuarioService.getInstancia().getCarritoUsuario(UsuarioService.getInstancia().
                             getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"))).getListaProductos().size());
-                    modelo.put("usuarioActual", ctx.sessionAttribute("usuario"));
+                    */modelo.put("usuarioActual", ctx.sessionAttribute("usuario"));
                 }
 
                 //enviando al sistema de plantilla.
