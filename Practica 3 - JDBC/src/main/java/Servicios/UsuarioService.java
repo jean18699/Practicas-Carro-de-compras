@@ -53,6 +53,8 @@ public class UsuarioService {
                 usuarios.add(usuario);
             }
 
+            this.usuarios = usuarios;
+
         }catch (SQLException ex) {
             Logger.getLogger(UsuarioService.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
@@ -185,7 +187,6 @@ public class UsuarioService {
                 usuario1.setUsuario(rs.getString("usuario"));
                 usuario1.setNombre(rs.getString("nombre"));
                 usuario1.setPassword(rs.getString("password"));
-                System.out.println(usuario1.getNombre());
             }
 
         } catch (SQLException ex) {
@@ -202,47 +203,7 @@ public class UsuarioService {
 
     }
 
-    public boolean addProductoCarritoUsuario(Usuario usuario, Producto producto)
-    {
-        //Si ya tiene el producto en el carrito, se le agrega la nueva cantidad
-        if(existeUsuario(usuario.getUsuario()) && usuario.existeProductoCarrito(producto.getId()))
-        {
-            for(int i = 0; i < usuario.getCarrito().getListaProductos().size();i++)
-            {
-                if(usuario.getCarrito().getListaProductos().get(i).getId() == producto.getId())
-                {
-                    usuario.getCarrito().getListaProductos().get(i).addCantidad(producto.getCantidad());
 
-                    return true;
-                }
-            }
-        }
-        //Si no lo tiene, se le agrega
-        else if(existeUsuario(usuario.getUsuario()) && !usuario.existeProductoCarrito(producto.getId()))
-        {
-            usuario.getCarrito().addProducto(producto);
 
-            return true;
-        }
-        return false;
-    }
 
-    public void deleteProductoCarritoUsuario(Usuario usuario, Producto producto)
-    {
-        if(existeUsuario(usuario.getUsuario()) && usuario.existeProductoCarrito(producto.getId()))
-        {
-            usuario.getCarrito().deleteProducto(producto);
-        }
-    }
-
-    public CarroCompra getCarritoUsuario(Usuario usuario)
-    {
-        if(existeUsuario(usuario.getUsuario()))
-        {
-            return usuario.getCarrito();
-        }else
-        {
-            return null;
-        }
-    }
 }

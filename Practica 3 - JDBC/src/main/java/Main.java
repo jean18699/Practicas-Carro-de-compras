@@ -18,7 +18,7 @@ public class Main {
         //Prueba de Conexión.
         DataBaseServices.getInstancia().testConexion();
 
-        BootStrapServices.crearTablas();
+
 
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config -> {
@@ -29,7 +29,8 @@ public class Main {
         });
 
         app.start(7000);
-
+        BootStrapServices.crearTablas();
+        BootStrapServices.stopDb();
         new TiendaControlador(app).aplicarRutas();
 
     }

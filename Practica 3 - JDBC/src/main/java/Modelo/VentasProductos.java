@@ -1,7 +1,7 @@
 package Modelo;
 
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public class VentasProductos {
@@ -10,15 +10,19 @@ public class VentasProductos {
     private long id;
     private String nombreCliente;
     private List<Producto> listaProductos;
-    private LocalDate fechaCompra;
+    private Date fechaCompra;
 
-    public VentasProductos(String nombreCliente, List<Producto> listaProductos, LocalDate fechaCompra)
+    public VentasProductos(String nombreCliente, List<Producto> listaProductos, Date fechaCompra)
     {
         contador = contador + 1;
         this.id = contador;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
         this.fechaCompra = fechaCompra;
+    }
+
+    public VentasProductos() {
+
     }
 
     public long getId() {
@@ -45,11 +49,11 @@ public class VentasProductos {
         this.listaProductos = listaProductos;
     }
 
-    public LocalDate getFechaCompra() {
+    public Date getFechaCompra() {
         return fechaCompra;
     }
 
-    public void setFechaCompra(LocalDate fechaCompra) {
+    public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
 

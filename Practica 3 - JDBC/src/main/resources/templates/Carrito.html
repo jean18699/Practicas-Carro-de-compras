@@ -87,7 +87,7 @@
                     <td th:text="${producto.cantidad}" >1</td>
                     <td th:text="${producto.getPrecioTotal()}">1000</td>
                     <td align="center">
-                        <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                        <button name="idProducto" form="placeholder" th:formaction="@{/carrito/eliminar}" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
                     </td>
                 </tr>
             </tbody>

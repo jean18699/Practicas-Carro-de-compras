@@ -5,13 +5,13 @@ public class Usuario {
     private String usuario;
     private String nombre;
     private String password;
-    private CarroCompra carrito;
+   // private CarroCompra carrito;
 
     public Usuario(String usuario, String nombre, String password) {
         this.usuario = usuario;
         this.nombre = nombre;
         this.password = password;
-        this.carrito = new CarroCompra();
+    //    this.carrito = new CarroCompra();
 
     }
 
@@ -43,25 +43,14 @@ public class Usuario {
         this.password = password;
     }
 
-    public CarroCompra getCarrito() {
+   /* public CarroCompra getCarrito() {
         return carrito;
     }
 
     public void setCarrito(CarroCompra carrito) {
         this.carrito = carrito;
-    }
+    }*/
 
-    public boolean existeProductoCarrito(long idProducto)
-    {
-        for(int i = 0; i < carrito.getListaProductos().size(); i++)
-        {
-            if(carrito.getListaProductos().get(i).getId() == idProducto)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 

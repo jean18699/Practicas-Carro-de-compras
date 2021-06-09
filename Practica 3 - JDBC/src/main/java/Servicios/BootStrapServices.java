@@ -3,6 +3,7 @@ package Servicios;
 import org.h2.tools.Server;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -49,6 +50,7 @@ public class BootStrapServices {
                 "  PRECIO VARCHAR(100) NOT NULL\n" +
                 ");";
 
+
         String sql_2 = "CREATE TABLE IF NOT EXISTS USUARIOS\n" +
                 "(\n" +
                 "  USUARIO VARCHAR(10) PRIMARY KEY NOT NULL,\n" +
@@ -56,38 +58,36 @@ public class BootStrapServices {
                 "  PASSWORD VARCHAR(100) NOT NULL\n" +
                 ");";
 
-        /*String sql_3 = "CREATE TABLE IF NOT EXISTS USUARIOS\n" +
+
+        String sql_3 = "CREATE TABLE IF NOT EXISTS VENTAS\n" +
                 "(\n" +
-                "  USUARIO VARCHAR(10) PRIMARY KEY NOT NULL,\n" +
-                "  NOMBRE VARCHAR(50) NOT NULL,\n" +
-                "  PASSWORD VARCHAR(100) NOT NULL\n" +
-                ");";
-        */
-        
-        /*String sql = "CREATE TABLE IF NOT EXISTS PRODUCTOS\n" +
-                "(\n" +
-                "  MATRICULA INTEGER PRIMARY KEY NOT NULL,\n" +
-                "  NOMBRE VARCHAR(100) NOT NULL,\n" +
-                "  APELLIDO VARCHAR(100) NOT NULL,\n" +
-                "  TELEFONO VARCHAR(25) NOT NULL,\n" +
-                "  CARRERA VARCHAR(50) NOT NULL\n" +
-                ");";
-*/
-        String sql = "CREATE TABLE IF NOT EXISTS PRODUCTOS\n" +
-                "(\n" +
-                "  ID INTEGER AUTOINCREMENT PRIMARY KEY NOT NULL,\n" +
-                "  NOMBRE VARCHAR(100) NOT NULL,\n" +
-                "  PRECIO DOUBLE NOT NULL,\n" +
-                "  TELEFONO VARCHAR(25) NOT NULL,\n" +
-                "  CARRERA VARCHAR(50) NOT NULL\n" +
+                "  ID INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,\n" +
+                "  NOMBRE_CLIENTE VARCHAR(50) NOT NULL,\n" +
+                " ID_PRODUCTO LONG NOT NULL, \n" +
+                " USUARIO VARCHAR(25) NOT NULL,\n" +
+                " CANTIDAD INTEGER NOT NULL,\n" +
+                " FECHA_COMPRA DATE NOT NULL,\n" +
+                " ID_VENTA LONG NOT NULL,\n" +
+                " FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTOS(ID)\n" +
                 ");";
 
+
+        String sql_admin = "INSERT INTO USUARIOS(USUARIO,NOMBRE,PASSWORD) VALUES('admin','Administrador','admin');";
 
         Connection con = DataBaseServices.getInstancia().getConexion();
         Statement statement = con.createStatement();
-      //  statement.execute(sql_1);
+        Statement stmt = con.createStatement();
+        ResultSet rs = stmt.executeQuery("select USUARIO from USUARIOS where USUARIO = 'admin'"); //se toma el ultimo ID que haya registrado
+
+        if(!rs.next())
+        {
+            statement.execute(sql_admin);
+        }
+
+
         statement.execute(sql_1);
         statement.execute(sql_2);
+        statement.execute(sql_3);
         statement.close();
         con.close();
     }
