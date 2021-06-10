@@ -15,11 +15,11 @@ public class TiendaService {
 
     public static TiendaService instancia;
    // private List<CarroCompra> carritos;
-    public CarroCompra carrito;
+    private CarroCompra carrito;
 
 
     private TiendaService() {
-        carrito = new CarroCompra();
+
 
     }
 
@@ -28,6 +28,11 @@ public class TiendaService {
             instancia = new TiendaService();
         }
         return instancia;
+    }
+
+    public void setCarroCompra(CarroCompra carroCompra)
+    {
+        carrito = carroCompra;
     }
 
     public void limpiarCarrito() {

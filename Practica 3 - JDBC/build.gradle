@@ -31,4 +31,7 @@ dependencies {
     //H2
     compile 'com.h2database:h2:1.4.200'
 
+    //Convertir objeto a json
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+
 }

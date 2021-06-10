@@ -43,15 +43,5 @@ public class Usuario {
         this.password = password;
     }
 
-   /* public CarroCompra getCarrito() {
-        return carrito;
-    }
-
-    public void setCarrito(CarroCompra carrito) {
-        this.carrito = carrito;
-    }*/
-
-
-
 
 }
