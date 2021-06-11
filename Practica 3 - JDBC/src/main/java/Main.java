@@ -26,6 +26,7 @@ public class Main {
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
 
+
         });
 
         app.start(7000);
