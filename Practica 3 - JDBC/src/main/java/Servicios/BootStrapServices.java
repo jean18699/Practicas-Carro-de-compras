@@ -20,7 +20,7 @@ public class BootStrapServices {
      */
     public static void startDb()  {
         try {
-            server = Server.createTcpServer("-tcpPort", "9092", "-tcpAllowOthers", "-ifNotExists").start();
+            server = Server.createTcpServer("-tcpPort", "9093", "-tcpAllowOthers", "-ifNotExists").start();
         }catch (SQLException ex){
             ex.printStackTrace();
         }
@@ -63,12 +63,14 @@ public class BootStrapServices {
                 "(\n" +
                 "  ID INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,\n" +
                 "  NOMBRE_CLIENTE VARCHAR(50) NOT NULL,\n" +
-                " ID_PRODUCTO LONG NOT NULL, \n" +
+                " ID_PRODUCTO LONG, \n" +
                 " USUARIO VARCHAR(25) NOT NULL,\n" +
                 " CANTIDAD INTEGER NOT NULL,\n" +
                 " FECHA_COMPRA DATE NOT NULL,\n" +
                 " ID_VENTA LONG NOT NULL,\n" +
-                " FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTOS(ID)\n" +
+                "CONSTRAINT fk_venta_producto\n" +
+                "FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTOS(ID)\n" +
+                "ON DELETE CASCADE" +
                 ");";
 
 

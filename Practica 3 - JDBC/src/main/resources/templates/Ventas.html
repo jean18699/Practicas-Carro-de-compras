@@ -5,87 +5,96 @@
     <title>Ventas</title>
 
     <!--Bootstrap -->
-    <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
 
 </head>
 <body>
 
-<header>
-    <nav class="navbar justify-content-end navbar-expand-lg navbar-dark bg-primary">
-            <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <b><a class="nav-link" href="/listaProductos">Comprar</a></b>
-                </li>
-                <li class="nav-item active">
-                    <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
-                </li>
-                <li th:if="${usuario == 'admin'}" class="nav-item active">
-                    <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
-                </li>
-                <li th:if="${usuario == 'admin'}" class="nav-item active">
-                    <b><a class="nav-link" th:href="@{/controlProductos}">Administrar Productos</a></b>
-                </li>
-                <li class="nav-item active">
-                    <b><a class="nav-link" th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
-                </li>
-                <li th:if="${usuario != null}" class="nav-item active">
-                    <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
-                </li>
-            </ul>
-    </nav>
-</header>
+    <header>
 
-<div class="row">&nbsp;</div>
-<div class="row">&nbsp;</div>
-<div class="row">&nbsp;</div>
-
-
-<h3 align="center">Listado de Ventas Realizadas</h3>
-
-<div class="row">&nbsp;</div>
-<div class="row">&nbsp;</div>
-
-<div th:each="venta : ${ventas}">
-    <div class="row justify-content-center">
-
-        <div style="width: 68%" class="card">
-          <h5 style="margin-left: -12px; margin-right: -12px" th:text="${venta.nombreCliente}  + ' -   ' + ${venta.fechaCompra}"class="card-header">Cliente</h5>
-            <div class="row">&nbsp;</div>
-            <div class="row">&nbsp;</div>
-            <div class="card-body">
-                <table style="width: 75%; margin-left: auto; margin-right: auto"
-                       class="table table-hover table-responsive table-bordered">
-                    <thead class="thead-light">
-                    <tr align="center">
-                        <th scope="col">Producto</th>
-                        <th scope="col">Precio(RD$)</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Total(RD$)</th>
-                    </tr>
-                    </thead>
-                    <tbody class="table-hover">
-                    <tr align="center" th:each="producto : ${venta.getListaProductos()}">
-                        <td th:text="${producto.nombre}">Pasola</td>
-                        <td th:text="${producto.getPrecio()}">1000</td>
-                        <td th:text="${producto.cantidad}">1</td>
-                        <td th:text="${producto.getPrecioTotal()}">1000</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td align="center"><b>Total</b></td>
-                    <td align="center" th:text="${venta.getTotalVenta()}">0</td>
-                    </tfoot>
-                </table>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" style="color:white;"><strong>JG SHOPPING</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <b><a class="nav-link" href="/listaProductos">Comprar</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
+                    </li>
+                    <li th:if="${usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/controlProductos}">Administrar Productos</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+                    <li th:if="${usuario != null}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
+                    </li>
+                </ul>
             </div>
-            <div class="row">&nbsp;</div>
+        </nav>
+
+    </header>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+
+    <h3 align="center">Listado de Ventas Realizadas</h3>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <div th:each="venta : ${ventas}">
+        <div class="row justify-content-center">
+
+            <div style="width: 68%" class="card">
+              <h5 style="margin-left: -12px; margin-right: -12px" th:text="${venta.nombreCliente}  + ' -   ' + ${venta.fechaCompra}"class="card-header">Cliente</h5>
+                <div class="row">&nbsp;</div>
+                <div class="row">&nbsp;</div>
+                <div class="card-body">
+                    <table style="width: 75%; margin-left: auto; margin-right: auto"
+                           class="table table-hover table-responsive table-bordered">
+                        <thead class="thead-light">
+                        <tr align="center">
+                            <th scope="col">Producto</th>
+                            <th scope="col">Precio(RD$)</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Total(RD$)</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-hover">
+                        <tr align="center" th:each="producto : ${venta.getListaProductos()}">
+                            <td th:text="${producto.nombre}">Pasola</td>
+                            <td th:text="${producto.getPrecio()}">1000</td>
+                            <td th:text="${producto.cantidad}">1</td>
+                            <td th:text="${producto.getPrecioTotal()}">1000</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td align="center"><b>Total</b></td>
+                        <td align="center" th:text="${venta.getTotalVenta()}">0</td>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="row">&nbsp;</div>
+            </div>
         </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
     </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">&nbsp;</div>
-</div>
 
 
 
