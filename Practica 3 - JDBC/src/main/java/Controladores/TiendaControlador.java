@@ -13,6 +13,7 @@ import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.eclipse.jetty.server.session.Session;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.thymeleaf.standard.serializer.StandardJavaScriptSerializer;
 
 import javax.servlet.http.Cookie;
@@ -95,8 +96,13 @@ public class TiendaControlador {
             {
                 if(ctx.formParam("recordar").equals("checked"))
                 {
+
+                    StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+                    String encryptedPassword = passwordEncryptor.encryptPassword(ctx.formParam("password"));
+
+
                     Cookie cookie_usuario = new Cookie("usuario_recordado",ctx.formParam("nombreUsuario"));
-                    Cookie cookie_password = new Cookie("password_recordado",ctx.formParam("password"));
+                    Cookie cookie_password = new Cookie("password_recordado",encryptedPassword);
                     cookie_usuario.setMaxAge(604800); //una semana
                     cookie_password.setMaxAge(604800);
 
@@ -135,17 +141,40 @@ public class TiendaControlador {
             ctx.res.addCookie(cookie_usuario);
             ctx.res.addCookie(cookie_password);
 
-            ctx.sessionAttribute("usuario", null);
+            if(ctx.req.getSession() != null)
+            {
+                ctx.sessionAttribute("usuario", null);
+            }
+
             ctx.redirect("/iniciarSesion");
         });
 
 
         app.get("/listaProductos", ctx ->
-
         {
             //Cargando productos para cualquier persona que entre al sistema, con o sin autenticar.
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos", ProductoService.getInstancia().getListaProductos());
+
+            if(ctx.cookie("usuario_recordado") != null && ctx.cookie("password_recordado") != null)
+            {
+                ctx.sessionAttribute("usuario", ctx.cookie("usuario_recordado"));
+                user_carrito = "carrito_"+ctx.sessionAttribute("usuario");
+
+                if (ctx.sessionAttribute(user_carrito) == null) {
+
+                    CarroCompra carroCompra = new CarroCompra();
+                    ctx.sessionAttribute(user_carrito, carroCompra);
+                    TiendaService.getInstancia().setCarroCompra(carroCompra);
+
+                }
+                else {
+                    CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
+                    TiendaService.getInstancia().setCarroCompra(carroCompra);
+
+                }
+            }
+
 
             if (ctx.sessionAttribute("usuario") == null) {
                 modelo.put("cantidadCarrito", 0);
@@ -398,7 +427,6 @@ public class TiendaControlador {
         });
 
         app.get("/agregarProducto", ctx ->
-
         {
 
             if (ctx.sessionAttribute("usuario") == null) {
@@ -419,7 +447,6 @@ public class TiendaControlador {
         });
 
         app.post("/agregarProducto/crear", ctx ->
-
         {
 
             if (ctx.sessionAttribute("usuario") == null) {
@@ -451,7 +478,6 @@ public class TiendaControlador {
                 ctx.result("Sin autorizacion");
             } else {
 
-                //Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Producto producto = new Producto(
                         ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getNombre(),
                         ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getPrecio()
@@ -481,12 +507,7 @@ public class TiendaControlador {
             } else {
                 ProductoService.getInstancia().editarProducto(Long.parseLong(ctx.pathParam("idProducto")),
                         ctx.formParam("nombreProducto"), Double.parseDouble(ctx.formParam("precioProducto")));
-               /* ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto")
-                )).setNombre(ctx.formParam("nombreProducto"));
 
-                ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto")
-                )).setPrecio(Double.parseDouble(ctx.formParam("precioProducto")));
-*/
                 ctx.redirect("/controlProductos");
             }
 

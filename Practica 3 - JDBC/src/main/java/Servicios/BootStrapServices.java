@@ -45,9 +45,9 @@ public class BootStrapServices {
 
         String sql_1 = "CREATE TABLE IF NOT EXISTS PRODUCTOS\n" +
                 "(\n" +
-                "ID INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,\n" +
+                "ID LONG AUTO_INCREMENT PRIMARY KEY NOT NULL,\n" +
                 "  NOMBRE VARCHAR(100) NOT NULL,\n" +
-                "  PRECIO VARCHAR(100) NOT NULL\n" +
+                "  PRECIO DOUBLE NOT NULL\n" +
                 ");";
 
 
@@ -68,6 +68,9 @@ public class BootStrapServices {
                 " CANTIDAD INTEGER NOT NULL,\n" +
                 " FECHA_COMPRA DATE NOT NULL,\n" +
                 " ID_VENTA LONG NOT NULL,\n" +
+                "CONSTRAINT fk_venta_usuario\n" +
+                "FOREIGN KEY(USUARIO) REFERENCES USUARIOS(USUARIO)\n" +
+                "ON DELETE CASCADE," +
                 "CONSTRAINT fk_venta_producto\n" +
                 "FOREIGN KEY(ID_PRODUCTO) REFERENCES PRODUCTOS(ID)\n" +
                 "ON DELETE CASCADE" +
@@ -76,16 +79,17 @@ public class BootStrapServices {
 
         String sql_admin = "INSERT INTO USUARIOS(USUARIO,NOMBRE,PASSWORD) VALUES('admin','Administrador','admin');";
 
+        //Creando la conexion
         Connection con = DataBaseServices.getInstancia().getConexion();
         Statement statement = con.createStatement();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select USUARIO from USUARIOS where USUARIO = 'admin'"); //se toma el ultimo ID que haya registrado
 
+        //Ejecutando los queries
         if(!rs.next())
         {
             statement.execute(sql_admin);
         }
-
 
         statement.execute(sql_1);
         statement.execute(sql_2);

@@ -57,7 +57,7 @@
 
     <!--Creacion de nuevo usuario -->
     <div th:if="${usuarioActual == 'admin'}" class="row justify-content-center">
-        <form style="width: 74%;" class="border border-secondary rounded" th:action="@{/listaUsuarios/crear}" onsubmit="return validar()" method="post">
+        <form style="width: 74%; padding:8px;" class="border border-secondary rounded" th:action="@{/listaUsuarios/crear}" onsubmit="return validar()" method="post">
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div style="border-bottom: gray" class="col-12">
