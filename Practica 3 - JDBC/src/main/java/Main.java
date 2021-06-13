@@ -25,8 +25,6 @@ public class Main {
             config.addStaticFiles("/bootstrap-5.0.1-dist"); //desde la carpeta de resources
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
-
-
         });
 
         app.start(7000);

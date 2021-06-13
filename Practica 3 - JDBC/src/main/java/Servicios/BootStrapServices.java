@@ -77,24 +77,37 @@ public class BootStrapServices {
                 ");";
 
 
+        //Query para guardar el admin por defecto
         String sql_admin = "INSERT INTO USUARIOS(USUARIO,NOMBRE,PASSWORD) VALUES('admin','Administrador','admin');";
 
         //Creando la conexion
         Connection con = DataBaseServices.getInstancia().getConexion();
         Statement statement = con.createStatement();
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select USUARIO from USUARIOS where USUARIO = 'admin'"); //se toma el ultimo ID que haya registrado
+
+
 
         //Ejecutando los queries
+
+        //Creacion de la tabla productos
+        statement.execute(sql_1);
+
+
+        //Creacion de la tabla usuarios
+        statement.execute(sql_2);
+
+
+        ResultSet rs = stmt.executeQuery("select USUARIO from USUARIOS where USUARIO = 'admin'");
+
         if(!rs.next())
         {
             statement.execute(sql_admin);
         }
 
-        statement.execute(sql_1);
-        statement.execute(sql_2);
+        //Creacion de la tabla ventas
         statement.execute(sql_3);
         statement.close();
+
         con.close();
     }
 

@@ -41,6 +41,9 @@
                     <li th:if="${usuario != null}" class="nav-item active">
                         <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
                     </li>
+                    <li th:if="${usuario == null}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/iniciarSesion}">Iniciar Sesion</a></b>
+                    </li>
                 </ul>
 
             </div>
