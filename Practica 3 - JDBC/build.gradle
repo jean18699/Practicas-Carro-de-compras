@@ -2,7 +2,7 @@ plugins {
     id 'application'
 }
 
-mainClassName = "Main"
+mainClassName = "org.pucmm.jean.Main"
 
 group 'org.pucmm.jean'
 version '1.0-SNAPSHOT'
@@ -37,5 +37,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jasypt/jasypt
     implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.2'
 
+    //ORM - Hibernate.
+    compile 'org.hibernate:hibernate-core:5.4.17.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.4.17.Final'
+
+    compile 'org.postgresql:postgresql:42.2.1'
 
 }
