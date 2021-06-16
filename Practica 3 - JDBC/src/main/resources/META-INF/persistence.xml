@@ -8,7 +8,8 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> <!-- mi proveedor de persistencia es hibernate -->
         <class>org.pucmm.jean.Modelo.Usuario</class> <!--Clases a ser manejadas por persistencia -->
         <class>org.pucmm.jean.Modelo.Producto</class>
-        <class>org.pucmm.jean.Modelo.Venta</class>
+        <class>org.pucmm.jean.Modelo.Producto_Comprado</class>
+        <class>org.pucmm.jean.Modelo.VentasProductos</class>
         <properties> <!--Propiedades para la conexion a la BD -->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/tienda-ORM-2017-0167" /> <!--URL de la base de datos -->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" /> <!--Driver H2 -->

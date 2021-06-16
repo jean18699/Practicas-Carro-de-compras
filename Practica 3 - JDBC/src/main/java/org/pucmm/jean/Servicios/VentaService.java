@@ -1,6 +1,7 @@
 package org.pucmm.jean.Servicios;
 
-import org.pucmm.jean.Modelo.Venta;
+import org.pucmm.jean.Modelo.Producto_Comprado;
+import org.pucmm.jean.Modelo.VentasProductos;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,17 +28,26 @@ public class VentaService {
         return instancia;
     }
 
-    public List<Venta> getVentas()
+    public List<VentasProductos> getVentas()
     {
-        List<Venta> ventas = em.createQuery("select v from Venta v", Venta.class).getResultList();
+        List<VentasProductos> ventas = em.createQuery("select v from VentasProductos v", VentasProductos.class).getResultList();
         return ventas;
     }
 
-    public void realizarVenta(Venta venta)
+    public void realizarVenta(VentasProductos venta)
     {
-
+       for(int i = 0; i < venta.getListaProductos().size();i++)
+        {
+           Producto_Comprado producto_comprado = venta.getListaProductos().get(i);
+            em.getTransaction().begin();
+            em.persist(producto_comprado);
+            em.getTransaction().commit();
+        }
 
        // Query query =  em.createQuery("Insert into VentasProductos_Productos()")
+
+
+
         em.getTransaction().begin();
         em.persist(venta);
         em.getTransaction().commit();

@@ -14,6 +14,9 @@ public class Producto implements Serializable {
     private String nombre;
     private double precio;
 
+    @Transient
+    private int cantidad;
+
 
 
     public Producto(String nombre, double precio)
@@ -41,12 +44,12 @@ public class Producto implements Serializable {
         return precio;
     }
 
-    /*public double getPrecioTotal() {
-        return precio * cantidad;
-    }*/
-
     public void setId(long id) {
         this.id = id;
+    }
+
+    public double getPrecioTotal() {
+        return precio * cantidad;
     }
 
     public void setNombre(String nombre) {
@@ -57,7 +60,7 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
 
-   /* public int getCantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
@@ -67,7 +70,7 @@ public class Producto implements Serializable {
 
     public void addCantidad(int cantidad) {
         this.cantidad += cantidad;
-    }*/
+    }
 
 
 }

@@ -1,9 +1,6 @@
 package org.pucmm.jean.Controladores;
 
-import org.pucmm.jean.Modelo.CarroCompra;
-import org.pucmm.jean.Modelo.Producto;
-import org.pucmm.jean.Modelo.Usuario;
-import org.pucmm.jean.Modelo.Venta;
+import org.pucmm.jean.Modelo.*;
 import org.pucmm.jean.Servicios.ProductoService;
 import org.pucmm.jean.Servicios.TiendaService;
 import org.pucmm.jean.Servicios.UsuarioService;
@@ -14,9 +11,7 @@ import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.servlet.http.Cookie;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TiendaControlador {
 
@@ -285,9 +280,9 @@ public class TiendaControlador {
                 );
                 producto.setId(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getId());
 
-            /*    producto.setCantidad(
+                producto.setCantidad(
                         Integer.parseInt(ctx.formParam("cantidad"))
-                );*/
+                );
 
                 TiendaService.getInstancia().addProductoCarrito(producto);
                 ctx.sessionAttribute(user_carrito, TiendaService.getInstancia().getCarrito());
@@ -322,7 +317,7 @@ public class TiendaControlador {
                 ctx.result("Usuario no logeado");
             } else {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
-               // TiendaService.getInstancia().limpiarCarrito();
+                TiendaService.getInstancia().limpiarCarrito();
                 ctx.sessionAttribute(user_carrito, TiendaService.getInstancia().getCarrito());
                 ctx.redirect("/carrito");
             }
@@ -338,10 +333,23 @@ public class TiendaControlador {
 
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 java.sql.Date fecha = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                List<Producto_Comprado> compras = new ArrayList<>();
 
-                Venta nuevaVenta = new Venta(
+                //Voy a tomar las compras del carrito y entrarlas en una clase nueva para las compras, separadas de los productos para la venta
+                for(int i = 0; i < TiendaService.getInstancia().getCarrito().getListaProductos().size(); i++)
+                {
+                    Producto_Comprado producto = new Producto_Comprado(
+                            TiendaService.getInstancia().getCarrito().getListaProductos().get(i).getNombre(),
+                            TiendaService.getInstancia().getCarrito().getListaProductos().get(i).getPrecio(),
+                            TiendaService.getInstancia().getCarrito().getListaProductos().get(i).getCantidad()
+                    );
+
+                    compras.add(producto);
+                }
+
+                VentasProductos nuevaVenta = new VentasProductos(
                         ctx.formParam("nombreCliente"),
-                        TiendaService.getInstancia().getCarrito().getListaProductos(),
+                        compras,
                         fecha
                 );
 
@@ -366,7 +374,7 @@ public class TiendaControlador {
 
                 int totalCarrito = 0;
                 for (int i = 0; i < carrito.getListaProductos().size(); i++) {
-                    //totalCarrito += carrito.getListaProductos().get(i).getPrecioTotal();
+                    totalCarrito += carrito.getListaProductos().get(i).getPrecioTotal();
                 }
 
 
