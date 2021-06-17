@@ -1,6 +1,8 @@
 package org.pucmm.jean.Servicios;
 
+import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
+import org.pucmm.jean.Modelo.Producto_Comprado;
 
 import javax.persistence.*;
 
@@ -48,8 +50,17 @@ public class ProductoService {
         entityManager.getTransaction().commit();
     }
 
-    public void addNuevoProducto(Producto producto)
+    public void addNuevoProducto(Producto producto, List<Foto> fotos)
     {
+        for(int i = 0; i < fotos.size();i++)
+        {
+            entityManager.getTransaction().begin();
+            entityManager.persist(fotos.get(i));
+            entityManager.getTransaction().commit();
+        }
+
+        producto.setFotos(fotos);
+
         entityManager.getTransaction().begin();
         entityManager.persist(producto);
         entityManager.getTransaction().commit();

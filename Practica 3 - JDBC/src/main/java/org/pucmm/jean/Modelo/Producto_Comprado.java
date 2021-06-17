@@ -14,6 +14,9 @@ public class Producto_Comprado implements Serializable {
     private double precio;
     private int cantidad;
 
+    @Transient
+    private List<Foto> fotos;
+
 
     public Producto_Comprado(String nombre, double precio, int cantidad)
     {
@@ -62,5 +65,13 @@ public class Producto_Comprado implements Serializable {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
     }
 }

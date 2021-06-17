@@ -10,6 +10,7 @@
         <class>org.pucmm.jean.Modelo.Producto</class>
         <class>org.pucmm.jean.Modelo.Producto_Comprado</class>
         <class>org.pucmm.jean.Modelo.VentasProductos</class>
+        <class>org.pucmm.jean.Modelo.Foto</class>
         <properties> <!--Propiedades para la conexion a la BD -->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/tienda-ORM-2017-0167" /> <!--URL de la base de datos -->
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" /> <!--Driver H2 -->

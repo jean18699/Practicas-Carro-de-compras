@@ -1,5 +1,6 @@
 package org.pucmm.jean;
 
+import org.pucmm.jean.Controladores.ImagenControlador;
 import org.pucmm.jean.Controladores.TiendaControlador;
 import org.pucmm.jean.Servicios.BootStrapServices;
 import org.pucmm.jean.Servicios.DataBaseServices;
@@ -34,6 +35,7 @@ public class Main {
         //BootStrapServices.crearTablas();
         //BootStrapServices.stopDb();
         new TiendaControlador(app).aplicarRutas();
+        new ImagenControlador(app).aplicarRutas();
 
     }
 

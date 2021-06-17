@@ -1,10 +1,7 @@
 package org.pucmm.jean.Controladores;
 
 import org.pucmm.jean.Modelo.*;
-import org.pucmm.jean.Servicios.ProductoService;
-import org.pucmm.jean.Servicios.TiendaService;
-import org.pucmm.jean.Servicios.UsuarioService;
-import org.pucmm.jean.Servicios.VentaService;
+import org.pucmm.jean.Servicios.*;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
@@ -165,7 +162,6 @@ public class TiendaControlador {
                 }
             }
 
-
             if (ctx.sessionAttribute("usuario") == null) {
                 modelo.put("cantidadCarrito", 0);
             } else {
@@ -201,6 +197,22 @@ public class TiendaControlador {
             }
         });
 
+
+        app.post("/listaProductos/verProducto/:id",ctx -> {
+
+            Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idVerProducto")));
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("producto", p);
+
+            ctx.render("/templates/Ver_Producto.html",modelo);
+
+
+
+        });
+
+
+
         app.post("/listaUsuarios/crear", ctx ->
 
         {
@@ -225,9 +237,7 @@ public class TiendaControlador {
 
 
         app.post("/listaUsuarios/eliminar", ctx ->
-
         {
-
 
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.redirect("/iniciarSesion");
@@ -391,9 +401,7 @@ public class TiendaControlador {
         });
 
         app.get("/controlProductos", ctx ->
-
         {
-
 
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.redirect("/iniciarSesion");
@@ -402,6 +410,8 @@ public class TiendaControlador {
             } else {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
+                TiendaService.getInstancia().getFotos().clear();
+
                 Map<String, Object> modelo = new HashMap<>();
 
                 modelo.put("usuario", usuario.getUsuario());
@@ -439,8 +449,12 @@ public class TiendaControlador {
             } else {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
+                List<Foto> fotos = TiendaService.getInstancia().getFotos();
+
+
                 Map<String, Object> modelo = new HashMap<>();
 
+                modelo.put("fotos", fotos);
                 modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("productos", ProductoService.getInstancia().getListaProductos());
@@ -463,7 +477,8 @@ public class TiendaControlador {
                         Double.parseDouble(ctx.formParam("precioProducto"))
                 );
 
-                ProductoService.getInstancia().addNuevoProducto(producto);
+                ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
+                TiendaService.getInstancia().getFotos().clear();
                 ctx.redirect("/controlProductos");
             }
 

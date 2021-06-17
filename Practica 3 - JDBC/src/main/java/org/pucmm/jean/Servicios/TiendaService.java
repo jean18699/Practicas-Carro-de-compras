@@ -1,15 +1,20 @@
 package org.pucmm.jean.Servicios;
 
 import org.pucmm.jean.Modelo.CarroCompra;
+import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TiendaService {
 
     public static TiendaService instancia;
     private CarroCompra carrito;
-
+    private List<Foto> fotos;
 
     private TiendaService() {
+        fotos = new ArrayList<>();
     }
 
     public static TiendaService getInstancia(){
@@ -80,6 +85,24 @@ public class TiendaService {
             return true;
         }
         return false;
+    }
+
+
+    public void setCarrito(CarroCompra carrito) {
+        this.carrito = carrito;
+    }
+
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
+    }
+
+    public void addFoto(Foto foto)
+    {
+        fotos.add(foto);
     }
 
 }

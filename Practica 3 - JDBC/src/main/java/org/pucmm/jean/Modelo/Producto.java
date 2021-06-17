@@ -2,6 +2,7 @@ package org.pucmm.jean.Modelo;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 
 @Entity
@@ -17,6 +18,8 @@ public class Producto implements Serializable {
     @Transient
     private int cantidad;
 
+    @OneToMany
+    private List<Foto> fotos;
 
 
     public Producto(String nombre, double precio)
@@ -72,5 +75,11 @@ public class Producto implements Serializable {
         this.cantidad += cantidad;
     }
 
+    public List<Foto> getFotos() {
+        return fotos;
+    }
 
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
+    }
 }
