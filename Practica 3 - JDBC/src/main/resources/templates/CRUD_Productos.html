@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <b><a class="nav-link"  href="/listaProductos">Comprar</a></b>
+                    <b><a class="nav-link"  href="/listaProductos/1">Comprar</a></b>
                 </li>
                 <li class="nav-item active">
                     <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
@@ -31,7 +31,7 @@
                     <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
                 </li>
                 <li th:if="${usuario == 'admin'}" class="nav-item active">
-                    <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
+                    <b><a class="nav-link"  th:href="@{/controlProductos/1}">Administrar Productos</a></b>
                 </li>
                 <li class="nav-item active">
                     <b><a class="nav-link"  th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
@@ -81,6 +81,13 @@
                         <button name="eliminarProducto" th:value="${producto.id}" th:formaction="@{/controlProductos/eliminarProducto}" type="submit" class="btn-sm btn-danger">Eliminar</button>
             </tr>
             </tbody>
+            <tfoot>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center" >
+                    <li th:each="pagina: ${#numbers.sequence(1, totalPaginas)}"  class="page-item"><a class="page-link" th:text="${pagina}" th:href="@{/controlProductos/} + ${pagina}"></a></li>
+                </ul>
+            </nav>
+            </tfoot>
         </table>
     </form>
 

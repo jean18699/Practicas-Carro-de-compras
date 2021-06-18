@@ -24,7 +24,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav justify-content-around mb-2 mb-lg-0 navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <b><a class="nav-link"  th:href="@{/listaProductos}">Comprar</a></b>
+                        <b><a class="nav-link"  th:href="@{/listaProductos/1}">Comprar</a></b>
                     </li>
                     <li class="nav-item active">
                         <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
@@ -33,7 +33,7 @@
                         <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
                     </li>
                     <li th:if="${usuario == 'admin'}" class="nav-item active">
-                        <b><a class="nav-link"  th:href="@{/controlProductos}">Administrar Productos</a></b>
+                        <b><a class="nav-link"  th:href="@{/controlProductos/1}">Administrar Productos</a></b>
                     </li>
                     <li class="nav-item active">
                         <b><a class="nav-link"  th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
@@ -61,7 +61,7 @@
     <div class="row">&nbsp;</div>
 
 
-    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+    <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover  table-responsive table-bordered">
         <thead class="thead-light">
             <tr align="center">
                 <th scope="col">Producto</th>
@@ -87,6 +87,14 @@
                 </form>
             </tr>
         </tbody>
+        <tfoot>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center" >
+                    <li th:each="pagina: ${#numbers.sequence(1, totalPaginas)}"  class="page-item"><a class="page-link" th:text="${pagina}" th:href="@{/listaProductos/} + ${pagina}"></a></li>
+                </ul>
+            </nav>
+        </tfoot>
+
     </table>
 
 

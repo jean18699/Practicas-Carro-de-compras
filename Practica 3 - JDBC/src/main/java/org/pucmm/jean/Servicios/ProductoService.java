@@ -1,5 +1,7 @@
 package org.pucmm.jean.Servicios;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.pucmm.jean.Modelo.Comentario;
 import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
@@ -102,11 +104,29 @@ public class ProductoService {
 
     }
 
-    public List<Producto> getListaProductos()
+    public List<Producto> getListaProductos(int pagina)
     {
-        List<Producto> productos = entityManager.createQuery("select p from Producto p",Producto.class).getResultList();
+        //Implementaremos paginacion
+        int paginaSize = 10;
 
-        return productos;
+        Query query = entityManager.createQuery("Select p from Producto  p")
+                .setFirstResult(calcularOffset(pagina))
+                .setMaxResults(paginaSize);
+
+        return query.getResultList();
+
+    }
+
+    public int getTotalPaginas()
+    {
+        Query query = entityManager.createQuery("Select Count(*) from Producto");
+
+        return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+    }
+
+    private int calcularOffset(int pagina)
+    {
+        return ((10*pagina)-10);
     }
 
 

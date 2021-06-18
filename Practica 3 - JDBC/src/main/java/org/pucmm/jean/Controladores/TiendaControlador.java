@@ -60,7 +60,7 @@ public class TiendaControlador {
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.render("/templates/Login.html");
             } else {
-                ctx.redirect("/listaProductos");
+                ctx.redirect("/listaProductos/1");
             }
 
         });
@@ -137,11 +137,12 @@ public class TiendaControlador {
         });
 
 
-        app.get("/listaProductos", ctx ->
+        app.get("/listaProductos/:pagina", ctx ->
         {
             //Cargando productos para cualquier persona que entre al sistema, con o sin autenticar.
             Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos", ProductoService.getInstancia().getListaProductos());
+            modelo.put("totalPaginas", ProductoService.getInstancia().getTotalPaginas());
+            modelo.put("productos", ProductoService.getInstancia().getListaProductos(Integer.parseInt(ctx.pathParam("pagina"))));
 
             if(ctx.cookie("usuario_recordado") != null && ctx.cookie("password_recordado") != null)
             {
@@ -453,7 +454,7 @@ public class TiendaControlador {
 
         });
 
-        app.get("/controlProductos", ctx ->
+        app.get("/controlProductos/:pagina", ctx ->
         {
 
             if (ctx.sessionAttribute("usuario") == null) {
@@ -461,6 +462,7 @@ public class TiendaControlador {
             } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
                 ctx.result("Sin autorizacion");
             } else {
+
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
                 TiendaService.getInstancia().getFotos().clear();
@@ -469,7 +471,8 @@ public class TiendaControlador {
 
                 modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
-                modelo.put("productos", ProductoService.getInstancia().getListaProductos());
+                modelo.put("totalPaginas", ProductoService.getInstancia().getTotalPaginas());
+                modelo.put("productos", ProductoService.getInstancia().getListaProductos(Integer.parseInt(ctx.pathParam("pagina"))));
 
                 //enviando al sistema de plantilla.
                 ctx.render("/templates/CRUD_Productos.html", modelo);
@@ -510,7 +513,7 @@ public class TiendaControlador {
                 modelo.put("fotos", fotos);
                 modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
-                modelo.put("productos", ProductoService.getInstancia().getListaProductos());
+               // modelo.put("productos", ProductoService.getInstancia().getListaProductos());
                 ctx.render("/templates/Crear_Producto.html", modelo);
             }
 
@@ -532,7 +535,7 @@ public class TiendaControlador {
 
                 ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
                 TiendaService.getInstancia().getFotos().clear();
-                ctx.redirect("/controlProductos");
+                ctx.redirect("/controlProductos/1");
             }
 
         });
@@ -579,7 +582,7 @@ public class TiendaControlador {
                 ProductoService.getInstancia().editarProducto(Long.parseLong(ctx.pathParam("idProducto")),
                         ctx.formParam("nombreProducto"), Double.parseDouble(ctx.formParam("precioProducto")));
 
-                ctx.redirect("/controlProductos");
+                ctx.redirect("/controlProductos/1");
             }
 
 
