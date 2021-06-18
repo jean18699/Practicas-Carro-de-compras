@@ -21,6 +21,8 @@ public class Producto implements Serializable {
     @OneToMany
     private List<Foto> fotos;
 
+   @OneToMany(orphanRemoval = true)
+   private List<Comentario> comentarios;
 
     public Producto(String nombre, double precio)
     {
@@ -28,8 +30,6 @@ public class Producto implements Serializable {
         this.precio = precio;
 
     }
-
-
 
     public Producto() {
 
@@ -82,4 +82,16 @@ public class Producto implements Serializable {
     public void setFotos(List<Foto> fotos) {
         this.fotos = fotos;
     }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+
+
+
 }

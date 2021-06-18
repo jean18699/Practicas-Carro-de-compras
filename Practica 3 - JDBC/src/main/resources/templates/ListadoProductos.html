@@ -80,9 +80,10 @@
                 </td>
 
                 <td align="center">
-                    <button name="idVerProducto" th:formaction="@{/listaProductos/verProducto/}+${producto.id}" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Ver Producto</button>
-                    <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Agregar</button>
+                    <button name="idVerProducto" th:formaction="@{/listaProductos/verProducto/}+${producto.id}" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Detalles</button>
+                    <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-success">Agregar al carrito</button>
                 </td>
+
                 </form>
             </tr>
         </tbody>

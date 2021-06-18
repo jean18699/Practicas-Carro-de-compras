@@ -201,17 +201,71 @@ public class TiendaControlador {
         app.post("/listaProductos/verProducto/:id",ctx -> {
 
             Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idVerProducto")));
-
+            CarroCompra carrito = TiendaService.getInstancia().getCarrito();
             Map<String, Object> modelo = new HashMap<>();
+
+            System.out.println(p.getFotos().size());
+
+            if(ctx.sessionAttribute("usuario") != null)
+            {
+                modelo.put("usuario", ctx.sessionAttribute("usuario"));
+            }
+
+            modelo.put("cantidadCarrito", carrito.getListaProductos().size());
             modelo.put("producto", p);
 
             ctx.render("/templates/Ver_Producto.html",modelo);
 
-
-
         });
 
+        app.post("/listaProductos/verProducto/enviarComentario/:id",ctx -> {
 
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/iniciarSesion");
+            } else {
+
+                Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                Comentario comentario = new Comentario(
+                        usuario,
+                        ctx.formParam("comentario"));
+
+                if(comentario != null)
+                {
+                    ProductoService.getInstancia().enviarComentario(
+                            ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
+                }
+
+                Map<String, Object> modelo = new HashMap<>();
+
+
+                modelo.put("usuario", ctx.sessionAttribute("usuario"));
+                Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id")));
+                modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
+                modelo.put("producto", p);
+
+                ctx.render("/templates/Ver_Producto.html",modelo);
+            }
+        });
+
+        app.post("/listaProductos/verProducto/eliminarComentario/:id",ctx -> {
+
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/iniciarSesion");
+            } else {
+
+                ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")), Long.parseLong(ctx.formParam("idComentario")));
+                Map<String, Object> modelo = new HashMap<>();
+                if(ctx.sessionAttribute("usuario") != null)
+                {
+                    modelo.put("usuario", ctx.sessionAttribute("usuario"));
+                }
+                Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id")));
+                modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
+                modelo.put("producto", p);
+
+                ctx.render("/templates/Ver_Producto.html",modelo);
+            }
+        });
 
         app.post("/listaUsuarios/crear", ctx ->
 
@@ -326,7 +380,7 @@ public class TiendaControlador {
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.result("Usuario no logeado");
             } else {
-                Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+
                 TiendaService.getInstancia().limpiarCarrito();
                 ctx.sessionAttribute(user_carrito, TiendaService.getInstancia().getCarrito());
                 ctx.redirect("/carrito");
@@ -374,7 +428,6 @@ public class TiendaControlador {
         app.get("/carrito", ctx ->
 
         {
-
 
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.redirect("/iniciarSesion");

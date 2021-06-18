@@ -1,5 +1,6 @@
 package org.pucmm.jean.Servicios;
 
+import org.pucmm.jean.Modelo.Comentario;
 import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
 import org.pucmm.jean.Modelo.Producto_Comprado;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 
 public class ProductoService {
 
@@ -27,6 +30,7 @@ public class ProductoService {
     public Producto getProductoById(long id)
     {
         Producto producto = entityManager.find(Producto.class,id);
+        entityManager.refresh(producto);
         return producto;
     }
 
@@ -67,6 +71,36 @@ public class ProductoService {
 
     }
 
+    public void enviarComentario(Producto producto, Comentario comentario){
+
+        //Producto producto = entityManager.find(Producto.class,idProducto);
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(comentario);
+        entityManager.getTransaction().commit();
+
+        producto.getComentarios().add(comentario);
+
+        entityManager.getTransaction().begin();
+        entityManager.merge(producto);
+        entityManager.getTransaction().commit();
+    }
+
+    public void eliminarComentario(long idProducto, long idComentario){
+
+        Comentario com = entityManager.find(Comentario.class,idComentario);
+        Producto producto = entityManager.find(Producto.class,idProducto);
+        producto.getComentarios().remove(com);
+
+        entityManager.getTransaction().begin();
+        entityManager.remove(com);
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        entityManager.merge(producto);
+        entityManager.getTransaction().commit();
+
+    }
 
     public List<Producto> getListaProductos()
     {
