@@ -26,18 +26,17 @@ public class FotoServices {
         return instancia;
     }
 
-    public void crearFoto(Foto foto)
-    {
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(foto);
-        entityManager.getTransaction().commit();
-
-    }
 
     public List<Foto> getFotos()
     {
         return entityManager.createQuery("Select f from Foto f",Foto.class).getResultList();
+    }
+
+    public Foto getFotoById(long id)
+    {
+        Foto foto = entityManager.find(Foto.class,id);
+        entityManager.refresh(foto);
+        return foto;
     }
 
 }

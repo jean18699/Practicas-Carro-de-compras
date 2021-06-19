@@ -78,6 +78,7 @@
                         <div th:each="foto,iterstat : ${producto.fotos}">
                             <td class="w-25"  th:if="${iterstat.index} == 0"><img width="100%" height="100" th:src="@{'data:'+${foto.getMimeType()}+';base64,'+${foto.getFotoBase64()}}"></td>
                         </div>
+
                         <td th:text="${producto.nombre}">Pasola</td>
                         <td th:text="${producto.precio}">1000</td>
                         <td>

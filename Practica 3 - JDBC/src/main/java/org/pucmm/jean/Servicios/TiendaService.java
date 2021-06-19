@@ -12,6 +12,7 @@ public class TiendaService {
     public static TiendaService instancia;
     private CarroCompra carrito;
     private List<Foto> fotos;
+    private Foto ultimaFoto;
 
     private TiendaService() {
         fotos = new ArrayList<>();
@@ -126,4 +127,11 @@ public class TiendaService {
         return null;
     }
 
+    public Foto getUltimaFoto() {
+        return ultimaFoto;
+    }
+
+    public void setUltimaFoto(Foto ultimaFoto) {
+        this.ultimaFoto = ultimaFoto;
+    }
 }

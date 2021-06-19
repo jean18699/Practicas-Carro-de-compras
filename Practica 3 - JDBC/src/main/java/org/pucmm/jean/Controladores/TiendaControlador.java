@@ -539,7 +539,8 @@ public class TiendaControlador {
 
                 if(TiendaService.getInstancia().getFotos().size() == 0)
                 {
-                    ctx.result("El producto debe de tener al menos 1 imagen.\n Consejo: A nadie le gusta comprar aquello que ni puede ver!");
+                    ctx.result("El producto debe de tener al menos 1 imagen cuando es creado. A nadie le gusta comprar aquello que ni puede ver!\n Si aun asi deseas tener este producto sin una imagen, puedes hacerlo " +
+                            "editando el producto una vez registrado");
                 }
                 else
                 {
@@ -613,11 +614,6 @@ public class TiendaControlador {
                 ctx.result("Sin autorizacion");
             } else {
 
-                /*for(int i = 0; i < TiendaService.getInstancia().getFotos().size();i++)
-                {
-
-                }*/
-
                 ProductoService.getInstancia().editarProducto(Long.parseLong(ctx.pathParam("idProducto")),
                         ctx.formParam("nombreProducto"), Double.parseDouble(ctx.formParam("precioProducto")));
 
@@ -682,9 +678,26 @@ public class TiendaControlador {
                 ctx.result("Sin autorizacion");
             } else {
 
-                //Producto producto = ProductoService.getInstancia().getProductoById(Long.parseLong());
-                ProductoService.getInstancia().eliminarFoto(Long.parseLong(ctx.pathParam("idProducto")),Long.parseLong("idProducto"));
+                for(int i = 0; i < TiendaService.getInstancia().getFotos().size();i++){
+                    if(TiendaService.getInstancia().getFotos().get(i).getId() == Long.parseLong(ctx.formParam("fotoEliminar")))
+                    {
 
+                        if(TiendaService.getInstancia().getFotos().size() > 1)
+                        {
+                            TiendaService.getInstancia().getFotos().remove(i);
+                            ProductoService.getInstancia().eliminarFoto(Long.parseLong(ctx.pathParam("idProducto")),Long.parseLong(ctx.formParam("fotoEliminar")));
+                        }
+                    }
+                }
+
+                CarroCompra carrito = TiendaService.getInstancia().getCarrito();
+                Map<String, Object> modelo = new HashMap<>();
+
+
+                modelo.put("fotos",TiendaService.getInstancia().getFotos());
+                modelo.put("cantidadCarrito", carrito.getListaProductos().size());
+                modelo.put("producto", ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto"))));
+                ctx.render("/templates/Editar_Producto.html", modelo);
             }
 
         });

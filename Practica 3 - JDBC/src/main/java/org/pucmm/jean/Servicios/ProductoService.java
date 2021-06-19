@@ -155,14 +155,20 @@ public class ProductoService {
                 .setMaxResults(paginaSize);
 
         return query.getResultList();
-
     }
 
     public int getTotalPaginas()
     {
         Query query = entityManager.createQuery("Select Count(*) from Producto");
 
-        return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+        if((int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10) == 0)
+        {
+            return 1;
+        }else
+        {
+            return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+        }
+
     }
 
     private int calcularOffset(int pagina)
