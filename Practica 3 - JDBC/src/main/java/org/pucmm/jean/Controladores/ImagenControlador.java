@@ -56,7 +56,6 @@ public class ImagenControlador {
                             String encodedString = Base64.getEncoder().encodeToString(bytes);
                             Foto foto = new Foto(uploadedFile.getFilename(),uploadedFile.getContentType(),encodedString);
                             TiendaService.getInstancia().addFoto(foto);
-                            //FotoServices.getInstancia().crearFoto(foto);
 
                         } catch (IOException e) {
                             e.printStackTrace();

@@ -8,6 +8,8 @@ import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.servlet.http.Cookie;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class TiendaControlador {
@@ -137,6 +139,14 @@ public class TiendaControlador {
         });
 
 
+        app.get("/listaProductos", ctx -> {
+            ctx.redirect("/listaProductos/1");
+        });
+
+        app.get("/controlProductos", ctx -> {
+            ctx.redirect("/controlProductos/1");
+        });
+
         app.get("/listaProductos/:pagina", ctx ->
         {
             //Cargando productos para cualquier persona que entre al sistema, con o sin autenticar.
@@ -263,8 +273,8 @@ public class TiendaControlador {
                 Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id")));
                 modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
                 modelo.put("producto", p);
-
-                ctx.render("/templates/Ver_Producto.html",modelo);
+              
+                 ctx.render("/templates/Ver_Producto.html",modelo);
             }
         });
 
@@ -481,16 +491,14 @@ public class TiendaControlador {
         });
 
         app.post("/controlProductos/eliminarProducto", ctx ->
-
         {
-
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.redirect("/iniciarSesion");
             } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
                 ctx.result("Sin autorizacion");
             } else {
                 ProductoService.getInstancia().deleteProducto(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("eliminarProducto"))));
-                ctx.redirect("/controlProductos");
+                ctx.redirect("/controlProductos/1");
             }
 
         });
@@ -528,21 +536,46 @@ public class TiendaControlador {
             } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
                 ctx.result("Sin autorizacion");
             } else {
-                Producto producto = new Producto(
-                        ctx.formParam("nombreProducto"),
-                        Double.parseDouble(ctx.formParam("precioProducto"))
+
+                if(TiendaService.getInstancia().getFotos().size() == 0)
+                {
+                    ctx.result("El producto debe de tener al menos 1 imagen.\n Consejo: A nadie le gusta comprar aquello que ni puede ver!");
+                }
+                else
+                {
+                    Producto producto = new Producto(
+                            ctx.formParam("nombreProducto"),
+                            Double.parseDouble(ctx.formParam("precioProducto"))
+                    );
+
+                    ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
+                    TiendaService.getInstancia().getFotos().clear();
+                    ctx.redirect("/controlProductos/1");
+                }
+            }
+        });
+
+
+        app.post("/agregarProducto/eliminarFoto", ctx ->
+        {
+            System.out.println(ctx.formParam("fotoEliminar"));
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/iniciarSesion");
+
+            } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
+                ctx.result("Sin autorizacion");
+            } else {
+
+                TiendaService.getInstancia().deleteFoto(
+                        TiendaService.getInstancia().getFotoByNombre(ctx.formParam("fotoEliminar"))
                 );
 
-                ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
-                TiendaService.getInstancia().getFotos().clear();
-                ctx.redirect("/controlProductos/1");
+                ctx.redirect("/agregarProducto");
             }
 
         });
 
-
         app.post("/editarProducto", ctx ->
-
         {
 
             if (ctx.sessionAttribute("usuario") == null) {
@@ -552,33 +585,39 @@ public class TiendaControlador {
                 ctx.result("Sin autorizacion");
             } else {
 
-                Producto producto = new Producto(
-                        ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getNombre(),
-                        ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getPrecio()
-                );
+                Producto producto = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto")));
 
-                producto.setId(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto"))).getId());
+                for(int i = 0; i < producto.getFotos().size();i++)
+                {
+                    TiendaService.getInstancia().getFotos().add(producto.getFotos().get(i));
+                }
+
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
 
                 Map<String, Object> modelo = new HashMap<>();
 
+
+                modelo.put("fotos",TiendaService.getInstancia().getFotos());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("producto", producto);
                 ctx.render("/templates/Editar_Producto.html", modelo);
             }
         });
 
-
         app.post("/editarProducto/:idProducto", ctx ->
-
         {
-
             if (ctx.sessionAttribute("usuario") == null) {
                 ctx.redirect("/iniciarSesion");
 
             } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
                 ctx.result("Sin autorizacion");
             } else {
+
+                /*for(int i = 0; i < TiendaService.getInstancia().getFotos().size();i++)
+                {
+
+                }*/
+
                 ProductoService.getInstancia().editarProducto(Long.parseLong(ctx.pathParam("idProducto")),
                         ctx.formParam("nombreProducto"), Double.parseDouble(ctx.formParam("precioProducto")));
 
@@ -588,6 +627,67 @@ public class TiendaControlador {
 
         });
 
+        app.post("editarProducto/procesarFoto/:idProducto",ctx -> {
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/iniciarSesion");
+
+            } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
+                ctx.result("Sin autorizacion");
+            } else {
+                ctx.uploadedFiles("foto").forEach(uploadedFile -> {
+                    try{
+
+                        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+                        int nRead;
+                        byte[] data = new byte[16384];
+
+                        while ((nRead = uploadedFile.getContent().read(data, 0, data.length)) != -1) {
+                            buffer.write(data, 0, nRead);
+                        }
+
+                        byte[] bytes = buffer.toByteArray();
+
+                        String encodedString = Base64.getEncoder().encodeToString(bytes);
+                        Foto foto = new Foto(uploadedFile.getFilename(),uploadedFile.getContentType(),encodedString);
+                        TiendaService.getInstancia().addFoto(foto);
+                        ProductoService.getInstancia().agregarFoto(Long.parseLong(ctx.pathParam("idProducto")),foto);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                CarroCompra carrito = TiendaService.getInstancia().getCarrito();
+
+                Map<String, Object> modelo = new HashMap<>();
+
+
+                modelo.put("fotos",TiendaService.getInstancia().getFotos());
+                modelo.put("cantidadCarrito", carrito.getListaProductos().size());
+                modelo.put("producto", ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto"))));
+                ctx.render("/templates/Editar_Producto.html", modelo);
+
+            }
+
+        });
+
+
+        app.post("/editarProducto/eliminarFoto/:idProducto", ctx ->
+        {
+            if (ctx.sessionAttribute("usuario") == null) {
+                ctx.redirect("/iniciarSesion");
+
+            } else if (!ctx.sessionAttribute("usuario").toString().equalsIgnoreCase("admin")) {
+                ctx.result("Sin autorizacion");
+            } else {
+
+                //Producto producto = ProductoService.getInstancia().getProductoById(Long.parseLong());
+                ProductoService.getInstancia().eliminarFoto(Long.parseLong(ctx.pathParam("idProducto")),Long.parseLong("idProducto"));
+
+            }
+
+        });
     }
 
 }

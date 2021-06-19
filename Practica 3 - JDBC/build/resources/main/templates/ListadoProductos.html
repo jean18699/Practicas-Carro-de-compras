@@ -64,6 +64,7 @@
     <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover  table-responsive table-bordered">
         <thead class="thead-light">
             <tr align="center">
+                <th scope="col"></th>
                 <th scope="col">Producto</th>
                 <th scope="col">Precio(RD$)</th>
                 <th scope="col">Cantidad</th>
@@ -72,19 +73,24 @@
         </thead>
         <tbody  class="table-hover">
             <tr align="center" th:each="producto : ${productos}">
-                <form th:action="@{/carrito/agregar}" method="post" th:object="${producto}">
-                <td th:text="${producto.nombre}">Pasola</td>
-                <td th:text="${producto.precio}">1000</td>
-                <td>
-                    <input name="cantidad" value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
-                </td>
 
-                <td align="center">
-                    <button name="idVerProducto" th:formaction="@{/listaProductos/verProducto/}+${producto.id}" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Detalles</button>
-                    <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-success">Agregar al carrito</button>
-                </td>
+                    <form th:action="@{/carrito/agregar}" method="post" th:object="${producto}">
+                        <div th:each="foto,iterstat : ${producto.fotos}">
+                            <td class="w-25"  th:if="${iterstat.index} == 0"><img width="100%" height="100" th:src="@{'data:'+${foto.getMimeType()}+';base64,'+${foto.getFotoBase64()}}"></td>
+                        </div>
+                        <td th:text="${producto.nombre}">Pasola</td>
+                        <td th:text="${producto.precio}">1000</td>
+                        <td>
+                            <input name="cantidad" value="1" class="input-group-sm" type="number" min="1" placeholder="1"/>
+                        </td>
 
-                </form>
+                        <td align="center">
+                            <button name="idVerProducto" th:formaction="@{/listaProductos/verProducto/}+${producto.id}" th:value="${producto.id}" type="submit" class="btn-sm btn-primary">Detalles</button>
+                            <button name="idProducto" th:value="${producto.id}" type="submit" class="btn-sm btn-success">Agregar al carrito</button>
+                        </td>
+
+                    </form>
+
             </tr>
         </tbody>
         <tfoot>

@@ -46,6 +46,8 @@ public class ProductoService {
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
 
+        entityManager.refresh(producto);
+
     }
 
 
@@ -71,11 +73,27 @@ public class ProductoService {
         entityManager.persist(producto);
         entityManager.getTransaction().commit();
 
+        entityManager.refresh(producto);
+    }
+
+    public void agregarFoto(long idProducto, Foto foto)
+    {
+        Producto producto = entityManager.find(Producto.class,idProducto);
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(foto);
+        entityManager.getTransaction().commit();
+
+        producto.getFotos().add(foto);
+
+        entityManager.getTransaction().begin();
+        entityManager.merge(producto);
+        entityManager.getTransaction().commit();
+
+        entityManager.refresh(producto);
     }
 
     public void enviarComentario(Producto producto, Comentario comentario){
-
-        //Producto producto = entityManager.find(Producto.class,idProducto);
 
         entityManager.getTransaction().begin();
         entityManager.persist(comentario);
@@ -86,6 +104,8 @@ public class ProductoService {
         entityManager.getTransaction().begin();
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
+
+        entityManager.refresh(producto);
     }
 
     public void eliminarComentario(long idProducto, long idComentario){
@@ -102,7 +122,28 @@ public class ProductoService {
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
 
+        entityManager.refresh(producto);
+
     }
+
+    public void eliminarFoto(long idProducto, long idFoto){
+
+        Foto foto = entityManager.find(Foto.class, idFoto);
+        Producto producto = entityManager.find(Producto.class,idProducto);
+        producto.getFotos().remove(foto);
+
+        entityManager.getTransaction().begin();
+        entityManager.remove(foto);
+        entityManager.getTransaction().commit();
+
+        entityManager.getTransaction().begin();
+        entityManager.merge(producto);
+        entityManager.getTransaction().commit();
+
+        entityManager.refresh(producto);
+
+    }
+
 
     public List<Producto> getListaProductos(int pagina)
     {

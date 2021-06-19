@@ -67,6 +67,44 @@
             </div>
         </div>
         <hr>
+
+        <div class="row">
+            <div class="container">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Formato</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="foto : ${fotos}">
+                        <td th:text="${foto.nombre}">Nombre Foto</td>
+                        <td th:text="${foto.mimeType}">PNG</td>
+                        <td>
+                            <button form="eliminarFotoForm" th:value="${foto.id}" name="fotoEliminar" class="btn-sm btn-primary " type="submit" >Eliminar</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="foto" class="form-label"><b>Imagenes del producto<b></b></label>
+                <input form="imagenForm" class="form-control form-control-sm" id="foto" name="foto" required multiple type="file" />
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-6">
+                <button form="imagenForm" class="btn btn-primary" type="submit">Subir</button>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+
+
         <div class="row">
             <div class="col-12">
                 <label for="nombreProducto" class="form-label"><b>Nombre</b></label>
@@ -95,9 +133,15 @@
         </div>
         <div class="row">&nbsp;</div>
 
-
     </form>
     </div>
+
+
+    <form id="imagenForm" th:action="@{/editarProducto/procesarFoto/} + ${producto.id}" method="post" enctype="multipart/form-data">
+    </form>
+
+    <form id="eliminarFotoForm" th:action="@{/editarProducto/eliminarFoto/} + ${producto.id}" method="post"></form>
+
 
     <script>
         //Codigo para validar el formulario

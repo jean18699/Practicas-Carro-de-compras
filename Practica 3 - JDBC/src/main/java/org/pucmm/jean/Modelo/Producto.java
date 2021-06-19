@@ -18,7 +18,7 @@ public class Producto implements Serializable {
     @Transient
     private int cantidad;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private List<Foto> fotos;
 
    @OneToMany(orphanRemoval = true)

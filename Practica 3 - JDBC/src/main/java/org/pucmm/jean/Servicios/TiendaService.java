@@ -105,4 +105,25 @@ public class TiendaService {
         fotos.add(foto);
     }
 
+    public void deleteFoto(Foto foto)
+    {
+        for(int i = 0; i < fotos.size();i++)
+        {
+            if(fotos.get(i) == foto){
+                fotos.remove(foto);
+            }
+        }
+    }
+
+    public Foto getFotoByNombre(String nombre)
+    {
+        for(int i = 0; i < fotos.size();i++)
+        {
+            if(fotos.get(i).getNombre().equals(nombre)){
+                return fotos.get(i);
+            }
+        }
+        return null;
+    }
+
 }
