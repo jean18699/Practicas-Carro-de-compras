@@ -36,11 +36,12 @@ public class ProductoService {
         return producto;
     }
 
-    public void editarProducto(long id, String nombre, Double precio){
+    public void editarProducto(long id, String nombre, Double precio, String descripcion){
 
         Producto producto = getProductoById(id);
         producto.setNombre(nombre);
         producto.setPrecio(precio);
+        producto.setDescripcion(descripcion);
 
         entityManager.getTransaction().begin();
         entityManager.merge(producto);

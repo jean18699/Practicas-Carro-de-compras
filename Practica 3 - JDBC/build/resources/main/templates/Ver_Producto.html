@@ -22,7 +22,7 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" style="color:white;"><strong>JG SHOPPING</strong></a>
+        <a th:href="@{/listaProductos/1}" class="navbar-brand" style="color:white;"><strong>JG SHOPPING</strong></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -67,7 +67,7 @@
 <div class="row justify-content-center">
 
     <div class="card" style="width: 75%">
-        <div th:text="${producto.nombre}" align="center" class="card-title"><strong>NombreProducto</strong></div>
+        <div align="center" class="card-title"><h4 th:text="${producto.nombre}">NombreProducto</h4></div>
         <div class="card-body">
             <div class="col-sm-12">
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -104,7 +104,15 @@
             </div>
 
             <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-12">
+                    <label for="nombreProducto" class="form-label"><b>Descripcion</b></label>
+                    <input type="text" th:value="${producto.descripcion}" id="descripcionProducto" class="form-control"
+                           name="descripcionProducto" disabled fullwidth required>
+                </div>
+            </div>
 
+            <div class="row">&nbsp;</div>
             <form th:action="@{/carrito/agregar}" method="post">
                 <div class="row">
                     <div class="col-6">
@@ -145,7 +153,7 @@
                             comentario
                         </td>
 
-                        <td align="center">
+                        <td th:if="${usuario == 'admin'}" align="center">
                             <button name="idComentario" th:value="${comentario.id}" type="submit"
                                     class="btn-sm btn-primary">Eliminar
                             </button>

@@ -17,7 +17,7 @@
     <header>
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" style="color:white;"><strong>JG SHOPPING</strong></a>
+            <a th:href="@{/listaProductos/1}" class="navbar-brand" style="color:white;"><strong>JG SHOPPING</strong></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav ml-auto">
@@ -59,7 +59,7 @@
         <div class="row justify-content-center">
 
             <div style="width: 68%" class="card">
-              <h5 style="margin-left: -12px; margin-right: -12px" th:text="${venta.nombreCliente}  + ' -   ' + ${venta.fechaCompra}"class="card-header">Cliente</h5>
+              <h5 style="margin-left: 0px; margin-right: 0px" th:text="${venta.nombreCliente}  + ' -   ' + ${venta.fechaCompra}"class="card-header">Cliente</h5>
                 <div class="row">&nbsp;</div>
                 <div class="row">&nbsp;</div>
                 <div class="card-body">
@@ -70,6 +70,7 @@
                             <th scope="col">Producto</th>
                             <th scope="col">Precio(RD$)</th>
                             <th scope="col">Cantidad</th>
+                            <th scope="col">Descripcion</th>
                             <th scope="col">Total(RD$)</th>
                         </tr>
                         </thead>
@@ -78,6 +79,7 @@
                             <td th:text="${producto.nombre}">Pasola</td>
                             <td th:text="${producto.getPrecio()}">1000</td>
                             <td th:text="${producto.cantidad}">1</td>
+                            <td id="descProducto"><button class="btn-sm btn-primary" onclick="mostrarDescripcion(this)" th:value="${producto.descripcion}">Mostrar</button> </td>
                             <td th:text="${producto.getPrecioTotal()}">1000</td>
                         </tr>
                         </tbody>
@@ -96,6 +98,13 @@
         <div class="row">&nbsp;</div>
     </div>
 
+    <script>
+        function mostrarDescripcion(elemento)
+        {
+            alert(elemento.value);
+        }
+
+    </script>
 
 
 </body>

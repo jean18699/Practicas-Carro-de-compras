@@ -14,7 +14,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" style="color:white;" ><strong>JG SHOPPING</strong></a>
+            <a th:href="@{/listaProductos/1}" class="navbar-brand" style="color:white;" ><strong>JG SHOPPING</strong></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -113,6 +113,14 @@
             <div class="col-12">
                 <label for="precioProducto" class="form-label"><b>Precio</b></label>
                 <input type="number" id="precioProducto"  class="form-control" name="precioProducto" min="1" fullwidth required>
+            </div>
+        </div>
+
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-12">
+                <label for="descripcionProducto" class="form-label"><b>Descripcion</b></label>
+                <input type="text" id="descripcionProducto"  class="form-control" name="descripcionProducto"  fullwidth required>
             </div>
         </div>
 

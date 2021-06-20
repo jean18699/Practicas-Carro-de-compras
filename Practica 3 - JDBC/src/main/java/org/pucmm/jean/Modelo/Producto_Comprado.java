@@ -13,16 +13,18 @@ public class Producto_Comprado implements Serializable {
     private String nombre;
     private double precio;
     private int cantidad;
+    private String descripcion;
 
     @Transient
     private List<Foto> fotos;
 
 
-    public Producto_Comprado(String nombre, double precio, int cantidad)
+    public Producto_Comprado(String nombre, double precio, int cantidad, String descripcion)
     {
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad = cantidad;
+        this.descripcion = descripcion;
     }
 
     public Producto_Comprado()
@@ -73,5 +75,13 @@ public class Producto_Comprado implements Serializable {
 
     public void setFotos(List<Foto> fotos) {
         this.fotos = fotos;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

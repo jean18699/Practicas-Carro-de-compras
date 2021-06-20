@@ -14,6 +14,7 @@ public class Producto implements Serializable {
     private long id;
     private String nombre;
     private double precio;
+    private String descripcion;
 
     @Transient
     private int cantidad;
@@ -24,11 +25,11 @@ public class Producto implements Serializable {
    @OneToMany(orphanRemoval = true)
    private List<Comentario> comentarios;
 
-    public Producto(String nombre, double precio)
+    public Producto(String nombre, double precio, String descripcion)
     {
         this.nombre = nombre;
         this.precio = precio;
-
+        this.descripcion = descripcion;
     }
 
     public Producto() {
@@ -91,7 +92,11 @@ public class Producto implements Serializable {
         this.comentarios = comentarios;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-
-
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 }
