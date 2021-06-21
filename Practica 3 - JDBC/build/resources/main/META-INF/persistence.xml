@@ -21,7 +21,7 @@
             <property name="hibernate.show_sql" value="false"/>
             <!--Propiedad para indicar como sera la generacion de tablas -->
             <!-- ver la documentación: https://docs.oracle.com/javaee/7/tutorial/persistence-intro005.htm -->
-            <property name="javax.persistence.schema-generation.database.action" value="update"/>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
         </properties>
     </persistence-unit>
 
