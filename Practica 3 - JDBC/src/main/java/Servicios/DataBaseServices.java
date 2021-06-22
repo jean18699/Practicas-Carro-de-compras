@@ -1,5 +1,7 @@
 package Servicios;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,7 +15,9 @@ import java.util.logging.Logger;
 public class DataBaseServices {
 
     private static DataBaseServices instancia;
-    private String URL = "jdbc:h2:tcp://localhost/~/tienda-2017-0167"; //Modo Server...
+    private String URL = "jdbc:h2:tcp://localhost/~/tienda-20170167";
+    String userHomeDir = System.getProperty("user.home");
+    File archivoBaseDeDatos = new File(userHomeDir + "/tienda-20170167.h2.db");
 
     /**
      *Implementando el patron Singleton
@@ -26,7 +30,7 @@ public class DataBaseServices {
      * Retornando la instancia.
      * @return
      */
-    public static DataBaseServices getInstancia(){
+    public static DataBaseServices getInstancia() {
         if(instancia==null){
              instancia = new DataBaseServices();
         }
@@ -37,6 +41,8 @@ public class DataBaseServices {
      * Metodo para el registro de driver de conexión.
      */
     private void registrarDriver() {
+
+
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException ex) {
@@ -47,8 +53,11 @@ public class DataBaseServices {
     public Connection getConexion() {
         Connection con = null;
         try {
+
+            archivoBaseDeDatos.createNewFile(); //Creando el archivo de base de datos si no existe.
+
             con = DriverManager.getConnection(URL, "sa", "");
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             Logger.getLogger(TiendaService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return con;
