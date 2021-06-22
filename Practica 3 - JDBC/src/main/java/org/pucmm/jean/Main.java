@@ -37,6 +37,7 @@ public class Main {
         new TiendaControlador(app).aplicarRutas();
         new ImagenControlador(app).aplicarRutas();
 
+
     }
 
 
