@@ -1,5 +1,7 @@
 package org.pucmm.jean.Servicios;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,8 +15,9 @@ import java.util.logging.Logger;
 public class DataBaseServices {
 
     private static DataBaseServices instancia;
-    private String URL = "jdbc:h2:tcp://localhost/~/tienda-ORM-2017-0167"; //Modo Server...
-
+    private String URL = "jdbc:h2:tcp://localhost/~/tienda-ORM-20170167"; //Modo Server...
+    String userHomeDir = System.getProperty("user.home");
+    File archivoBaseDeDatos = new File(userHomeDir + "/tienda-ORM-20170167.h2.db");
     /**
      *Implementando el patron Singleton
      */
@@ -47,8 +50,9 @@ public class DataBaseServices {
     public Connection getConexion() {
         Connection con = null;
         try {
+            archivoBaseDeDatos.createNewFile();
             con = DriverManager.getConnection(URL, "sa", "");
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             Logger.getLogger(TiendaService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return con;
