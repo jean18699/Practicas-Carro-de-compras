@@ -19,7 +19,7 @@ public class ProductoService {
     public static ProductoService instancia;
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
     EntityManager entityManager = emf.createEntityManager();
-
+    private GestionDb gestionDb = new GestionDb(Producto.class);;
 
     public static ProductoService getInstancia(){
         if(instancia==null){
@@ -31,8 +31,7 @@ public class ProductoService {
 
     public Producto getProductoById(long id)
     {
-        Producto producto = entityManager.find(Producto.class,id);
-        entityManager.refresh(producto);
+        Producto producto = (Producto) gestionDb.find(id);
         return producto;
     }
 
@@ -43,60 +42,69 @@ public class ProductoService {
         producto.setPrecio(precio);
         producto.setDescripcion(descripcion);
 
-        entityManager.getTransaction().begin();
+        gestionDb.editar(producto);
+
+       /* entityManager.getTransaction().begin();
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
 
-        entityManager.refresh(producto);
+        entityManager.refresh(producto);*/
 
     }
 
 
     public void deleteProducto(Producto producto)
     {
-        entityManager.getTransaction().begin();
+        /*entityManager.getTransaction().begin();
         entityManager.remove(producto);
-        entityManager.getTransaction().commit();
+        entityManager.getTransaction().commit();*/
+        gestionDb.eliminar(producto);
     }
 
     public void addNuevoProducto(Producto producto, List<Foto> fotos)
     {
         for(int i = 0; i < fotos.size();i++)
         {
-            entityManager.getTransaction().begin();
+           /* entityManager.getTransaction().begin();
             entityManager.persist(fotos.get(i));
-            entityManager.getTransaction().commit();
+            entityManager.getTransaction().commit();*/
+            gestionDb.crear(fotos.get(i));
         }
 
         producto.setFotos(fotos);
 
-        entityManager.getTransaction().begin();
+        /*entityManager.getTransaction().begin();
         entityManager.persist(producto);
-        entityManager.getTransaction().commit();
+        entityManager.getTransaction().commit();*/
+        gestionDb.crear(producto);
 
-        entityManager.refresh(producto);
+        //entityManager.refresh(producto);
     }
 
     public void agregarFoto(long idProducto, Foto foto)
     {
-        Producto producto = entityManager.find(Producto.class,idProducto);
-
-        entityManager.getTransaction().begin();
+        Producto producto = (Producto) gestionDb.find(idProducto);//entityManager.find(Producto.class,idProducto);
+        gestionDb.crear(foto);
+        /*entityManager.getTransaction().begin();
         entityManager.persist(foto);
-        entityManager.getTransaction().commit();
-
+        entityManager.getTransaction().commit();*/
         producto.getFotos().add(foto);
+        gestionDb.editar(producto);
 
-        entityManager.getTransaction().begin();
+       /* entityManager.getTransaction().begin();
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
 
-        entityManager.refresh(producto);
+        entityManager.refresh(producto);*/
     }
 
     public void enviarComentario(Producto producto, Comentario comentario){
 
-        entityManager.getTransaction().begin();
+        gestionDb.crear(comentario);
+        producto.getComentarios().add(comentario);
+        gestionDb.editar(producto);
+
+        /*entityManager.getTransaction().begin();
         entityManager.persist(comentario);
         entityManager.getTransaction().commit();
 
@@ -106,15 +114,18 @@ public class ProductoService {
         entityManager.merge(producto);
         entityManager.getTransaction().commit();
 
-        entityManager.refresh(producto);
+        entityManager.refresh(producto);*/
     }
 
     public void eliminarComentario(long idProducto, long idComentario){
 
-        Comentario com = entityManager.find(Comentario.class,idComentario);
-        Producto producto = entityManager.find(Producto.class,idProducto);
+        Comentario com = (Comentario) gestionDb.find(idComentario);//entityManager.find(Comentario.class,idComentario);
+        Producto producto = (Producto) gestionDb.find(idProducto);//entityManager.find(Producto.class,idProducto);
         producto.getComentarios().remove(com);
 
+        gestionDb.eliminar(com);
+        gestionDb.editar(producto);
+        /*
         entityManager.getTransaction().begin();
         entityManager.remove(com);
         entityManager.getTransaction().commit();
@@ -124,15 +135,18 @@ public class ProductoService {
         entityManager.getTransaction().commit();
 
         entityManager.refresh(producto);
-
+*/
     }
 
     public void eliminarFoto(long idProducto, long idFoto){
 
-        Foto foto = entityManager.find(Foto.class, idFoto);
-        Producto producto = entityManager.find(Producto.class,idProducto);
+        Foto foto = (Foto) gestionDb.find(idFoto);//entityManager.find(Foto.class, idFoto);
+        Producto producto = (Producto) gestionDb.find(idProducto);//entityManager.find(Producto.class,idProducto);
         producto.getFotos().remove(foto);
 
+        gestionDb.eliminar(foto);
+        gestionDb.editar(producto);
+/*
         entityManager.getTransaction().begin();
         entityManager.remove(foto);
         entityManager.getTransaction().commit();
@@ -142,7 +156,7 @@ public class ProductoService {
         entityManager.getTransaction().commit();
 
         entityManager.refresh(producto);
-
+*/
     }
 
 

@@ -11,20 +11,21 @@ import java.util.List;
 public class UsuarioService {
 
     public static UsuarioService instancia;
-
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager em = emf.createEntityManager();
+    private GestionDb gestionDb;
+    /*EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
+    EntityManager em = emf.createEntityManager();*/
 
     public UsuarioService()
     {
+        gestionDb = new GestionDb(Usuario.class);
+
         //Ingresando el admin
-        Usuario admin = em.find(Usuario.class,"admin");
+        Usuario admin = (Usuario) gestionDb.find("admin");
         if(admin == null)
         {
             Usuario userAdmin = new Usuario("admin","Administrador","admin");
-            em.getTransaction().begin();
-            em.persist(userAdmin);
-            em.getTransaction().commit();
+            gestionDb.crear(userAdmin);
+
         }
 
     }
@@ -38,29 +39,25 @@ public class UsuarioService {
 
     public List<Usuario> getUsuarios() {
 
-        List<Usuario> usuarios = em.createQuery("select u from Usuario u",Usuario.class).getResultList();
+        List<Usuario> usuarios = gestionDb.findAll();
         return usuarios;
     }
 
 
     public void crearUsuario(Usuario usuario)
     {
-       em.getTransaction().begin();
-       em.persist(usuario);
-       em.getTransaction().commit();
+      gestionDb.crear(usuario);
     }
 
     public void eliminarUsuario(Usuario usuario)
     {
-        em.getTransaction().begin();
-        em.remove(usuario);
-        em.getTransaction().commit();
+        gestionDb.eliminar(usuario);
     }
 
 
     public Usuario getUsuarioByNombreUsuario(String usuario)
     {
-        Usuario usuario1 = em.find(Usuario.class,usuario);
+        Usuario usuario1 = (Usuario) gestionDb.find(usuario);
         return usuario1;
     }
 

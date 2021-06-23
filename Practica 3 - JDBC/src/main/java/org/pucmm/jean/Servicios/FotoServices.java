@@ -12,11 +12,12 @@ public class FotoServices {
 
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
     EntityManager entityManager = emf.createEntityManager();
+    private GestionDb gestionDb;
 
     private static FotoServices instancia;
 
     private FotoServices(){
-
+        gestionDb = new GestionDb(Foto.class);
     }
 
     public static FotoServices getInstancia(){
@@ -29,7 +30,7 @@ public class FotoServices {
 
     public List<Foto> getFotos()
     {
-        return entityManager.createQuery("Select f from Foto f",Foto.class).getResultList();
+        return gestionDb.findAll();
     }
 
     public Foto getFotoById(long id)
