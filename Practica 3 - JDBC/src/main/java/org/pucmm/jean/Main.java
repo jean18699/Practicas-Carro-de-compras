@@ -16,6 +16,16 @@ public class Main {
 
     public static void main(String[] args) throws SQLException {
 
+        if(args.length >= 1){
+            modoConexion = args[0];
+            System.out.println("Modo de Operacion: "+modoConexion);
+        }
+
+        //Iniciando la base de datos.
+        if(modoConexion.isEmpty()) {
+            BootStrapServices.getInstancia().init();
+        }
+
         //Iniciando el servicio
         BootStrapServices.startDb();
 
@@ -46,11 +56,11 @@ public class Main {
      * @return
      */
     static int getHerokuAssignedPort() {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        if (processBuilder.environment().get("PORT") != null) {
-            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        String herokuPort = System.getenv("PORT");
+        if (herokuPort != null) {
+            return Integer.parseInt(herokuPort);
         }
-        return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
+        return 7000;
     }
 
     /**

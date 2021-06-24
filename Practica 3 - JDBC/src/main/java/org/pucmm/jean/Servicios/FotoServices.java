@@ -10,14 +10,14 @@ import java.util.List;
 
 public class FotoServices {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager entityManager = emf.createEntityManager();
+    EntityManager entityManager;
     private GestionDb gestionDb;
 
     private static FotoServices instancia;
 
     private FotoServices(){
         gestionDb = new GestionDb(Foto.class);
+        entityManager = gestionDb.getEntityManager();
     }
 
     public static FotoServices getInstancia(){
@@ -35,8 +35,7 @@ public class FotoServices {
 
     public Foto getFotoById(long id)
     {
-        Foto foto = entityManager.find(Foto.class,id);
-        entityManager.refresh(foto);
+        Foto foto = (Foto) gestionDb.find(id);
         return foto;
     }
 

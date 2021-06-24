@@ -12,8 +12,6 @@ public class UsuarioService {
 
     public static UsuarioService instancia;
     private GestionDb gestionDb;
-    /*EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager em = emf.createEntityManager();*/
 
     public UsuarioService()
     {
@@ -38,7 +36,6 @@ public class UsuarioService {
     }
 
     public List<Usuario> getUsuarios() {
-
         List<Usuario> usuarios = gestionDb.findAll();
         return usuarios;
     }

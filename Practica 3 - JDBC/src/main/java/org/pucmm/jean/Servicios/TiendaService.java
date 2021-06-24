@@ -127,11 +127,4 @@ public class TiendaService {
         return null;
     }
 
-    public Foto getUltimaFoto() {
-        return ultimaFoto;
-    }
-
-    public void setUltimaFoto(Foto ultimaFoto) {
-        this.ultimaFoto = ultimaFoto;
-    }
 }

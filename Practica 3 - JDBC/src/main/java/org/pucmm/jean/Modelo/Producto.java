@@ -1,13 +1,13 @@
 package org.pucmm.jean.Modelo;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
 
 @Entity
 public class Producto implements Serializable {
-
 
     @Id
     @GeneratedValue

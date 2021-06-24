@@ -3,6 +3,7 @@ package org.pucmm.jean.Servicios;
 import org.pucmm.jean.Modelo.Producto_Comprado;
 import org.pucmm.jean.Modelo.VentasProductos;
 
+import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -11,15 +12,11 @@ import java.util.List;
 
 public class VentaService {
 
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager em = emf.createEntityManager();
+    GestionDb gestionDb = new GestionDb(VentasProductos.class);
 
     public static VentaService instancia;
 
-    public VentaService()
-    {
-
-    }
+    public VentaService(){}
 
     public static VentaService getInstancia(){
         if(instancia==null){
@@ -30,6 +27,7 @@ public class VentaService {
 
     public List<VentasProductos> getVentas()
     {
+        EntityManager em = gestionDb.getEntityManager();
         List<VentasProductos> ventas = em.createQuery("select v from VentasProductos v", VentasProductos.class).getResultList();
         return ventas;
     }
@@ -39,17 +37,10 @@ public class VentaService {
        for(int i = 0; i < venta.getListaProductos().size();i++)
         {
            Producto_Comprado producto_comprado = venta.getListaProductos().get(i);
-            em.getTransaction().begin();
-            em.persist(producto_comprado);
-            em.getTransaction().commit();
+           gestionDb.crear(producto_comprado);
         }
 
-        em.getTransaction().begin();
-        em.persist(venta);
-        em.getTransaction().commit();
-
-
-
+       gestionDb.crear(venta);
     }
 
 
