@@ -4,17 +4,18 @@ import org.pucmm.jean.Modelo.CarroCompra;
 import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TiendaService {
 
     public static TiendaService instancia;
     private CarroCompra carrito;
-    private Set<Foto> fotos;
+    private List<Foto> fotos;
 
 
     private TiendaService() {
-        fotos = new HashSet<Foto>();
+        fotos = new ArrayList<>();
     }
 
     public static TiendaService getInstancia(){
@@ -92,11 +93,11 @@ public class TiendaService {
         this.carrito = carrito;
     }
 
-    public Set<Foto> getFotos() {
+    public List<Foto> getFotos() {
         return fotos;
     }
 
-    public void setFotos(Set<Foto> fotos) {
+    public void setFotos(List<Foto> fotos) {
         this.fotos = fotos;
     }
 
@@ -107,36 +108,22 @@ public class TiendaService {
 
     public void deleteFoto(Foto foto)
     {
-        for(Iterator<Foto> it = fotos.iterator(); it.hasNext();)
-        {
-            if(it.next() == foto)
-            {
-                it.remove();
-            }
-        }
-        /*for(int i = 0; i < fotos.size();i++)
+        for(int i = 0; i < fotos.size();i++)
         {
             if(fotos.get(i) == foto){
                 fotos.remove(foto);
             }
-        }*/
+        }
     }
 
     public Foto getFotoByNombre(String nombre)
     {
-        for(Iterator<Foto> it = fotos.iterator(); it.hasNext();)
-        {
-            if(it.next().getNombre().equals(nombre))
-            {
-                return it.next();
-            }
-        }
-       /* for(int i = 0; i < fotos.size();i++)
+        for(int i = 0; i < fotos.size();i++)
         {
             if(fotos.get(i).getNombre().equals(nombre)){
                 return fotos.get(i);
             }
-        }*/
+        }
         return null;
     }
 

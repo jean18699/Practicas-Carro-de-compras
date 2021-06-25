@@ -20,10 +20,10 @@ public class Producto implements Serializable {
     @Transient
     private int cantidad;
 
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Foto> fotos;
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Foto> fotos;
 
-   @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
    private Set<Comentario> comentarios;
 
     public Producto(String nombre, double precio, String descripcion)
@@ -77,11 +77,11 @@ public class Producto implements Serializable {
         this.cantidad += cantidad;
     }
 
-    public Set<Foto> getFotos() {
+    public List<Foto> getFotos() {
         return fotos;
     }
 
-    public void setFotos(Set<Foto> fotos) {
+    public void setFotos(List<Foto> fotos) {
         this.fotos = fotos;
     }
 

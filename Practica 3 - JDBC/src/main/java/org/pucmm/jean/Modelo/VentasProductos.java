@@ -14,7 +14,7 @@ public class VentasProductos implements Serializable {
     private long id;
     private String nombreCliente;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Producto_Comprado> listaProductos;
 
 

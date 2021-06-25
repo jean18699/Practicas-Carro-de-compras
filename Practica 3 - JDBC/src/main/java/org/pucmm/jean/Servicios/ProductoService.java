@@ -12,9 +12,7 @@ import org.pucmm.jean.Modelo.Producto_Comprado;
 import javax.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 
@@ -53,11 +51,12 @@ public class ProductoService {
         gestionDb.eliminar(producto);
     }
 
-    public void addNuevoProducto(Producto producto, Set<Foto> fotos)
+    public void addNuevoProducto(Producto producto, List<Foto> fotos)
     {
-        for(Iterator<Foto> it = fotos.iterator(); it.hasNext();)
+        for(int i = 0; i < fotos.size();i++)
         {
-            gestionDb.crear(it.next());
+            System.out.println(fotos.get(i).getNombre());
+            gestionDb.crear(fotos.get(i));
         }
         producto.setFotos(fotos);
         gestionDb.crear(producto);
@@ -105,12 +104,16 @@ public class ProductoService {
             //Implementaremos paginacion
             int paginaSize = 10;
 
+          /*  Query query = entityManager.createQuery("Select distinct p from Producto p join fetch p.comentarios as com join fetch p.fotos as fotos group by p.id," +
+                    "fotos.id, com.id")
+                    .setFirstResult(calcularOffset(pagina))
+                    .setMaxResults(paginaSize);*/
             Query query = entityManager.createQuery("Select distinct p from Producto p")
                     .setFirstResult(calcularOffset(pagina))
                     .setMaxResults(paginaSize);
 
-            return query.getResultList();
 
+            return query.getResultList();
         }finally
         {
             entityManager.close();
