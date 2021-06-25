@@ -27,9 +27,9 @@ public class VentaService {
 
     public List<VentasProductos> getVentas()
     {
-        EntityManager em = gestionDb.getEntityManager();
-        List<VentasProductos> ventas = em.createQuery("select v from VentasProductos v", VentasProductos.class).getResultList();
-        return ventas;
+        //EntityManager em = gestionDb.getEntityManager();
+       // List<VentasProductos> ventas = em.createQuery("select v from VentasProductos v", VentasProductos.class).getResultList();
+        return gestionDb.findAll();
     }
 
     public void realizarVenta(VentasProductos venta)

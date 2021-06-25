@@ -512,7 +512,7 @@ public class TiendaControlador {
             } else {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
-                List<Foto> fotos = TiendaService.getInstancia().getFotos();
+                Set<Foto> fotos = TiendaService.getInstancia().getFotos();
 
 
                 Map<String, Object> modelo = new HashMap<>();
@@ -587,9 +587,9 @@ public class TiendaControlador {
 
                 Producto producto = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.formParam("idProducto")));
 
-                for(int i = 0; i < producto.getFotos().size();i++)
+                for(Iterator<Foto> it = producto.getFotos().iterator(); it.hasNext();)
                 {
-                    TiendaService.getInstancia().getFotos().add(producto.getFotos().get(i));
+                    TiendaService.getInstancia().getFotos().add(it.next());
                 }
 
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
@@ -677,17 +677,18 @@ public class TiendaControlador {
                 ctx.result("Sin autorizacion");
             } else {
 
-                for(int i = 0; i < TiendaService.getInstancia().getFotos().size();i++){
-                    if(TiendaService.getInstancia().getFotos().get(i).getId() == Long.parseLong(ctx.formParam("fotoEliminar")))
+                for(Iterator<Foto> it = TiendaService.getInstancia().getFotos().iterator(); it.hasNext();)
+                {
+                    if(it.next().getId() == Long.parseLong(ctx.formParam("fotoEliminar")))
                     {
-
                         if(TiendaService.getInstancia().getFotos().size() > 1)
                         {
-                            TiendaService.getInstancia().getFotos().remove(i);
+                            it.remove();
                             ProductoService.getInstancia().eliminarFoto(Long.parseLong(ctx.pathParam("idProducto")),Long.parseLong(ctx.formParam("fotoEliminar")));
                         }
                     }
                 }
+
 
                 CarroCompra carrito = TiendaService.getInstancia().getCarrito();
                 Map<String, Object> modelo = new HashMap<>();

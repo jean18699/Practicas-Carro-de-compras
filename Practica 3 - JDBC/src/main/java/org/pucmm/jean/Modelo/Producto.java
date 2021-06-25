@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -19,11 +20,11 @@ public class Producto implements Serializable {
     @Transient
     private int cantidad;
 
-    @OneToMany(orphanRemoval = true)
-    private List<Foto> fotos;
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Foto> fotos;
 
-   @OneToMany(orphanRemoval = true)
-   private List<Comentario> comentarios;
+   @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+   private Set<Comentario> comentarios;
 
     public Producto(String nombre, double precio, String descripcion)
     {
@@ -76,19 +77,19 @@ public class Producto implements Serializable {
         this.cantidad += cantidad;
     }
 
-    public List<Foto> getFotos() {
+    public Set<Foto> getFotos() {
         return fotos;
     }
 
-    public void setFotos(List<Foto> fotos) {
+    public void setFotos(Set<Foto> fotos) {
         this.fotos = fotos;
     }
 
-    public List<Comentario> getComentarios() {
+    public Set<Comentario> getComentarios() {
         return comentarios;
     }
 
-    public void setComentarios(List<Comentario> comentarios) {
+    public void setComentarios(Set<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
 

@@ -22,7 +22,7 @@ public class GestionDb<T> {
             if(Main.getModoConexion().equalsIgnoreCase("Heroku")){
                 emf = getConfiguracionBaseDatosHeroku();
             }else{
-                emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
+                emf = Persistence.createEntityManagerFactory("AWS");
             }
         }
         this.claseEntidad = claseEntidad;

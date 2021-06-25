@@ -2,6 +2,7 @@ package org.pucmm.jean.Servicios;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.annotations.QueryHints;
 import org.pucmm.jean.Main;
 import org.pucmm.jean.Modelo.Comentario;
 import org.pucmm.jean.Modelo.Foto;
@@ -11,7 +12,9 @@ import org.pucmm.jean.Modelo.Producto_Comprado;
 import javax.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 
@@ -50,11 +53,11 @@ public class ProductoService {
         gestionDb.eliminar(producto);
     }
 
-    public void addNuevoProducto(Producto producto, List<Foto> fotos)
+    public void addNuevoProducto(Producto producto, Set<Foto> fotos)
     {
-        for(int i = 0; i < fotos.size();i++)
+        for(Iterator<Foto> it = fotos.iterator(); it.hasNext();)
         {
-            gestionDb.crear(fotos.get(i));
+            gestionDb.crear(it.next());
         }
         producto.setFotos(fotos);
         gestionDb.crear(producto);
@@ -98,28 +101,40 @@ public class ProductoService {
     {
         EntityManager entityManager = gestionDb.getEntityManager();
 
-        //Implementaremos paginacion
-        int paginaSize = 10;
+        try{
+            //Implementaremos paginacion
+            int paginaSize = 10;
 
-        Query query = entityManager.createQuery("Select p from Producto  p")
-                .setFirstResult(calcularOffset(pagina))
-                .setMaxResults(paginaSize);
+            Query query = entityManager.createQuery("Select distinct p from Producto p")
+                    .setFirstResult(calcularOffset(pagina))
+                    .setMaxResults(paginaSize);
 
-        return query.getResultList();
+            return query.getResultList();
+
+        }finally
+        {
+            entityManager.close();
+        }
+
     }
 
     public int getTotalPaginas()
     {
         EntityManager entityManager = gestionDb.getEntityManager();
-        Query query =  entityManager.createQuery("Select Count(*) from Producto");
 
-        if((int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10) == 0)
-        {
-            return 1;
-        }else
-        {
-            return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+        try{
+            Query query =  entityManager.createQuery("Select Count(*) from Producto");
+            if((int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10) == 0)
+            {
+                return 1;
+            }else
+            {
+                return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+            }
+        }finally {
+            entityManager.close();
         }
+
     }
 
     private int calcularOffset(int pagina)

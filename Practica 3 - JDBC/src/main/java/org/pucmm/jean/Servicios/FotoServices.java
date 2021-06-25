@@ -10,14 +10,13 @@ import java.util.List;
 
 public class FotoServices {
 
-    EntityManager entityManager;
     private GestionDb gestionDb;
 
     private static FotoServices instancia;
 
     private FotoServices(){
         gestionDb = new GestionDb(Foto.class);
-        entityManager = gestionDb.getEntityManager();
+
     }
 
     public static FotoServices getInstancia(){
