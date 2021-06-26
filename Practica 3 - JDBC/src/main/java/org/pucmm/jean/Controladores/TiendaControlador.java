@@ -35,6 +35,7 @@ public class TiendaControlador {
 
         app.get("/iniciarSesion", ctx -> {
 
+            String usuario = ctx.sessionAttribute("usuario");
 
             if(ctx.cookie("usuario_recordado") != null && ctx.cookie("password_recordado") != null)
             {
@@ -59,7 +60,7 @@ public class TiendaControlador {
             }
 
             //En el caso de no tener cookies se tiene que pasar por el auth
-            if (ctx.sessionAttribute("usuario") == null) {
+            if (usuario == null) {
                 ctx.render("/templates/Login.html");
             } else {
                 ctx.redirect("/listaProductos/1");
@@ -548,7 +549,7 @@ public class TiendaControlador {
                             ctx.formParam("descripcionProducto")
                     );
 
-                    ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
+                    ProductoService.getInstancia().addNuevoProducto(producto);
                     TiendaService.getInstancia().getFotos().clear();
                     ctx.redirect("/controlProductos/1");
                 }

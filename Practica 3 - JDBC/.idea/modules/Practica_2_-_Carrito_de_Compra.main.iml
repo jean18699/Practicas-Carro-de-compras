@@ -5,6 +5,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <datasource-mapping>
+          <factory-entry name="AWS" />
           <factory-entry name="Heroku" />
           <factory-entry name="MiUnidadPersistencia" value="9004a39d-f1fe-4ddb-9adf-66f5d1fa7bd1" />
         </datasource-mapping>

@@ -7,11 +7,11 @@
       <jdbc-driver>org.h2.Driver</jdbc-driver>
       <jdbc-url>jdbc:h2:file:~/tienda-ORM-2017-0167;MV_STORE=false</jdbc-url>
     </data-source>
-    <data-source source="LOCAL" name="PostgreSQL - tienda@3.227.247.246" uuid="d4ae723e-28be-4338-a64d-602bba02807d">
+    <data-source source="LOCAL" name="PostgreSQL - tienda@localhost" uuid="d4ae723e-28be-4338-a64d-602bba02807d">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://3.227.247.246:5432/tienda</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/Tienda</jdbc-url>
     </data-source>
   </component>
 </project>

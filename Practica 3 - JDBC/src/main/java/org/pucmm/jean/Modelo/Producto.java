@@ -1,5 +1,7 @@
 package org.pucmm.jean.Modelo;
 
+import org.hibernate.annotations.OnDelete;
+
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.io.Serializable;

@@ -20,7 +20,7 @@ public class ProductoService {
 
     public static ProductoService instancia;
 
-    private GestionDb gestionDb = new GestionDb(Producto.class);;
+    private GestionDb gestionDb = new GestionDb(Producto.class);
 
     public static ProductoService getInstancia(){
         if(instancia==null){
@@ -51,48 +51,93 @@ public class ProductoService {
         gestionDb.eliminar(producto);
     }
 
-    public void addNuevoProducto(Producto producto, List<Foto> fotos)
+    public void addNuevoProducto(Producto producto)
     {
-        for(int i = 0; i < fotos.size();i++)
-        {
-            System.out.println(fotos.get(i).getNombre());
-            gestionDb.crear(fotos.get(i));
+
+        EntityManager em = gestionDb.getEntityManager();
+
+        try {
+            for (int i = 0; i < TiendaService.getInstancia().getFotos().size(); i++) {
+                em.getTransaction().begin();
+                em.persist(TiendaService.getInstancia().getFotos().get(i));
+                em.getTransaction().commit();
+            }
         }
-        producto.setFotos(fotos);
-        gestionDb.crear(producto);
+        finally {
+            producto.setFotos(TiendaService.getInstancia().getFotos());
+            gestionDb.crear(producto);
+            em.close();
+        }
     }
 
     public void agregarFoto(long idProducto, Foto foto)
     {
-        Producto producto = (Producto) gestionDb.find(idProducto);
-        gestionDb.crear(foto);
-        producto.getFotos().add(foto);
-        gestionDb.editar(producto);
+        EntityManager em = gestionDb.getEntityManager();
+
+        try{
+            Producto producto = (Producto) gestionDb.find(idProducto);
+            em.getTransaction().begin();
+            em.persist(foto);
+            em.getTransaction().commit();
+            producto.getFotos().add(foto);
+            gestionDb.editar(producto);
+        }finally {
+            em.close();
+        }
+
+
     }
 
     public void enviarComentario(Producto producto, Comentario comentario)
     {
-        gestionDb.crear(comentario);
-        producto.getComentarios().add(comentario);
-        gestionDb.editar(producto);
+        EntityManager em = gestionDb.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(comentario);
+            em.getTransaction().commit();
+            producto.getComentarios().add(comentario);
+            gestionDb.editar(producto);
+        }finally {
+            em.close();
+        }
     }
 
     public void eliminarComentario(long idProducto, long idComentario)
     {
-        Comentario com = (Comentario) gestionDb.find(idComentario);
-        Producto producto = (Producto) gestionDb.find(idProducto);
-        producto.getComentarios().remove(com);
-        gestionDb.eliminar(com);
-        gestionDb.editar(producto);
+        EntityManager em = gestionDb.getEntityManager();
+        Comentario com = em.find(Comentario.class, idComentario);
+        Producto producto = em.find(Producto.class, idProducto);
+        try {
+
+            producto.getComentarios().remove(com);
+            gestionDb.editar(producto);
+            em.getTransaction().begin();
+            em.remove(com);
+            em.getTransaction().commit();
+
+        }finally {
+            em.close();
+        }
     }
 
     public void eliminarFoto(long idProducto, long idFoto)
     {
-        Foto foto = (Foto) gestionDb.find(idFoto);
-        Producto producto = (Producto) gestionDb.find(idProducto);
-        producto.getFotos().remove(foto);
-        gestionDb.eliminar(foto);
-        gestionDb.editar(producto);
+        EntityManager em = gestionDb.getEntityManager();
+        Foto foto = em.find(Foto.class, idFoto);
+        Producto producto = em.find(Producto.class, idProducto);
+        try
+        {
+            producto.getFotos().remove(foto);
+            gestionDb.editar(producto);
+
+            em.getTransaction().begin();
+            em.remove(foto);
+            em.getTransaction().commit();
+
+        }finally
+        {
+            em.close();
+        }
     }
 
 
@@ -104,10 +149,6 @@ public class ProductoService {
             //Implementaremos paginacion
             int paginaSize = 10;
 
-          /*  Query query = entityManager.createQuery("Select distinct p from Producto p join fetch p.comentarios as com join fetch p.fotos as fotos group by p.id," +
-                    "fotos.id, com.id")
-                    .setFirstResult(calcularOffset(pagina))
-                    .setMaxResults(paginaSize);*/
             Query query = entityManager.createQuery("Select distinct p from Producto p")
                     .setFirstResult(calcularOffset(pagina))
                     .setMaxResults(paginaSize);
