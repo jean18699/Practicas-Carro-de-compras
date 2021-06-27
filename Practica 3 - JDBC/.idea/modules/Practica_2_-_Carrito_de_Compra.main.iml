@@ -8,6 +8,7 @@
           <factory-entry name="AWS" />
           <factory-entry name="Heroku" />
           <factory-entry name="MiUnidadPersistencia" value="9004a39d-f1fe-4ddb-9adf-66f5d1fa7bd1" />
+          <factory-entry name="POSTGRES_LOCAL" />
         </datasource-mapping>
         <naming-strategy-map />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/../../src/main/resources/META-INF/persistence.xml" />
