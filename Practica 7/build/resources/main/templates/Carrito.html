@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carro de compras</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+
+    <header>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a th:href="@{/listaProductos/1}" class="navbar-brand" style="color:white;" ><strong>JG SHOPPING</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  href="/listaProductos/1">Comprar</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                    </li>
+                    <li th:if="${usuario.usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
+                    </li>
+                    <li th:if="${usuario.usuario == 'admin'}" class="nav-item active">
+                        <b><a class="nav-link"  th:href="@{/controlProductos/1}">Administrar Productos</a></b>
+                    </li>
+                    <li class="nav-item active">
+                        <b><a class="nav-link"  th:text="'Carrito(' + ${cantidadCarrito}+')'" th:href="@{/carrito}">0</a></b>
+                    </li>
+                    <li th:if="${usuario.usuario != null}" class="nav-item active">
+                        <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <h3 class="h3" align="center">Carrito de compras</h3>
+
+    <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
+
+    <div class="row justify-content-center">
+        <form style="width: 75%; padding: 8px;" class="border border-secondary rounded"  th:action="@{/agregarProducto/crear}" method="post">
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div style="border-bottom: gray" class="col-12">
+                    <h5 class="h5"><strong>Datos del Cliente</strong></h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <label for="nombreCliente" class="form-label"><b>Nombre del Cliente:</b></label>
+                    <input form="accion" type="text" id="nombreCliente"  class="form-control" name="nombreCliente" fullwidth required>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+        </form>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <form id="accion"  th:action="@{carrito/comprar}" method="post">
+        <table style="width: 75%; margin-left: auto; margin-right: auto" class="table table-hover table-bordered">
+            <thead class="thead-light">
+                <tr align="center">
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio($RD)</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio Total($RD)</th>
+
+                    <th scope="col">Accion</th>
+                </tr>
+            </thead>
+            <tbody  class="table-hover">
+                <tr align="center" th:each="producto : ${productosCarrito}">
+                    <td th:text="${producto.nombre}">Pasola</td>
+                    <td th:text="${producto.getPrecio()}">1000</td>
+                    <td th:text="${producto.cantidad}" >1</td>
+                    <td th:text="${producto.getPrecioTotal()}">1000</td>
+                    <td align="center">
+                        <button name="idProducto" form="placeholder" th:formaction="@{/carrito/eliminar}" th:value="${producto.id}" type="submit" class="btn-sm btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row" >
+            <div class="col-8"></div>
+
+            <div class="col-3">
+
+                <h5 th:text="'Total:   ' + ${totalCarrito}">Total</h5>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row justify-content-center">
+
+
+                <button name="procesarCompra"  type="submit" class="btn btn- btn-primary">Procesar Compra</button>
+                <button name="limpiarCarrito" form="placeholder" type="submit" th:formaction="@{/carrito/limpiar}" class="btn btn-secondary">Limpiar Carrito</button>
+
+        </div>
+    </form>
+
+<form id="placeholder" method="post">
+
+</form>
+
+</body>
+</html>

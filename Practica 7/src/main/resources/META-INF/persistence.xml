@@ -1,0 +1,28 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="MiUnidadPersistencia" transaction-type="RESOURCE_LOCAL"> <!--Mi unidad de persistencia (pueden haber varias). RESOURCE_LOCAL = manejo de validaciones por la aplicacion -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> <!-- mi proveedor de persistencia es hibernate -->
+        <class>org.pucmm.jean.Modelo.Usuario</class> <!--Clases a ser manejadas por persistencia -->
+        <class>org.pucmm.jean.Modelo.Producto</class>
+        <class>org.pucmm.jean.Modelo.Producto_Comprado</class>
+        <class>org.pucmm.jean.Modelo.VentasProductos</class>
+        <class>org.pucmm.jean.Modelo.Foto</class>
+        <class>org.pucmm.jean.Modelo.Comentario</class>
+        <properties> <!--Propiedades para la conexion a la BD -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/tienda-ORM-20170167" /> <!--URL de la base de datos -->
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" /> <!--Driver H2 -->
+            <property name="javax.persistence.jdbc.user" value="sa" />
+            <property name="javax.persistence.jdbc.password" value="" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <!--Propiedad para indicar como sera la generacion de tablas -->
+            <!-- ver la documentación: https://docs.oracle.com/javaee/7/tutorial/persistence-intro005.htm -->
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
