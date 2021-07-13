@@ -29,93 +29,100 @@ public class TiendaControlador {
 
         app.get("/", ctx -> {
 
-            ctx.redirect("/iniciarSesion");
+            ctx.redirect("/listaProductos");
 
         });
 
         app.get("/iniciarSesion", ctx -> {
 
-
-            if(ctx.cookie("usuario_recordado") != null && ctx.cookie("password_recordado") != null)
+            if(ctx.sessionAttribute("usuario") == null)
             {
+                if(ctx.cookie("usuario_recordado") != null) {
+                    ctx.sessionAttribute("usuario", ctx.cookie("usuario_recordado"));
+                    user_carrito = "carrito_" + ctx.cookie("usuario_recordado");
 
-                ctx.sessionAttribute("usuario", ctx.cookie("usuario_recordado"));
-
-                user_carrito = "carrito_"+ctx.sessionAttribute("usuario");
-
-                //Creando el carrito
-                if (ctx.sessionAttribute(user_carrito) == null) {
-
-                    CarroCompra carroCompra = new CarroCompra();
-                    ctx.sessionAttribute(user_carrito, carroCompra);
-                    TiendaService.getInstancia().setCarroCompra(carroCompra);
-                    ctx.redirect("/iniciarSesion");
+                    //Creando el carrito
+                    if (ctx.sessionAttribute(user_carrito) == null) {
+                        CarroCompra carroCompra = new CarroCompra();
+                        ctx.sessionAttribute(user_carrito, carroCompra);
+                        TiendaService.getInstancia().setCarroCompra(carroCompra);
+                        ctx.redirect("/iniciarSesion");
+                    } else {
+                        CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
+                        TiendaService.getInstancia().setCarroCompra(carroCompra);
+                        ctx.redirect("/iniciarSesion");
+                    }
+                }else {
+                    ctx.render("/templates/Login.html");
                 }
-                else {
-                    CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
-                    TiendaService.getInstancia().setCarroCompra(carroCompra);
-                    ctx.redirect("/iniciarSesion");
-                }
-            }
-
-            //En el caso de no tener cookies se tiene que pasar por el auth
-            if (ctx.sessionAttribute("usuario") == null) {
-                ctx.render("/templates/Login.html");
-            } else {
+            }else
+            {
                 ctx.redirect("/listaProductos/1");
             }
 
         });
 
 
-        app.post("/autenticar", ctx -> {
+        app.post("/iniciarSesion", ctx -> {
 
           if (UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")) != null) {
                 if (!UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")).getPassword().equals(ctx.formParam("password"))) {
-                    ctx.redirect("/iniciarSesion");
-                }
-                else{
-                    ctx.sessionAttribute("usuario", ctx.formParam("nombreUsuario"));
-                }
-            }
-
-
-            //Guardamos el usuario en una cookie
-            if(ctx.formParam("recordar") != null)
-            {
-                if(ctx.formParam("recordar").equals("checked"))
+                    ctx.result("credenciales incorrectas");
+                    //ctx.render("/templates/Login.html");
+                }else
                 {
+                    if(ctx.formParam("recordar") != null)
+                    {
+                        if(ctx.formParam("recordar").equals("checked"))
+                        {
 
-                    StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
-                    String encryptedPassword = passwordEncryptor.encryptPassword(ctx.formParam("password"));
+                            StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+                            String encryptedPassword = passwordEncryptor.encryptPassword(ctx.formParam("password"));
 
 
-                    Cookie cookie_usuario = new Cookie("usuario_recordado",ctx.formParam("nombreUsuario"));
-                    Cookie cookie_password = new Cookie("password_recordado",encryptedPassword);
-                    cookie_usuario.setMaxAge(604800); //una semana
-                    cookie_password.setMaxAge(604800);
+                            Cookie cookie_usuario = new Cookie("usuario_recordado",ctx.formParam("nombreUsuario"));
+                            Cookie cookie_password = new Cookie("password_recordado",encryptedPassword);
+                            cookie_usuario.setMaxAge(604800); //una semana
+                            cookie_password.setMaxAge(604800);
 
-                    ctx.res.addCookie(cookie_usuario);
-                    ctx.res.addCookie(cookie_password);
+                            ctx.res.addCookie(cookie_usuario);
+                            ctx.res.addCookie(cookie_password);
+                        }
+                    }
+
+                    ctx.sessionAttribute("usuario", ctx.formParam("nombreUsuario"));
+
+                    //Creando el carrito
+                    user_carrito = "carrito_"+ctx.formParam("nombreUsuario");
+
+                    if (ctx.sessionAttribute(user_carrito) == null) {
+                        CarroCompra carroCompra = new CarroCompra();
+                        ctx.sessionAttribute(user_carrito, carroCompra);
+                        TiendaService.getInstancia().setCarroCompra(carroCompra);
+                    }
+                    else {
+                        CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
+                        TiendaService.getInstancia().setCarroCompra(carroCompra);
+                    }
+
+                    ctx.redirect("/listaProductos/1");
                 }
-            }
+
+               /* else{
+
+                    //Guardamos el usuario en una cookie
 
 
-            user_carrito = "carrito_"+ctx.sessionAttribute("usuario");
 
-            //Creando el carrito
-            if (ctx.sessionAttribute(user_carrito) == null) {
 
-                CarroCompra carroCompra = new CarroCompra();
-                ctx.sessionAttribute(user_carrito, carroCompra);
-                TiendaService.getInstancia().setCarroCompra(carroCompra);
-                ctx.redirect("/iniciarSesion");
-            }
-            else {
-                CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
-                TiendaService.getInstancia().setCarroCompra(carroCompra);
-                ctx.redirect("/iniciarSesion");
-            }
+                }*/
+
+          }else{
+              ctx.result("Este usuario no se encuentra registrado");
+          }
+
+
+
         });
 
 

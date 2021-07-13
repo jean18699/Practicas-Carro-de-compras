@@ -19,7 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c29be7f1-644a-44c2-a25d-1a6a2bec642f" name="Default Changelist" comment="" />
+    <list default="true" id="c29be7f1-644a-44c2-a25d-1a6a2bec642f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Practica 7/src/main/java/org/pucmm/jean/Servicios/BootStrapServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Practica 7/src/main/java/org/pucmm/jean/Servicios/BootStrapServices.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,7 +73,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Practica 3 - JDBC" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager" selected="Gradle.Practica 2 - Carrito de Compra [run]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -121,6 +123,7 @@
       <workItem from="1623047463338" duration="460000" />
       <workItem from="1623047963387" duration="58000" />
       <workItem from="1623294927617" duration="211000" />
+      <workItem from="1626150729192" duration="6000" />
     </task>
     <servers />
   </component>
