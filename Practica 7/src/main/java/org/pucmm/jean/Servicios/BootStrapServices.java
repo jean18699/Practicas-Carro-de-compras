@@ -10,6 +10,11 @@ import java.sql.SQLException;
 public class BootStrapServices {
 
     private static Server server;
+    private static BootStrapServices instancia;
+
+    private BootStrapServices() {
+
+    }
 
     /**
      *
@@ -33,11 +38,10 @@ public class BootStrapServices {
         }
     }
 
+    public void init() {
+        startDb();
+    }
 
-    /**
-     * Metodo para recrear las tablas necesarios
-     * @throws SQLException
-     */
 
 
 }

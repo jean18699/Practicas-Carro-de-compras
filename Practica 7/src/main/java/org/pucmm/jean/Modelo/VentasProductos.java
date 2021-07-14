@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class VentasProductos implements Serializable {
@@ -13,7 +14,7 @@ public class VentasProductos implements Serializable {
     private long id;
     private String nombreCliente;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Producto_Comprado> listaProductos;
 
 
@@ -28,7 +29,7 @@ public class VentasProductos implements Serializable {
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
         this.fechaCompra = fechaCompra;
-       // this.usuario = usuario;
+        // this.usuario = usuario;
     }
 
     public VentasProductos() {
@@ -70,12 +71,11 @@ public class VentasProductos implements Serializable {
     /*public Usuario getUsuario() {
         return usuario;
     }
-
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }*/
 
-   public int getCantidad() {
+    public int getCantidad() {
         return cantidad;
     }
 
@@ -86,7 +86,6 @@ public class VentasProductos implements Serializable {
    /* public long getId_venta() {
         return id_venta;
     }
-
     public void setId_venta(long id_venta) {
         this.id_venta = id_venta;
     }*/

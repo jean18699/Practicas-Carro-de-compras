@@ -204,12 +204,12 @@
         }
     }
 
-    $(document).ready(function(){
+    /*$(document).ready(function(){
         $('#btnComentar').click(function(){
             webSocket.send($('#comentario').val());
         });
     });
-
+*/
     function verificarConexion(){
         if(!webSocket || webSocket.readyState == 3){
             conectar();

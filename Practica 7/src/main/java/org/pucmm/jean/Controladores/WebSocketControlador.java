@@ -81,7 +81,7 @@ public class WebSocketControlador {
         app.ws("/comentarios/:id",ws->{
 
             ws.onConnect(ctx->{
-                enviarComentarios(Long.parseLong(ctx.pathParam("id")));
+               // enviarComentarios(Long.parseLong(ctx.pathParam("id")));
             });
 
             ws.onClose(ctx -> {
@@ -93,7 +93,7 @@ public class WebSocketControlador {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Comentario comentario = new Comentario(usuario,ctx.message());
                 ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
-                enviarComentarios(Long.parseLong(ctx.pathParam("id")));
+              //  enviarComentarios(Long.parseLong(ctx.pathParam("id")));
             });
 
         });
@@ -102,7 +102,7 @@ public class WebSocketControlador {
 
 
     }
-
+/*
     private  static void enviarComentarios(long idProducto) {
         for(Session sesionConectada : TiendaControlador.usuariosConectados){
             for(int i = 0 ; i < ProductoService.getInstancia().getProductoById(idProducto).getComentarios().size(); i++)
@@ -116,7 +116,7 @@ public class WebSocketControlador {
 
         }
     }
-
+*/
     public static void enviarCantidadConectados(){
         for(Session sesionConectada : TiendaControlador.usuariosConectados){
             try {
@@ -126,5 +126,6 @@ public class WebSocketControlador {
             }
         }
     }
+
 
 }

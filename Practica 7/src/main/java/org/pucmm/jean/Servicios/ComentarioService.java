@@ -9,8 +9,7 @@ import javax.persistence.Persistence;
 public class ComentarioService {
 
     public static ComentarioService instancia;
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager em = emf.createEntityManager();
+    GestionDb gestionDb = new GestionDb(Comentario.class);
 
 
     public static ComentarioService getInstancia(){
@@ -24,7 +23,7 @@ public class ComentarioService {
 
     public Comentario getComentarioById(long id)
     {
-        Comentario com = em.find(Comentario.class,id);
+        Comentario com = (Comentario) gestionDb.find(id);
         return com;
     }
 

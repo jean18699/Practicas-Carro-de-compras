@@ -1,19 +1,18 @@
 package org.pucmm.jean.Controladores;
 
+import org.eclipse.jetty.websocket.api.Session;
+import org.pucmm.jean.Modelo.*;
+import org.pucmm.jean.Servicios.*;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
-import org.eclipse.jetty.websocket.api.Session;
 import org.jasypt.util.password.StrongPasswordEncryptor;
-import org.pucmm.jean.Modelo.*;
-import org.pucmm.jean.Servicios.*;
 
 import javax.servlet.http.Cookie;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
-import static j2html.TagCreator.*;
-import static j2html.TagCreator.a;
+
 public class TiendaControlador {
 
     private Javalin app;
@@ -27,10 +26,13 @@ public class TiendaControlador {
     }
 
 
+
     public void aplicarRutas() throws NumberFormatException {
 
         app.get("/", ctx -> {
+
             ctx.redirect("/listaProductos");
+
         });
 
         app.get("/iniciarSesion", ctx -> {
@@ -64,8 +66,7 @@ public class TiendaControlador {
 
 
         app.post("/autenticar", ctx -> {
-
-          if (UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")) != null) {
+            if (UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")) != null) {
                 if (!UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")).getPassword().equals(ctx.formParam("password"))) {
                     ctx.result("credenciales incorrectas");
                 }else
@@ -106,12 +107,12 @@ public class TiendaControlador {
                     ctx.redirect("/listaProductos/1");
                     //ctx.render("templates/RedireccionInicioSesion.html");
                 }
-
-          }else{
-              ctx.result("Este usuario no se encuentra registrado");
-          }
-
+            }else {
+                ctx.result("Este usuario no se encuentra registrado");
+            }
         });
+
+
 
         app.get("/cerrarSesion", ctx ->
         {
@@ -209,7 +210,14 @@ public class TiendaControlador {
             Map<String, Object> modelo = new HashMap<>();
 
             modelo.put("usuario", ctx.sessionAttribute("usuario"));
-            modelo.put("cantidadCarrito", carrito.getListaProductos().size());
+            if(carrito !=null)
+            {
+                modelo.put("cantidadCarrito", carrito.getListaProductos().size());
+            }else
+            {
+                modelo.put("cantidadCarrito",0);
+            }
+
             modelo.put("producto", p);
 
             ctx.render("/templates/Ver_Producto.html",modelo);
@@ -262,8 +270,8 @@ public class TiendaControlador {
                 Producto p = ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id")));
                 modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
                 modelo.put("producto", p);
-              
-                 ctx.render("/templates/Ver_Producto.html",modelo);
+
+                ctx.render("/templates/Ver_Producto.html",modelo);
             }
         });
 
@@ -513,7 +521,7 @@ public class TiendaControlador {
                 modelo.put("fotos", fotos);
                 modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
-               // modelo.put("productos", ProductoService.getInstancia().getListaProductos());
+                // modelo.put("productos", ProductoService.getInstancia().getListaProductos());
                 ctx.render("/templates/Crear_Producto.html", modelo);
             }
 
@@ -541,7 +549,7 @@ public class TiendaControlador {
                             ctx.formParam("descripcionProducto")
                     );
 
-                    ProductoService.getInstancia().addNuevoProducto(producto, TiendaService.getInstancia().getFotos());
+                    ProductoService.getInstancia().addNuevoProducto(producto);
                     TiendaService.getInstancia().getFotos().clear();
                     ctx.redirect("/controlProductos/1");
                 }
@@ -693,8 +701,6 @@ public class TiendaControlador {
             }
 
         });
-
     }
-
 
 }

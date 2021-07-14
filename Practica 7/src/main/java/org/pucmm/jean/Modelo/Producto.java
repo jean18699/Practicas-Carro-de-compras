@@ -1,13 +1,16 @@
 package org.pucmm.jean.Modelo;
 
+import org.hibernate.annotations.OnDelete;
+
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
 public class Producto implements Serializable {
-
 
     @Id
     @GeneratedValue
@@ -19,11 +22,11 @@ public class Producto implements Serializable {
     @Transient
     private int cantidad;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Foto> fotos;
 
-   @OneToMany(orphanRemoval = true)
-   private List<Comentario> comentarios;
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Comentario> comentarios;
 
     public Producto(String nombre, double precio, String descripcion)
     {
@@ -84,11 +87,11 @@ public class Producto implements Serializable {
         this.fotos = fotos;
     }
 
-    public List<Comentario> getComentarios() {
+    public Set<Comentario> getComentarios() {
         return comentarios;
     }
 
-    public void setComentarios(List<Comentario> comentarios) {
+    public void setComentarios(Set<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
 

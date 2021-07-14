@@ -8,9 +8,11 @@ import org.pucmm.jean.Servicios.TiendaService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.*;
 import java.util.Base64;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 
 
 public class ImagenControlador {

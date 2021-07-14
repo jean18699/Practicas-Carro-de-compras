@@ -31,7 +31,7 @@ public class DataBaseServices {
      */
     public static DataBaseServices getInstancia(){
         if(instancia==null){
-             instancia = new DataBaseServices();
+            instancia = new DataBaseServices();
         }
         return instancia;
     }

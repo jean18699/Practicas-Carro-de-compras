@@ -1,18 +1,26 @@
 package org.pucmm.jean.Servicios;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.annotations.QueryHints;
+import org.pucmm.jean.Main;
 import org.pucmm.jean.Modelo.Comentario;
 import org.pucmm.jean.Modelo.Foto;
 import org.pucmm.jean.Modelo.Producto;
+import org.pucmm.jean.Modelo.Producto_Comprado;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.hibernate.id.PersistentIdentifierGenerator.PK;
 
 public class ProductoService {
 
     public static ProductoService instancia;
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidadPersistencia");
-    EntityManager entityManager = emf.createEntityManager();
 
+    private GestionDb gestionDb = new GestionDb(Producto.class);
 
     public static ProductoService getInstancia(){
         if(instancia==null){
@@ -24,8 +32,7 @@ public class ProductoService {
 
     public Producto getProductoById(long id)
     {
-        Producto producto = entityManager.find(Producto.class,id);
-        entityManager.refresh(producto);
+        Producto producto = (Producto) gestionDb.find(id);
         return producto;
     }
 
@@ -35,132 +42,141 @@ public class ProductoService {
         producto.setNombre(nombre);
         producto.setPrecio(precio);
         producto.setDescripcion(descripcion);
-
-        entityManager.getTransaction().begin();
-        entityManager.merge(producto);
-        entityManager.getTransaction().commit();
-
-        entityManager.refresh(producto);
-
+        gestionDb.editar(producto);
     }
 
 
     public void deleteProducto(Producto producto)
     {
-        entityManager.getTransaction().begin();
-        entityManager.remove(producto);
-        entityManager.getTransaction().commit();
+        gestionDb.eliminar(producto);
     }
 
-    public void addNuevoProducto(Producto producto, List<Foto> fotos)
+    public void addNuevoProducto(Producto producto)
     {
-        for(int i = 0; i < fotos.size();i++)
-        {
-            entityManager.getTransaction().begin();
-            entityManager.persist(fotos.get(i));
-            entityManager.getTransaction().commit();
+
+        EntityManager em = gestionDb.getEntityManager();
+
+        try {
+            for (int i = 0; i < TiendaService.getInstancia().getFotos().size(); i++) {
+                em.getTransaction().begin();
+                em.persist(TiendaService.getInstancia().getFotos().get(i));
+                em.getTransaction().commit();
+            }
         }
-
-        producto.setFotos(fotos);
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(producto);
-        entityManager.getTransaction().commit();
-
-        entityManager.refresh(producto);
+        finally {
+            producto.setFotos(TiendaService.getInstancia().getFotos());
+            gestionDb.crear(producto);
+            em.close();
+        }
     }
 
     public void agregarFoto(long idProducto, Foto foto)
     {
-        Producto producto = entityManager.find(Producto.class,idProducto);
+        EntityManager em = gestionDb.getEntityManager();
 
-        entityManager.getTransaction().begin();
-        entityManager.persist(foto);
-        entityManager.getTransaction().commit();
+        try{
+            Producto producto = (Producto) gestionDb.find(idProducto);
+            em.getTransaction().begin();
+            em.persist(foto);
+            em.getTransaction().commit();
+            producto.getFotos().add(foto);
+            gestionDb.editar(producto);
+        }finally {
+            em.close();
+        }
 
-        producto.getFotos().add(foto);
-
-        entityManager.getTransaction().begin();
-        entityManager.merge(producto);
-        entityManager.getTransaction().commit();
-
-        entityManager.refresh(producto);
-    }
-
-    public void enviarComentario(Producto producto, Comentario comentario){
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(comentario);
-        entityManager.getTransaction().commit();
-
-        producto.getComentarios().add(comentario);
-
-        entityManager.getTransaction().begin();
-        entityManager.merge(producto);
-        entityManager.getTransaction().commit();
-
-        entityManager.refresh(producto);
-    }
-
-    public void eliminarComentario(long idProducto, long idComentario){
-
-        Comentario com = entityManager.find(Comentario.class,idComentario);
-        Producto producto = entityManager.find(Producto.class,idProducto);
-        producto.getComentarios().remove(com);
-
-        entityManager.getTransaction().begin();
-        entityManager.remove(com);
-        entityManager.getTransaction().commit();
-
-        entityManager.getTransaction().begin();
-        entityManager.merge(producto);
-        entityManager.getTransaction().commit();
-
-        entityManager.refresh(producto);
 
     }
 
-    public void eliminarFoto(long idProducto, long idFoto){
+    public void enviarComentario(Producto producto, Comentario comentario)
+    {
+        EntityManager em = gestionDb.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(comentario);
+            em.getTransaction().commit();
+            producto.getComentarios().add(comentario);
+            gestionDb.editar(producto);
+        }finally {
+            em.close();
+        }
+    }
 
-        Foto foto = entityManager.find(Foto.class, idFoto);
-        Producto producto = entityManager.find(Producto.class,idProducto);
-        producto.getFotos().remove(foto);
+    public void eliminarComentario(long idProducto, long idComentario)
+    {
+        EntityManager em = gestionDb.getEntityManager();
+        Comentario com = em.find(Comentario.class, idComentario);
+        Producto producto = em.find(Producto.class, idProducto);
+        try {
 
-        entityManager.getTransaction().begin();
-        entityManager.remove(foto);
-        entityManager.getTransaction().commit();
+            producto.getComentarios().remove(com);
+            gestionDb.editar(producto);
+            em.getTransaction().begin();
+            em.remove(com);
+            em.getTransaction().commit();
 
-        entityManager.getTransaction().begin();
-        entityManager.merge(producto);
-        entityManager.getTransaction().commit();
+        }finally {
+            em.close();
+        }
+    }
 
-        entityManager.refresh(producto);
+    public void eliminarFoto(long idProducto, long idFoto)
+    {
+        EntityManager em = gestionDb.getEntityManager();
+        Foto foto = em.find(Foto.class, idFoto);
+        Producto producto = em.find(Producto.class, idProducto);
+        try
+        {
+            producto.getFotos().remove(foto);
+            gestionDb.editar(producto);
 
+            em.getTransaction().begin();
+            em.remove(foto);
+            em.getTransaction().commit();
+
+        }finally
+        {
+            em.close();
+        }
     }
 
 
     public List<Producto> getListaProductos(int pagina)
     {
-        //Implementaremos paginacion
-        int paginaSize = 10;
+        EntityManager entityManager = gestionDb.getEntityManager();
 
-        Query query = entityManager.createQuery("Select p from Producto  p")
-                .setFirstResult(calcularOffset(pagina))
-                .setMaxResults(paginaSize);
+        try{
+            //Implementaremos paginacion
+            int paginaSize = 10;
 
-        return query.getResultList();
+            Query query = entityManager.createQuery("Select distinct p from Producto p")
+                    .setFirstResult(calcularOffset(pagina))
+                    .setMaxResults(paginaSize);
+
+
+            return query.getResultList();
+        }finally
+        {
+            entityManager.close();
+        }
+
     }
 
     public int getTotalPaginas()
     {
-        Query query = entityManager.createQuery("Select Count(*) from Producto");
+        EntityManager entityManager = gestionDb.getEntityManager();
 
-        if((int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10) == 0)
-        {
-            return 1;
-        }else
-        {
-            return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+        try{
+            Query query =  entityManager.createQuery("Select Count(*) from Producto");
+            if((int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10) == 0)
+            {
+                return 1;
+            }else
+            {
+                return (int) Math.ceil(Double.parseDouble(query.getSingleResult().toString()) / 10);
+            }
+        }finally {
+            entityManager.close();
         }
 
     }
@@ -169,7 +185,6 @@ public class ProductoService {
     {
         return ((10*pagina)-10);
     }
-
 
 
 }
