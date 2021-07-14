@@ -54,7 +54,12 @@ public class UsuarioService {
 
     public Usuario getUsuarioByNombreUsuario(String usuario)
     {
-       return (Usuario) gestionDb.find(usuario);
+        EntityManager em = gestionDb.getEntityManager();
+        try{
+            return em.find(Usuario.class,usuario);
+        }finally {
+            em.close();
+        }
     }
 
 }

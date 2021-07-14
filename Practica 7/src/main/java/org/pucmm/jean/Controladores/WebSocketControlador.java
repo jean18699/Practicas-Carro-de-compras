@@ -13,10 +13,11 @@ import java.io.IOException;
 import java.net.http.WebSocket;
 import java.util.List;
 
+import static j2html.TagCreator.*;
+
 public class WebSocketControlador {
 
     private Javalin app;
-    private Session sesionActual;
 
     public WebSocketControlador(Javalin app)
     {
@@ -44,11 +45,7 @@ public class WebSocketControlador {
 
                 for(int i = 0; i < TiendaControlador.usuariosConectados.size();i++)
                 {
-
-                    if(TiendaControlador.usuariosConectados.get(i).equals(sesionActual))
-                    {
-                        TiendaControlador.usuariosConectados.remove(i);
-                    }
+                    TiendaControlador.usuariosConectados.remove(i);
                 }
 
                 System.out.println(TiendaControlador.usuariosConectados.size());
@@ -78,14 +75,29 @@ public class WebSocketControlador {
 
         });
 
+
         app.ws("/comentarios/:id",ws->{
 
             ws.onConnect(ctx->{
-               // enviarComentarios(Long.parseLong(ctx.pathParam("id")));
+                TiendaControlador.usuariosVistaProducto.add(ctx.session);
+                for(Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios())
+                {
+                    try {
+                        ctx.session.getRemote().sendString(
+                                tr(
+                                        td(ctx.sessionAttribute("usuario").toString()),
+                                        td(com.getMensaje()),
+                                        td(button("Eliminar").withType("button").withId("btnEliminarComentario").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
+                                ).render()
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
 
             ws.onClose(ctx -> {
-
+                TiendaControlador.usuariosVistaProducto.remove(ctx.session);
             });
 
             ws.onMessage(ctx -> {
@@ -93,30 +105,27 @@ public class WebSocketControlador {
                 Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Comentario comentario = new Comentario(usuario,ctx.message());
                 ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
-              //  enviarComentarios(Long.parseLong(ctx.pathParam("id")));
+                enviarComentario(usuario.getUsuario(),comentario);
             });
 
         });
-
-
-
-
     }
-/*
-    private  static void enviarComentarios(long idProducto) {
-        for(Session sesionConectada : TiendaControlador.usuariosConectados){
-            for(int i = 0 ; i < ProductoService.getInstancia().getProductoById(idProducto).getComentarios().size(); i++)
-            {
-                try {
-                    sesionConectada.getRemote().sendString(ProductoService.getInstancia().getProductoById(idProducto).getComentarios().get(i).getMensaje());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
+    private  static void enviarComentario(String nombreUsuario, Comentario comentario) {
+        for(Session sesionConectada : TiendaControlador.usuariosVistaProducto){
+            try {
+                sesionConectada.getRemote().sendString(
+                        tr(
+                                td(nombreUsuario),
+                                td(comentario.getMensaje()),
+                                td(button("Eliminar").withType("button").withId("btnEliminarComentario").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())))
+                        ).render());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-*/
+
     public static void enviarCantidadConectados(){
         for(Session sesionConectada : TiendaControlador.usuariosConectados){
             try {

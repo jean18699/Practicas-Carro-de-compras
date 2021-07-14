@@ -144,11 +144,11 @@
                     <th th:if="${usuario == 'admin'}" scope="col">Accion</th>
                 </tr>
                 </thead>
-                <tbody class="table-hover">
-                <tr align="center" th:each="comentario : ${producto.comentarios}">
-                    <form th:action="@{/listaProductos/verProducto/eliminarComentario/}+${producto.id}" method="post"
-                          th:object="${producto}">
-                        <td th:text="${comentario.usuario.getUsuario()}">Usuario1</td>
+                <tbody id="seccionComentarios" class="table-hover">
+                <!--tr align="center" th:each="comentario : ${producto.comentarios}">-->
+                   <!-- <form th:action="@{/listaProductos/verProducto/eliminarComentario/}+${producto.id}" method="post"
+                          th:object="${producto}">-->
+                       <!-- <td th:text="${comentario.usuario.getUsuario()}">Usuario1</td>
                         <td style="white-space:pre-wrap; word-wrap: break-word" th:text="${comentario.mensaje}">Soy un
                             comentario
                         </td>
@@ -157,9 +157,9 @@
                             <button name="idComentario" th:value="${comentario.id}" type="submit"
                                     class="btn-sm btn-primary">Eliminar
                             </button>
-                        </td>
-                    </form>
-                </tr>
+                        </td>-->
+                   <!-- </form>-->
+               <!-- </tr>-->
                 </tbody>
             </table>
         </div>
@@ -174,7 +174,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="col-2">
-                            <button id="btnComentar" type="submit" name="comentar" class="btn btn-primary">Enviar comentario</button>
+                            <button id="btnComentar" type="button" name="comentar" class="btn btn-primary">Enviar comentario</button>
                         </div>
                     </div>
                 </div>
@@ -188,35 +188,40 @@
 <script>
 
     var webSocket;
-    var tiempoReconectar = 1000;
+    var webSocket2;
+
     function conectar()
     {
         /*<![CDATA[*/
-        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/comentarios/"+[(@{${producto.id}})]);
+        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/comentarios/[(@{${producto.id}})]");
         /*]]>*/
-
+        webSocket2 = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
         webSocket.onopen = function(e){}
         webSocket.onclose = function(e){}
         webSocket.onmessage = function(data){
             $(document).ready(function(){
-             //   $('#menuUsuario').html("Usuarios("+data.data+")");
+               $('#seccionComentarios').append(data.data);
             });
         }
+        webSocket.on;
+        webSocket2.on;
     }
 
-    /*$(document).ready(function(){
+    $(document).ready(function(){
+        conectar();
         $('#btnComentar').click(function(){
             webSocket.send($('#comentario').val());
+            $('#comentario').val("");
         });
-    });
-*/
-    function verificarConexion(){
-        if(!webSocket || webSocket.readyState == 3){
-            conectar();
-        }
-    }
 
-    setInterval(verificarConexion, tiempoReconectar); //para reconectar.
+        $('#btnEliminarComentario').click(function(){
+           console.log("klk")
+            // webSocket.send("eliminar/"+$('#btnEliminarComentario').val());
+        });
+
+    });
+
+
 
     /*<![CDATA[*/
 //    var cantidadVisitas = [(@{${visitasFechas}})];

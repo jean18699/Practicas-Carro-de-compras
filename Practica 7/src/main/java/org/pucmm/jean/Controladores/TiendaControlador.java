@@ -18,10 +18,14 @@ public class TiendaControlador {
     private Javalin app;
     String user_carrito = null;
     public static List<Session> usuariosConectados;
+    public static List<Session> usuariosVistaProducto;
+    public static Session sesionActual;
+
 
     public TiendaControlador(Javalin app) {
         this.app = app;
         this.usuariosConectados = new ArrayList<>();
+        this.usuariosVistaProducto = new ArrayList<>();
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
     }
 
