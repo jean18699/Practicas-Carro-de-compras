@@ -174,7 +174,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="col-2">
-                            <button type="submit" name="comentar" class="btn btn-primary">Enviar comentario</button>
+                            <button id="btnComentar" type="submit" name="comentar" class="btn btn-primary">Enviar comentario</button>
                         </div>
                     </div>
                 </div>
@@ -185,6 +185,52 @@
 
 </div>
 
+<script>
+
+    var webSocket;
+    var tiempoReconectar = 1000;
+    function conectar()
+    {
+        /*<![CDATA[*/
+        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/comentarios/"+[(@{${producto.id}})]);
+        /*]]>*/
+
+        webSocket.onopen = function(e){}
+        webSocket.onclose = function(e){}
+        webSocket.onmessage = function(data){
+            $(document).ready(function(){
+             //   $('#menuUsuario').html("Usuarios("+data.data+")");
+            });
+        }
+    }
+
+    $(document).ready(function(){
+        $('#btnComentar').click(function(){
+            webSocket.send($('#comentario').val());
+        });
+    });
+
+    function verificarConexion(){
+        if(!webSocket || webSocket.readyState == 3){
+            conectar();
+        }
+    }
+
+    setInterval(verificarConexion, tiempoReconectar); //para reconectar.
+
+    /*<![CDATA[*/
+//    var cantidadVisitas = [(@{${visitasFechas}})];
+    /*]]>*/
+
+    /*[# th:each="url : ${urlActual}"]*/
+   // urlActual.push("[(${url})]");
+    ///*[/]*/
+
+    /*[# th:each="fecha : ${fechas}"]*/
+   // fechas.push("[(${fecha})]");
+    ///*[/]*/
+
+</script>
 
 </body>
 </html>

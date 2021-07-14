@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<h3>Iniciando Sesion...</h3>
+<script>
+    var webSocket;
+    var reconexion = 5000;
+
+    $(document).ready(function(){
+        sleep(2000).then(() => {
+            conexionWebSocket();
+            window.location = "http://"+location.hostname+":"+location.port+"/listaProductos"
+        });
+
+
+    });
+
+    function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    function conexionWebSocket()
+    {
+        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
+        webSocket.onopen  = function(e){console.log("Conectado - status "+this.readyState); };
+        webSocket.onmessage = function(data){recibirInformacionServidor(data);};
+        webSocket.on;
+    }
+
+    function recibirInformacionServidor(mensaje){
+        console.log("Recibiendo del servidor: "+mensaje.data)
+        $("#mensajeServidor").append(mensaje.data);
+    }
+
+</script>
+
+</body>
+</html>

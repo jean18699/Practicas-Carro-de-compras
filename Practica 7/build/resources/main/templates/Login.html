@@ -7,6 +7,7 @@
     <!--Bootstrap -->
     <!-- <link rel="stylesheet" href="../bootstrap-5.0.1-dist/css/bootstrap.css">-->
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 </head>
 <body>
@@ -26,7 +27,7 @@
     <div class="row">&nbsp;</div>
 
     <div class="row justify-content-center">
-        <form style="width:35%" class="border border-secondary rounded"  th:action="@{/iniciarSesion}" method="post">
+        <form style="width:35%" class="border border-secondary rounded"  th:action="@{/autenticar}" method="post">
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div style="border-bottom: gray" class="col-12" align="center">
@@ -65,7 +66,7 @@
             <div class="container">
                 <div class="row" align="center">
                     <div class="col-md-12">
-                        <button name="btnInicio" type="submit" th:formmethod="post" class="btn btn-primary">Iniciar Sesion</button>
+                        <button id="btnInicio" name="btnInicio" type="submit" th:formmethod="post" class="btn btn-primary">Iniciar Sesion</button>
                     </div>
                 </div>
             </div>
@@ -75,6 +76,28 @@
         </form>
     </div>
 
+   <!-- <script>
+        var webSocket;
+        var reconexion = 5000;
 
+        $(document).ready(function(){
+
+            conexionWebSocket();
+
+            $("#botonInicio").click(function(){
+                webSocket.send("iniciar");
+            });
+        });
+
+        function conexionWebSocket()
+        {
+            webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/autenticar")
+            webSocket.onopen = function(e) {
+                console.log("Conectado");
+            }
+            webSocket.on
+        }
+
+    </script>-->
 </body>
 </html>

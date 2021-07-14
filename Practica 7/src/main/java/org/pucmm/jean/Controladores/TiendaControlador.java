@@ -3,6 +3,7 @@ package org.pucmm.jean.Controladores;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import org.eclipse.jetty.websocket.api.Session;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.pucmm.jean.Modelo.*;
 import org.pucmm.jean.Servicios.*;
@@ -11,26 +12,25 @@ import javax.servlet.http.Cookie;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
-
+import static j2html.TagCreator.*;
+import static j2html.TagCreator.a;
 public class TiendaControlador {
 
     private Javalin app;
     String user_carrito = null;
+    public static List<Session> usuariosConectados;
 
     public TiendaControlador(Javalin app) {
         this.app = app;
+        this.usuariosConectados = new ArrayList<>();
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
-
-
     }
 
 
     public void aplicarRutas() throws NumberFormatException {
 
         app.get("/", ctx -> {
-
             ctx.redirect("/listaProductos");
-
         });
 
         app.get("/iniciarSesion", ctx -> {
@@ -57,18 +57,17 @@ public class TiendaControlador {
                 }
             }else
             {
-                ctx.redirect("/listaProductos/1");
+                ctx.redirect("/redirigirInicioSesion");
             }
 
         });
 
 
-        app.post("/iniciarSesion", ctx -> {
+        app.post("/autenticar", ctx -> {
 
           if (UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")) != null) {
                 if (!UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.formParam("nombreUsuario")).getPassword().equals(ctx.formParam("password"))) {
                     ctx.result("credenciales incorrectas");
-                    //ctx.render("/templates/Login.html");
                 }else
                 {
                     if(ctx.formParam("recordar") != null)
@@ -104,28 +103,15 @@ public class TiendaControlador {
                         CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
                         TiendaService.getInstancia().setCarroCompra(carroCompra);
                     }
-
                     ctx.redirect("/listaProductos/1");
+                    //ctx.render("templates/RedireccionInicioSesion.html");
                 }
-
-               /* else{
-
-                    //Guardamos el usuario en una cookie
-
-
-
-
-                }*/
 
           }else{
               ctx.result("Este usuario no se encuentra registrado");
           }
 
-
-
         });
-
-
 
         app.get("/cerrarSesion", ctx ->
         {
@@ -142,7 +128,7 @@ public class TiendaControlador {
                 ctx.sessionAttribute("usuario", null);
             }
 
-            ctx.redirect("/iniciarSesion");
+            ctx.render("templates/RedireccionCerrarSesion.html");
         });
 
 
@@ -707,6 +693,8 @@ public class TiendaControlador {
             }
 
         });
+
     }
+
 
 }

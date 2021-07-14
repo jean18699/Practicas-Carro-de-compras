@@ -2,12 +2,16 @@ package org.pucmm.jean;
 
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
+import org.eclipse.jetty.websocket.api.Session;
 import org.pucmm.jean.Controladores.ImagenControlador;
 import org.pucmm.jean.Controladores.TiendaControlador;
+import org.pucmm.jean.Controladores.WebSocketControlador;
 import org.pucmm.jean.Servicios.BootStrapServices;
 import org.pucmm.jean.Servicios.DataBaseServices;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -15,6 +19,7 @@ public class Main {
     private static String modoConexion = "";
 
     public static void main(String[] args) throws SQLException {
+
 
         //Iniciando el servicio
         BootStrapServices.startDb();
@@ -36,6 +41,7 @@ public class Main {
         //BootStrapServices.stopDb();
         new TiendaControlador(app).aplicarRutas();
         new ImagenControlador(app).aplicarRutas();
+        new WebSocketControlador(app).aplicarRutas();
 
 
     }

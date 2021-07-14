@@ -27,7 +27,7 @@
                         <b><a class="nav-link"  th:href="@{/listaProductos/1}">Comprar</a></b>
                     </li>
                     <li class="nav-item active">
-                        <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                        <b><a id="menuUsuario" class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
                     </li>
                     <li th:if="${usuario == 'admin'}" class="nav-item active">
                         <b><a class="nav-link"  th:href="@{/ventas}">Ventas Realizadas</a></b>
@@ -103,6 +103,33 @@
         </tfoot>
 
     </table>
+
+    <script>
+        var webSocket;
+        var tiempoReconectar = 1000;
+        function conectar()
+        {
+            webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
+            webSocket.onopen = function(e){webSocket.send("usuarios")}
+            webSocket.onclose = function(e){}
+            webSocket.onmessage = function(data){
+                $(document).ready(function(){
+
+                    $('#menuUsuario').html("Usuarios("+data.data+")");
+                });
+            }
+
+        }
+
+        function verificarConexion(){
+            if(!webSocket || webSocket.readyState == 3){
+                conectar();
+            }
+        }
+
+        setInterval(verificarConexion, tiempoReconectar); //para reconectar.
+
+    </script>
 
 
 </body>
