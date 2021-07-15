@@ -17,7 +17,6 @@
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
 
-
 </head>
 <body>
 <header>
@@ -189,6 +188,7 @@
 
     var webSocket;
     var webSocket2;
+    var tiempoReconectar = 1000;
 
     function conectar()
     {
@@ -200,28 +200,61 @@
         webSocket.onclose = function(e){}
         webSocket.onmessage = function(data){
             $(document).ready(function(){
-               $('#seccionComentarios').append(data.data);
+                //console.log($('#seccionComentarios tr[value ="'+1640+'"]'))
+
+               // if('#seccionComentarios'.length > 0)
+               // {
+                  //  $('#seccionComentarios').find(data.data).remove();
+               /* }else
+                {*/
+                if(!isNaN(data.data))
+                {
+                    var id = data.data;
+
+                    $('tbody tr button').click(function () {
+                       $(this).parent().parent().remove()
+                    });
+                   // console.log($("#seccionComentarios tr.selected td button").attr('value'))
+                }else
+                {
+                    $('#seccionComentarios').append(data.data);
+                }
+
+                /*if($('#seccionComentarios').length > 0)
+                {
+                    $('#seccionComentarios tr[value="'+data.data+'"]').remove();
+                }else
+                {
+                    $('#seccionComentarios').append(data.data);
+                }*/
+
+               // }*/
+
             });
         }
-        webSocket.on;
         webSocket2.on;
     }
 
     $(document).ready(function(){
-        conectar();
+
         $('#btnComentar').click(function(){
             webSocket.send($('#comentario').val());
             $('#comentario').val("");
         });
 
-        $('#btnEliminarComentario').click(function(){
-           console.log("klk")
-            // webSocket.send("eliminar/"+$('#btnEliminarComentario').val());
+        $(".table tbody").on('click', 'button', function(){
+            webSocket.send($(this).attr("value"));
         });
 
     });
 
+    function verificarConexion(){
+        if(!webSocket || webSocket.readyState == 3){
+            conectar();
+        }
+    }
 
+    setInterval(verificarConexion, tiempoReconectar); //para reconectar.
 
     /*<![CDATA[*/
 //    var cantidadVisitas = [(@{${visitasFechas}})];

@@ -87,7 +87,7 @@ public class WebSocketControlador {
                                 tr(
                                         td(ctx.sessionAttribute("usuario").toString()),
                                         td(com.getMensaje()),
-                                        td(button("Eliminar").withType("button").withId("btnEliminarComentario").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
+                                        td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
                                 ).render()
                         );
                     } catch (IOException e) {
@@ -101,24 +101,52 @@ public class WebSocketControlador {
             });
 
             ws.onMessage(ctx -> {
-                System.out.println(ctx.message());
-                Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                //Si el mensaje que llega es un numero, es que intentamos eliminar un comentario
+                if(isNumeric(ctx.message()))
+                {
+                    ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")),Long.parseLong(ctx.message()));
+                    for(Session sesionConectada : TiendaControlador.usuariosVistaProducto) {
+                        //Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                        for (Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios()) {
+                            try {
+                                tr(
+                                        td(ctx.sessionAttribute("usuario").toString()),
+                                        td(com.getMensaje()),
+                                        td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
+                                ).render()
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    //enviarComentario(usuario.getUsuario(),comentario);
+                }
+                else { //De lo contrario intentamos enviar un comentario
+                    Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
+                    Comentario comentario = new Comentario(usuario,ctx.message());
+                    ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
+                    enviarComentario(usuario.getUsuario(),comentario);
+                }
+               // System.out.println(ctx.message());
+              /*  Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                 Comentario comentario = new Comentario(usuario,ctx.message());
                 ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
-                enviarComentario(usuario.getUsuario(),comentario);
+                enviarComentario(usuario.getUsuario(),comentario);*/
             });
 
         });
     }
 
     private  static void enviarComentario(String nombreUsuario, Comentario comentario) {
+        
         for(Session sesionConectada : TiendaControlador.usuariosVistaProducto){
             try {
                 sesionConectada.getRemote().sendString(
                         tr(
                                 td(nombreUsuario),
                                 td(comentario.getMensaje()),
-                                td(button("Eliminar").withType("button").withId("btnEliminarComentario").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())))
+                                td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())))
                         ).render());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -136,5 +164,13 @@ public class WebSocketControlador {
         }
     }
 
+    public static boolean isNumeric(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
 
 }

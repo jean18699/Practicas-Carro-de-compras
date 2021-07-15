@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: io.javalin:javalin:3.8.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.javalin/javalin/3.8.0/dbacf51c2ce324a3aafeb77c064dac5baf6b759/javalin-3.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.javalin/javalin/3.8.0/c95c3b0b8def5dd0d35d060e1bb59da178294474/javalin-3.8.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
