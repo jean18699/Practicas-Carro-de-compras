@@ -101,21 +101,16 @@ public class WebSocketControlador {
             });
 
             ws.onMessage(ctx -> {
+
                 //Si el mensaje que llega es un numero, es que intentamos eliminar un comentario
                 if(isNumeric(ctx.message()))
                 {
-                    for(Session sesionConectada : TiendaControlador.usuariosVistaProducto) {
-                        //Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
-                        for (Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios()) {
-                            try {
-                                sesionConectada.getRemote().sendString(String.valueOf(com.getId()));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
                     ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")),Long.parseLong(ctx.message()));
-                    //enviarComentario(usuario.getUsuario(),comentario);
+                    for(Session sesionConectada : TiendaControlador.usuariosVistaProducto) {
+
+                        sesionConectada.getRemote().sendString(ctx.message());
+                    }
+
                 }
                 else { //De lo contrario intentamos enviar un comentario
                     Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));

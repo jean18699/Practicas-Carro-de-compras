@@ -188,7 +188,7 @@
 
     var webSocket;
     var webSocket2;
-    var tiempoReconectar = 1000;
+    var tiempoReconectar = 3000;
     var id;
 
     function conectar()
@@ -201,45 +201,28 @@
         webSocket.onclose = function(e){}
         webSocket.onmessage = function(data){
             $(document).ready(function(){
-
-               // if('#seccionComentarios'.length > 0)
-               // {
-                  //  $('#seccionComentarios').find(data.data).remove();
-               /* }else
-                {*/
                 if(!isNaN(data.data))
                 {
-                    id = data.data;
-
-                    $('#seccionComentarios tr button[value ="'+id+'"]').parent().parent().remove()
-                   // console.log($("#seccionComentarios tr.selected td button").attr('value'))
+                    $('#seccionComentarios tr td button[value ="'+data.data+'"]').parent().parent().remove()
                 }else
                 {
                     $('#seccionComentarios').append(data.data);
                 }
-
-                /*if($('#seccionComentarios').length > 0)
-                {
-                    $('#seccionComentarios tr[value="'+data.data+'"]').remove();
-                }else
-                {
-                    $('#seccionComentarios').append(data.data);
-                }*/
-
-               // }*/
-
             });
         }
         webSocket2.on;
     }
 
     $(document).ready(function(){
+        conectar();
         $('#btnComentar').click(function(){
             webSocket.send($('#comentario').val());
             $('#comentario').val("");
         });
 
-        $(".table tbody").on('click', 'button', function(){
+
+        $(".table tbody").on('click', 'tr td button', function(){
+            verificarConexion();
             webSocket.send($(this).attr("value"));
         });
 
@@ -251,7 +234,7 @@
         }
     }
 
-    setInterval(verificarConexion, tiempoReconectar); //para reconectar.
+  //  setInterval(verificarConexion, tiempoReconectar); //para reconectar.
 
     /*<![CDATA[*/
 //    var cantidadVisitas = [(@{${visitasFechas}})];
