@@ -27,7 +27,7 @@
 
     function conexionWebSocket()
     {
-        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
+        webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/IniciarSesion");
         webSocket.onopen  = function(e){console.log("Conectado - status "+this.readyState); };
         webSocket.onmessage = function(data){recibirInformacionServidor(data);};
         webSocket.on;

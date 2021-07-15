@@ -17,10 +17,9 @@ public class TiendaControlador {
 
     private Javalin app;
     String user_carrito = null;
+    public static String usuarioActual;
     public static List<Session> usuariosConectados;
     public static List<Session> usuariosVistaProducto;
-    public static Session sesionActual;
-
 
     public TiendaControlador(Javalin app) {
         this.app = app;
@@ -28,8 +27,6 @@ public class TiendaControlador {
         this.usuariosVistaProducto = new ArrayList<>();
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
     }
-
-
 
     public void aplicarRutas() throws NumberFormatException {
 
@@ -45,6 +42,7 @@ public class TiendaControlador {
             {
                 if(ctx.cookie("usuario_recordado") != null) {
                     ctx.sessionAttribute("usuario", ctx.cookie("usuario_recordado"));
+                    usuarioActual = ctx.cookie("usuario_recordado");
                     user_carrito = "carrito_" + ctx.cookie("usuario_recordado");
 
                     //Creando el carrito
@@ -59,10 +57,13 @@ public class TiendaControlador {
                         ctx.redirect("/iniciarSesion");
                     }
                 }else {
+
                     ctx.render("/templates/Login.html");
                 }
             }else
             {
+                usuarioActual = ctx.sessionAttribute("usuario");
+                System.out.println(usuarioActual);
                 ctx.redirect("/redirigirInicioSesion");
             }
 
@@ -95,7 +96,7 @@ public class TiendaControlador {
                     }
 
                     ctx.sessionAttribute("usuario", ctx.formParam("nombreUsuario"));
-
+                    usuarioActual = ctx.sessionAttribute("usuario");
                     //Creando el carrito
                     user_carrito = "carrito_"+ctx.formParam("nombreUsuario");
 
@@ -108,8 +109,8 @@ public class TiendaControlador {
                         CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
                         TiendaService.getInstancia().setCarroCompra(carroCompra);
                     }
-                    ctx.redirect("/listaProductos/1");
-                    //ctx.render("templates/RedireccionInicioSesion.html");
+                    //ctx.redirect("/listaProductos/1");
+                    ctx.render("templates/RedireccionInicioSesion.html");
                 }
             }else {
                 ctx.result("Este usuario no se encuentra registrado");

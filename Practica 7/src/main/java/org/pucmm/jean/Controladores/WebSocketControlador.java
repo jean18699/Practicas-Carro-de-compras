@@ -22,35 +22,9 @@ public class WebSocketControlador {
     public WebSocketControlador(Javalin app)
     {
         this.app = app;
-
     }
 
     public void aplicarRutas() throws NumberFormatException {
-
-        app.ws("/iniciarSesion",ws->{
-            ws.onConnect(ctx->{
-                ctx.sessionAttributeMap().put("sesion_",ctx.session);
-                TiendaControlador.usuariosConectados.add(ctx.session);
-                System.out.println(TiendaControlador.usuariosConectados.size());
-            });
-
-            ws.onMessage(ctx -> {
-
-            });
-
-        });
-
-        app.ws("/cerrarSesion",ws->{
-            ws.onClose(ctx->{
-
-                for(int i = 0; i < TiendaControlador.usuariosConectados.size();i++)
-                {
-                    TiendaControlador.usuariosConectados.remove(i);
-                }
-
-                System.out.println(TiendaControlador.usuariosConectados.size());
-            });
-        });
 
         app.ws("/sesion",ws->{
 
@@ -66,7 +40,7 @@ public class WebSocketControlador {
                         TiendaControlador.usuariosConectados.remove(i);
                     }
                 }
-
+                enviarCantidadConectados();
             });
 
             ws.onMessage(ctx -> {
@@ -80,16 +54,28 @@ public class WebSocketControlador {
 
             ws.onConnect(ctx->{
                 TiendaControlador.usuariosVistaProducto.add(ctx.session);
+                System.out.println(TiendaControlador.usuarioActual);
                 for(Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios())
                 {
                     try {
-                        ctx.session.getRemote().sendString(
-                                tr(
-                                        td(ctx.sessionAttribute("usuario").toString()),
-                                        td(com.getMensaje()),
-                                        td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
-                                ).render()
-                        );
+                        if(!TiendaControlador.usuarioActual.equalsIgnoreCase("admin") && !TiendaControlador.usuarioActual.equalsIgnoreCase(com.getUsuario().getUsuario()))
+                        {
+                            ctx.session.getRemote().sendString(
+                                    tr(
+                                            td(com.getUsuario().getUsuario()),
+                                            td(com.getMensaje()),
+                                            td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())).attr("hidden"))
+                                    ).render());
+                        }else
+                        {
+                            ctx.session.getRemote().sendString(
+                                    tr(
+                                            td(com.getUsuario().getUsuario()),
+                                            td(com.getMensaje()),
+                                            td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
+                                    ).render());
+                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -118,11 +104,6 @@ public class WebSocketControlador {
                     ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
                     enviarComentario(usuario.getUsuario(),comentario);
                 }
-               // System.out.println(ctx.message());
-              /*  Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
-                Comentario comentario = new Comentario(usuario,ctx.message());
-                ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
-                enviarComentario(usuario.getUsuario(),comentario);*/
             });
 
         });
