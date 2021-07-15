@@ -189,6 +189,7 @@
     var webSocket;
     var webSocket2;
     var tiempoReconectar = 1000;
+    var id;
 
     function conectar()
     {
@@ -200,7 +201,6 @@
         webSocket.onclose = function(e){}
         webSocket.onmessage = function(data){
             $(document).ready(function(){
-                //console.log($('#seccionComentarios tr[value ="'+1640+'"]'))
 
                // if('#seccionComentarios'.length > 0)
                // {
@@ -209,11 +209,9 @@
                 {*/
                 if(!isNaN(data.data))
                 {
-                    var id = data.data;
+                    id = data.data;
 
-                    $('tbody tr button').click(function () {
-                       $(this).parent().parent().remove()
-                    });
+                    $('#seccionComentarios tr button[value ="'+id+'"]').parent().parent().remove()
                    // console.log($("#seccionComentarios tr.selected td button").attr('value'))
                 }else
                 {
@@ -236,7 +234,6 @@
     }
 
     $(document).ready(function(){
-
         $('#btnComentar').click(function(){
             webSocket.send($('#comentario').val());
             $('#comentario').val("");

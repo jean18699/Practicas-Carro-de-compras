@@ -104,22 +104,17 @@ public class WebSocketControlador {
                 //Si el mensaje que llega es un numero, es que intentamos eliminar un comentario
                 if(isNumeric(ctx.message()))
                 {
-                    ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")),Long.parseLong(ctx.message()));
                     for(Session sesionConectada : TiendaControlador.usuariosVistaProducto) {
                         //Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                         for (Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios()) {
                             try {
-                                tr(
-                                        td(ctx.sessionAttribute("usuario").toString()),
-                                        td(com.getMensaje()),
-                                        td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())))
-                                ).render()
+                                sesionConectada.getRemote().sendString(String.valueOf(com.getId()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
-
+                    ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")),Long.parseLong(ctx.message()));
                     //enviarComentario(usuario.getUsuario(),comentario);
                 }
                 else { //De lo contrario intentamos enviar un comentario
@@ -139,7 +134,6 @@ public class WebSocketControlador {
     }
 
     private  static void enviarComentario(String nombreUsuario, Comentario comentario) {
-        
         for(Session sesionConectada : TiendaControlador.usuariosVistaProducto){
             try {
                 sesionConectada.getRemote().sendString(
