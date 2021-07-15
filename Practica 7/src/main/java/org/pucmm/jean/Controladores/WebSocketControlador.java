@@ -8,6 +8,7 @@ import org.pucmm.jean.Modelo.Usuario;
 import org.pucmm.jean.Servicios.ComentarioService;
 import org.pucmm.jean.Servicios.ProductoService;
 import org.pucmm.jean.Servicios.UsuarioService;
+import org.pucmm.jean.Servicios.VentaService;
 
 import java.io.IOException;
 import java.net.http.WebSocket;
@@ -49,12 +50,25 @@ public class WebSocketControlador {
 
         });
 
+        app.ws("/ventas",ws->{
+            ws.onConnect(ctx -> {
+                ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
+            });
+
+            ws.onClose(ctx -> {
+
+            });
+
+            ws.onMessage(ctx -> {
+                //ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
+            });
+        });
 
         app.ws("/comentarios/:id",ws->{
 
             ws.onConnect(ctx->{
                 TiendaControlador.usuariosVistaProducto.add(ctx.session);
-                System.out.println(TiendaControlador.usuarioActual);
+
                 for(Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios())
                 {
                     try {

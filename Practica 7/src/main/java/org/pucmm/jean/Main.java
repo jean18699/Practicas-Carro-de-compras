@@ -2,11 +2,13 @@ package org.pucmm.jean;
 
 import io.javalin.Javalin;
 import io.javalin.core.util.RouteOverviewPlugin;
+import org.pucmm.jean.Controladores.DashboardControlador;
 import org.pucmm.jean.Controladores.ImagenControlador;
 import org.pucmm.jean.Controladores.TiendaControlador;
 import org.pucmm.jean.Controladores.WebSocketControlador;
 import org.pucmm.jean.Servicios.BootStrapServices;
 import org.pucmm.jean.Servicios.DataBaseServices;
+import org.pucmm.jean.Servicios.VentaService;
 
 import java.sql.SQLException;
 
@@ -27,6 +29,7 @@ public class Main {
 
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config -> {
+            config.addStaticFiles("/vistas");
             config.addStaticFiles("/bootstrap-5.0.1-dist"); //desde la carpeta de resources
             config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
@@ -38,7 +41,7 @@ public class Main {
         new TiendaControlador(app).aplicarRutas();
         new ImagenControlador(app).aplicarRutas();
         new WebSocketControlador(app).aplicarRutas();
-
+        new DashboardControlador(app).aplicarRutas();
 
     }
 

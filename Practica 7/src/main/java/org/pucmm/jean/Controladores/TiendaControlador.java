@@ -20,11 +20,13 @@ public class TiendaControlador {
     public static String usuarioActual;
     public static List<Session> usuariosConectados;
     public static List<Session> usuariosVistaProducto;
+    public static List<Session> usuariosVistaDashboard;
 
     public TiendaControlador(Javalin app) {
         this.app = app;
         this.usuariosConectados = new ArrayList<>();
         this.usuariosVistaProducto = new ArrayList<>();
+        this.usuariosVistaDashboard = new ArrayList<>();
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
     }
 
@@ -58,7 +60,7 @@ public class TiendaControlador {
                     }
                 }else {
 
-                    ctx.render("/templates/Login.html");
+                    ctx.render("/vistas/templates/Login.html");
                 }
             }else
             {
@@ -110,7 +112,7 @@ public class TiendaControlador {
                         TiendaService.getInstancia().setCarroCompra(carroCompra);
                     }
                     //ctx.redirect("/listaProductos/1");
-                    ctx.render("templates/RedireccionInicioSesion.html");
+                    ctx.render("vistas/templates/RedireccionInicioSesion.html");
                 }
             }else {
                 ctx.result("Este usuario no se encuentra registrado");
@@ -134,7 +136,7 @@ public class TiendaControlador {
                 ctx.sessionAttribute("usuario", null);
             }
 
-            ctx.render("templates/RedireccionCerrarSesion.html");
+            ctx.render("vistas/templates/RedireccionCerrarSesion.html");
         });
 
 
@@ -181,7 +183,7 @@ public class TiendaControlador {
             }
 
             //enviando al sistema de plantilla.
-            ctx.render("/templates/ListadoProductos.html", modelo);
+            ctx.render("/vistas/templates/ListadoProductos.html", modelo);
         });
 
         app.get("/listaUsuarios", ctx ->
@@ -203,7 +205,7 @@ public class TiendaControlador {
                 }
 
                 //enviando al sistema de plantilla.
-                ctx.render("/templates/ListaUsuarios.html", modelo);
+                ctx.render("/vistas/templates/ListaUsuarios.html", modelo);
             }
         });
 
@@ -225,7 +227,7 @@ public class TiendaControlador {
 
             modelo.put("producto", p);
 
-            ctx.render("/templates/Ver_Producto.html",modelo);
+            ctx.render("/vistas/templates/Ver_Producto.html",modelo);
 
         });
 
@@ -254,7 +256,7 @@ public class TiendaControlador {
                 modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
                 modelo.put("producto", p);
 
-                ctx.render("/templates/Ver_Producto.html",modelo);
+                ctx.render("/vistas/templates/Ver_Producto.html",modelo);
             }
         });
 
@@ -276,7 +278,7 @@ public class TiendaControlador {
                 modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
                 modelo.put("producto", p);
 
-                ctx.render("/templates/Ver_Producto.html",modelo);
+                ctx.render("/vistas/templates/Ver_Producto.html",modelo);
             }
         });
 
@@ -338,7 +340,7 @@ public class TiendaControlador {
                 modelo.put("cantidadCarrito", TiendaService.getInstancia().getCarrito().getListaProductos().size());
                 modelo.put("usuario", ctx.sessionAttribute("usuario"));
 
-                ctx.render("/templates/Ventas.html", modelo);
+                ctx.render("/vistas/templates/Ventas.html", modelo);
             }
         });
 
@@ -464,7 +466,7 @@ public class TiendaControlador {
                 modelo.put("totalCarrito", totalCarrito);
 
                 //enviando al sistema de plantilla.
-                ctx.render("/templates/Carrito.html", modelo);
+                ctx.render("/vistas/templates/Carrito.html", modelo);
             }
 
         });
@@ -490,7 +492,7 @@ public class TiendaControlador {
                 modelo.put("productos", ProductoService.getInstancia().getListaProductos(Integer.parseInt(ctx.pathParam("pagina"))));
 
                 //enviando al sistema de plantilla.
-                ctx.render("/templates/CRUD_Productos.html", modelo);
+                ctx.render("/vistas/templates/CRUD_Productos.html", modelo);
             }
 
         });
@@ -527,7 +529,7 @@ public class TiendaControlador {
                 modelo.put("usuario", usuario.getUsuario());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 // modelo.put("productos", ProductoService.getInstancia().getListaProductos());
-                ctx.render("/templates/Crear_Producto.html", modelo);
+                ctx.render("/vistas/templates/Crear_Producto.html", modelo);
             }
 
         });
@@ -606,7 +608,7 @@ public class TiendaControlador {
                 modelo.put("fotos",TiendaService.getInstancia().getFotos());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("producto", producto);
-                ctx.render("/templates/Editar_Producto.html", modelo);
+                ctx.render("/vistas/templates/Editar_Producto.html", modelo);
             }
         });
 
@@ -667,7 +669,7 @@ public class TiendaControlador {
                 modelo.put("fotos",TiendaService.getInstancia().getFotos());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("producto", ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto"))));
-                ctx.render("/templates/Editar_Producto.html", modelo);
+                ctx.render("/vistas/templates/Editar_Producto.html", modelo);
 
             }
 
@@ -702,7 +704,7 @@ public class TiendaControlador {
                 modelo.put("fotos",TiendaService.getInstancia().getFotos());
                 modelo.put("cantidadCarrito", carrito.getListaProductos().size());
                 modelo.put("producto", ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("idProducto"))));
-                ctx.render("/templates/Editar_Producto.html", modelo);
+                ctx.render("/vistas/templates/Editar_Producto.html", modelo);
             }
 
         });

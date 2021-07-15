@@ -1,0 +1,22 @@
+
+/*Intentando hacer un scroll de tabla*/
+.my-custom-scrollbar-1{
+    position: relative;
+    height: 400px;
+    overflow: auto;
+}
+
+.my-custom-scrollbar-2{
+    position: relative;
+    height: 250px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+input[type=radio] {
+    width: 20px;
+    height: 20px;
+}
