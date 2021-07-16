@@ -1,5 +1,8 @@
 package org.pucmm.jean.Controladores;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.javalin.Javalin;
 import org.eclipse.jetty.websocket.api.Session;
 import org.pucmm.jean.Modelo.Comentario;
@@ -53,6 +56,34 @@ public class WebSocketControlador {
         app.ws("/ventas",ws->{
             ws.onConnect(ctx -> {
                 ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
+            });
+
+            ws.onClose(ctx -> {
+
+            });
+
+            ws.onMessage(ctx -> {
+                //ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
+            });
+        });
+
+        app.ws("/cantidadVendida",ws->{
+            ws.onConnect(ctx -> {
+                ObjectMapper mapper = new ObjectMapper();
+                ArrayNode arrayNode = mapper.createArrayNode();
+
+                for(int i = 0; i < VentaService.getInstancia().getVentas().size();i++)
+                {
+                    ObjectNode venta = mapper.createObjectNode();
+                    venta.put("id",VentaService.getInstancia().getVentas().get(i).getId());
+                    venta.put("cantidadVendida",VentaService.getInstancia().getVentas().get(i).getCantidadVendida());
+                    arrayNode.add(venta);
+                }
+                String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
+
+               // System.out.println(json);
+
+                 ctx.session.getRemote().sendString(json);
             });
 
             ws.onClose(ctx -> {

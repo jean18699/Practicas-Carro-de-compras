@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="90b6e3ad-1340-4038-ac13-11078e84d13e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../Practica 2 - Carrito de Compra/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Practica 2 - Carrito de Compra/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Practica 7/src/main/java/org/pucmm/jean/Servicios/BootStrapServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Practica 7/src/main/java/org/pucmm/jean/Servicios/BootStrapServices.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +23,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Practica 3 - JDBC" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Practica 2 - Carrito de Compra" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -37,6 +36,7 @@
       <option name="presentableId" value="Default" />
       <updated>1626150084187</updated>
       <workItem from="1626150085689" duration="33000" />
+      <workItem from="1626421085540" duration="37000" />
     </task>
     <servers />
   </component>
@@ -44,9 +44,9 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-860" y="310" key="FileChooserDialogImpl" timestamp="1626150117261">
+    <state x="-860" y="310" key="FileChooserDialogImpl" timestamp="1626421120361">
       <screen x="-1280" y="65" width="1280" height="984" />
     </state>
-    <state x="-860" y="310" key="FileChooserDialogImpl/0.0.1920.1040/-1280.65.1280.984@-1280.65.1280.984" timestamp="1626150117261" />
+    <state x="-860" y="310" key="FileChooserDialogImpl/0.0.1920.1040/-1280.65.1280.984@-1280.65.1280.984" timestamp="1626421120361" />
   </component>
 </project>

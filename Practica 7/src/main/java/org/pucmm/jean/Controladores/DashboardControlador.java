@@ -3,6 +3,8 @@ package org.pucmm.jean.Controladores;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import org.pucmm.jean.Modelo.VentasProductos;
+import org.pucmm.jean.Servicios.TiendaService;
 import org.pucmm.jean.Servicios.VentaService;
 
 import java.util.*;
@@ -25,7 +27,9 @@ public class  DashboardControlador {
 
 
         app.get("/dashboard",ctx -> {
-            modelo.put("cantidadVentas", VentaService.getInstancia().getVentas().size());
+            System.out.println(VentaService.getInstancia().getVentas().get(0).getCantidadVendida());
+            modelo.put("cantidadVentas", VentaService.getInstancia().getVentas());
+            modelo.put("ventas", VentaService.getInstancia().getVentas());
             ctx.render("/vistas/templates/dashboard.html",modelo);
 
         });

@@ -102,6 +102,16 @@ public class VentasProductos implements Serializable {
         return total;
     }
 
+    public int getCantidadVendida()
+    {
+        int cantidad = 0;
+        for(int i = 0; i < listaProductos.size(); i++)
+        {
+            cantidad += listaProductos.get(i).getCantidad();
+        }
+        return cantidad;
+    }
+
 
     public void setListaProductos(List<Producto_Comprado> listaProductos) {
         this.listaProductos = listaProductos;

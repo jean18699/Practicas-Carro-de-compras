@@ -96,26 +96,9 @@
                     <script>
 
                         /*<![CDATA[*/
-                        var cantidadVentas = parseInt([(@{${cantidadVentas}})]);
+                        var cantidadVentas = parseInt("[(@{${cantidadVentas}})]");
                         var myChart;
                         /*]]>*/
-
-                        /*[# th:each="url : ${urlActual}"]*/
-                    //    urlActual.push("[(${url})]");
-                        ///*[/]*/
-
-                        /*[# th:each="fecha : ${fechas}"]*/
-                    //     fechas.push("[(${fecha})]");
-                        ///*[/]*/
-
-                        //Funcion para cargar el historial de acceso cuando se clickee una barra en el dashboard. Asi se vera el acceso obtenido desde esa fecha
-                      /*  function graphClickEvent(event, array){
-
-                            var enlace =  window.location.href +"/"+urlActual[0]+"/estadisticas/"+fechas[array[0].index].toString()//window.location.href+"/"+urlActual[0]+"/"+fechas[array[0].index].toString()
-                            window.location.replace(enlace)
-
-                        }*/
-
 
                         var ctx = document.getElementById('myChart').getContext('2d');
                             myChart = new Chart(ctx, {
@@ -228,14 +211,102 @@
                                 conectar();
                             }
                         }
-
                         setInterval(verificarConexion, tiempoReconectar);
-
                     </script>
                 </canvas>
             </div>
-            <div class="content">
 
+
+            <div class="content">
+                <div class="row">
+                    <canvas id="cantidadesChart">
+                        <script th:inline="text">
+
+                            var webSocket2;
+                            var tiempoReconectar = 5000;
+                            var myChart2;
+                            var idVentas = [];
+                            var cantidadesVendidas = []
+                            var colores = []
+
+                            /*[# th:each="venta : ${ventas}"]*/
+                            idVentas.push("Venta #[(${venta.id})]")
+                            cantidadesVendidas.push("[(${venta.getCantidadVendida()})]")
+                            colores.push('rgb('+Math.random() * (255-1)+1+','+Math.random() * (255-1)+1+','+Math.random() * (255-1)+1+')')
+                            ///*[/]*/
+
+
+                            var ctx2 = document.getElementById('cantidadesChart').getContext('2d');
+                            myChart2 = new Chart(ctx2, {
+                                type: 'pie',
+                                data:
+                                    {
+                                        labels: idVentas,
+                                        datasets: [
+                                            {
+                                                labels: idVentas,
+                                                data: cantidadesVendidas,
+                                                backgroundColor: colores
+                                            }
+                                        ]
+                                    },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top',
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Chart.js Pie Chart'
+                                        }
+                                    }
+                                },
+                            });
+
+                            function actualizarGrafoPastel(ventas)
+                            {
+                                cantidadesVendidas = []
+                                idVentas = []
+
+                                ventas.forEach( function(venta) {
+                                    idVentas.push("Venta #"+venta.id)
+                                    cantidadesVendidas.push(venta.cantidadVendida)
+                                    colores.push('rgb('+Math.random() * (255-1)+1+','+Math.random() * (255-1)+1+','+Math.random() * (255-1)+1+')')
+                                });
+
+
+                                myChart2.data.labels = idVentas;
+                                myChart2.data.datasets[0].data = cantidadesVendidas;
+                                myChart2.data.datasets[0].backgroundColor = colores;
+                                myChart2.update();
+                            }
+
+                            function conectarGrafo2()
+                            {
+                                webSocket2 = new WebSocket("ws://"+location.hostname+":"+location.port+"/cantidadVendida");
+                                webSocket2.onopen = function(e){}
+                                webSocket2.onclose = function(e){}
+                                webSocket2.onmessage = function(data){
+                                    $(document).ready(function(){
+                                        var ventasServer = JSON.parse(data.data)
+                                        actualizarGrafoPastel(ventasServer)
+                                    });
+                                    webSocket2.close();
+                                }
+                            }
+
+                            function verificarConexion(){
+                                if(!webSocket2 || webSocket2.readyState == 3){
+                                    conectarGrafo2();
+                                }
+                            }
+                            setInterval(verificarConexion, tiempoReconectar);
+
+
+                        </script>
+                    </canvas>
+                </div>
             </div>
         </div>
     </div>
