@@ -65,8 +65,15 @@ public class TiendaControlador {
             }else
             {
                 usuarioActual = ctx.sessionAttribute("usuario");
-                System.out.println(usuarioActual);
-                ctx.redirect("/redirigirInicioSesion");
+
+                if(ctx.sessionAttribute("usuario").equals("admin"))
+                {
+                    ctx.redirect("/dashboard");
+                }else
+                {
+                    ctx.redirect("/listaProductos");
+                }
+
             }
 
         });
@@ -135,8 +142,8 @@ public class TiendaControlador {
             {
                 ctx.sessionAttribute("usuario", null);
             }
-
-            ctx.render("vistas/templates/RedireccionCerrarSesion.html");
+            ctx.redirect("iniciarSesion");
+            //ctx.render("vistas/templates/RedireccionCerrarSesion.html");
         });
 
 

@@ -28,6 +28,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav mb-2 mb-lg-0 navbar-nav ml-auto">
+                <li th:if="${usuario == 'admin'}" class="nav-item active">
+                    <b><a class="nav-link"  th:href="@{/dashboard}">Dashboard</a></b>
+                </li>
                 <li class="nav-item active">
                     <b><a class="nav-link" href="/listaProductos/1">Comprar</a></b>
                 </li>
@@ -45,6 +48,9 @@
                 </li>
                 <li th:if="${usuario != null}" class="nav-item active">
                     <b><a class="nav-link" th:href="@{/cerrarSesion}">Cerrar Sesion</a></b>
+                </li>
+                <li th:if="${usuario == null}" class="nav-item active">
+                    <b><a class="nav-link" th:href="@{/iniciarSesion}">Iniciar Sesion</a></b>
                 </li>
             </ul>
 
@@ -143,26 +149,10 @@
                     <th th:if="${usuario == 'admin'}" scope="col">Accion</th>
                 </tr>
                 </thead>
-                <tbody id="seccionComentarios" class="table-hover">
-                <!--tr align="center" th:each="comentario : ${producto.comentarios}">-->
-                   <!-- <form th:action="@{/listaProductos/verProducto/eliminarComentario/}+${producto.id}" method="post"
-                          th:object="${producto}">-->
-                       <!-- <td th:text="${comentario.usuario.getUsuario()}">Usuario1</td>
-                        <td style="white-space:pre-wrap; word-wrap: break-word" th:text="${comentario.mensaje}">Soy un
-                            comentario
-                        </td>
-
-                        <td th:if="${usuario == 'admin'}" align="center">
-                            <button name="idComentario" th:value="${comentario.id}" type="submit"
-                                    class="btn-sm btn-primary">Eliminar
-                            </button>
-                        </td>-->
-                   <!-- </form>-->
-               <!-- </tr>-->
-                </tbody>
+                <tbody id="seccionComentarios" class="table-hover"></tbody>
             </table>
         </div>
-        <div class="card-footer">
+        <div th:if="${usuario != null}" class="card-footer">
             <form th:action="@{/listaProductos/verProducto/enviarComentario/}+${producto.id}" method="post">
                 <div class="row">
                     <div class="col-6">
@@ -178,6 +168,17 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div th:if="${usuario == null}" class="card-footer">
+
+                <div class="row">
+                    <div class="col-6">
+                        <h5>Inicia sesion para ver los comentarios</h5>
+                    </div>
+                </div>
+                <div class="row">&nbsp;</div>
+
+
         </div>
 
     </div>
