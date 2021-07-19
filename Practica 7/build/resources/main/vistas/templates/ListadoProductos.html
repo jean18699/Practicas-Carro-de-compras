@@ -116,8 +116,8 @@
             webSocket.onclose = function(e){}
             webSocket.onmessage = function(data){
                 $(document).ready(function(){
-
-                    $('#menuUsuario').html("Usuarios("+data.data+")");
+                    var cantidadUsuariosServer = JSON.parse(data.data).length
+                    $('#menuUsuario').html("Usuarios("+cantidadUsuariosServer+")");
                 });
             }
 

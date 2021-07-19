@@ -17,16 +17,17 @@ public class TiendaControlador {
 
     private Javalin app;
     String user_carrito = null;
-    public static String usuarioActual;
     public static List<Session> usuariosConectados;
     public static List<Session> usuariosVistaProducto;
     public static List<Session> usuariosVistaDashboard;
+    public static List<String> nombreUsuariosConectados;
 
     public TiendaControlador(Javalin app) {
         this.app = app;
         this.usuariosConectados = new ArrayList<>();
         this.usuariosVistaProducto = new ArrayList<>();
         this.usuariosVistaDashboard = new ArrayList<>();
+        this.nombreUsuariosConectados = new ArrayList<>();
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
     }
 
@@ -44,9 +45,8 @@ public class TiendaControlador {
             {
                 if(ctx.cookie("usuario_recordado") != null) {
                     ctx.sessionAttribute("usuario", ctx.cookie("usuario_recordado"));
-                    usuarioActual = ctx.cookie("usuario_recordado");
                     user_carrito = "carrito_" + ctx.cookie("usuario_recordado");
-
+                    nombreUsuariosConectados.add(ctx.sessionAttribute("usuario"));
                     //Creando el carrito
                     if (ctx.sessionAttribute(user_carrito) == null) {
                         CarroCompra carroCompra = new CarroCompra();
@@ -56,6 +56,7 @@ public class TiendaControlador {
                     } else {
                         CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
                         TiendaService.getInstancia().setCarroCompra(carroCompra);
+                        nombreUsuariosConectados.add(ctx.sessionAttribute("usuario"));
                         ctx.redirect("/iniciarSesion");
                     }
                 }else {
@@ -64,8 +65,7 @@ public class TiendaControlador {
                 }
             }else
             {
-                usuarioActual = ctx.sessionAttribute("usuario");
-
+                nombreUsuariosConectados.add(ctx.sessionAttribute("usuario"));
                 if(ctx.sessionAttribute("usuario").equals("admin"))
                 {
                     ctx.redirect("/dashboard");
@@ -105,7 +105,6 @@ public class TiendaControlador {
                     }
 
                     ctx.sessionAttribute("usuario", ctx.formParam("nombreUsuario"));
-                    usuarioActual = ctx.sessionAttribute("usuario");
                     //Creando el carrito
                     user_carrito = "carrito_"+ctx.formParam("nombreUsuario");
 
@@ -118,8 +117,18 @@ public class TiendaControlador {
                         CarroCompra carroCompra = ctx.sessionAttribute(user_carrito);
                         TiendaService.getInstancia().setCarroCompra(carroCompra);
                     }
-                    //ctx.redirect("/listaProductos/1");
-                    ctx.render("vistas/templates/RedireccionInicioSesion.html");
+
+                    nombreUsuariosConectados.add(ctx.sessionAttribute("usuario"));
+
+                    if(ctx.sessionAttribute("usuario").equals("admin"))
+                    {
+                        ctx.redirect("/dashboard");
+                    }else
+                    {
+                        ctx.redirect("/listaProductos/1");
+                    }
+
+
                 }
             }else {
                 ctx.result("Este usuario no se encuentra registrado");
@@ -138,12 +147,14 @@ public class TiendaControlador {
             ctx.res.addCookie(cookie_usuario);
             ctx.res.addCookie(cookie_password);
 
+            nombreUsuariosConectados.remove(ctx.sessionAttribute("usuario"));
+
             if(ctx.req.getSession() != null)
             {
                 ctx.sessionAttribute("usuario", null);
             }
+
             ctx.redirect("iniciarSesion");
-            //ctx.render("vistas/templates/RedireccionCerrarSesion.html");
         });
 
 

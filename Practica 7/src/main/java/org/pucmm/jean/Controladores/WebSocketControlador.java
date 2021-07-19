@@ -1,5 +1,6 @@
 package org.pucmm.jean.Controladores;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -33,18 +34,20 @@ public class WebSocketControlador {
         app.ws("/sesion",ws->{
 
             ws.onConnect(ctx->{
-                TiendaControlador.usuariosConectados.add(ctx.session);
+                if(ctx.sessionAttribute("usuario")!= null)
+                {
+                    TiendaControlador.usuariosConectados.add(ctx.session);
+                    enviarCantidadConectados();
+                }
             });
 
             ws.onClose(ctx -> {
-                for(int i = 0; i < TiendaControlador.usuariosConectados.size();i++)
+                if(ctx.sessionAttribute("usuario")!= null)
                 {
-                    if(TiendaControlador.usuariosConectados.get(i).equals(ctx.session))
-                    {
-                        TiendaControlador.usuariosConectados.remove(i);
-                    }
+                    TiendaControlador.usuariosConectados.remove(ctx.session);
+                    enviarCantidadConectados();
                 }
-                enviarCantidadConectados();
+
             });
 
             ws.onMessage(ctx -> {
@@ -63,7 +66,6 @@ public class WebSocketControlador {
             });
 
             ws.onMessage(ctx -> {
-                //ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
             });
         });
 
@@ -81,8 +83,6 @@ public class WebSocketControlador {
                 }
                 String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
 
-               // System.out.println(json);
-
                  ctx.session.getRemote().sendString(json);
             });
 
@@ -91,19 +91,18 @@ public class WebSocketControlador {
             });
 
             ws.onMessage(ctx -> {
-                //ctx.session.getRemote().sendString(String.valueOf(VentaService.getInstancia().getVentas().size()));
             });
         });
 
         app.ws("/comentarios/:id",ws->{
 
             ws.onConnect(ctx->{
-                TiendaControlador.usuariosVistaProducto.add(ctx.session);
 
+                TiendaControlador.usuariosVistaProducto.add(ctx.session);
                 for(Comentario com : ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))).getComentarios())
                 {
                     try {
-                        if(!TiendaControlador.usuarioActual.equalsIgnoreCase("admin") && !TiendaControlador.usuarioActual.equalsIgnoreCase(com.getUsuario().getUsuario()))
+                        if(!ctx.sessionAttribute("usuario").equals("admin") && !ctx.sessionAttribute("usuario").equals(com.getUsuario().getUsuario()))
                         {
                             ctx.session.getRemote().sendString(
                                     tr(
@@ -111,7 +110,7 @@ public class WebSocketControlador {
                                             td(com.getMensaje()),
                                             td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(com.getId())).attr("hidden"))
                                     ).render());
-                        }else
+                        }else if(ctx.sessionAttribute("usuario").equals("admin") || ctx.sessionAttribute("usuario").equals(com.getUsuario().getUsuario()))
                         {
                             ctx.session.getRemote().sendString(
                                     tr(
@@ -131,6 +130,7 @@ public class WebSocketControlador {
                 TiendaControlador.usuariosVistaProducto.remove(ctx.session);
             });
 
+            //Enviar o eliminar mensaje
             ws.onMessage(ctx -> {
 
                 //Si el mensaje que llega es un numero, es que intentamos eliminar un comentario
@@ -138,7 +138,6 @@ public class WebSocketControlador {
                 {
                     ProductoService.getInstancia().eliminarComentario(Long.parseLong(ctx.pathParam("id")),Long.parseLong(ctx.message()));
                     for(Session sesionConectada : TiendaControlador.usuariosVistaProducto) {
-
                         sesionConectada.getRemote().sendString(ctx.message());
                     }
 
@@ -147,32 +146,57 @@ public class WebSocketControlador {
                     Usuario usuario = UsuarioService.getInstancia().getUsuarioByNombreUsuario(ctx.sessionAttribute("usuario"));
                     Comentario comentario = new Comentario(usuario,ctx.message());
                     ProductoService.getInstancia().enviarComentario(ProductoService.getInstancia().getProductoById(Long.parseLong(ctx.pathParam("id"))),comentario);
-                    enviarComentario(usuario.getUsuario(),comentario);
+                    enviarComentario(comentario,ctx.sessionAttribute("usuario"));
                 }
             });
 
         });
     }
 
-    private  static void enviarComentario(String nombreUsuario, Comentario comentario) {
+    private  static void enviarComentario(Comentario comentario, String sesion) {
         for(Session sesionConectada : TiendaControlador.usuariosVistaProducto){
             try {
-                sesionConectada.getRemote().sendString(
-                        tr(
-                                td(nombreUsuario),
-                                td(comentario.getMensaje()),
-                                td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())))
-                        ).render());
+                if(!sesion.equals("admin") && !sesion.equals(comentario.getUsuario().getUsuario()))
+                {
+                    sesionConectada.getRemote().sendString(
+                            tr(
+                                    td(comentario.getUsuario().getUsuario()),
+                                    td(comentario.getMensaje()),
+                                    td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())).attr("hidden"))
+                            ).render());
+                }else
+                {
+                    sesionConectada.getRemote().sendString(
+                            tr(
+                                    td(comentario.getUsuario().getUsuario()),
+                                    td(comentario.getMensaje()),
+                                    td(button("Eliminar").withType("button").withClass("btn btn-danger").withValue(String.valueOf(comentario.getId())))
+                            ).render());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void enviarCantidadConectados(){
+    public static void enviarCantidadConectados() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode arrayNode = mapper.createArrayNode();
+        for(int i = 0; i < TiendaControlador.nombreUsuariosConectados.size();i++)
+        {
+            ObjectNode usuario = mapper.createObjectNode();
+            usuario.put("usuario",TiendaControlador.nombreUsuariosConectados.get(i));
+            arrayNode.add(usuario);
+        }
+        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode);
+
         for(Session sesionConectada : TiendaControlador.usuariosConectados){
             try {
-                sesionConectada.getRemote().sendString(String.valueOf(TiendaControlador.usuariosConectados.size()));
+                if(sesionConectada.isOpen())
+                {
+                    sesionConectada.getRemote().sendString(String.valueOf(json));
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

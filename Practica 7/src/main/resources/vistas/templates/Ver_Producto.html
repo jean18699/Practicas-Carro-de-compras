@@ -35,7 +35,7 @@
                     <b><a class="nav-link" href="/listaProductos/1">Comprar</a></b>
                 </li>
                 <li class="nav-item active">
-                    <b><a class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
+                    <b><a id="menuUsuario" class="nav-link" th:href="@{/listaUsuarios}">Usuarios</a></b>
                 </li>
                 <li th:if="${usuario == 'admin'}" class="nav-item active">
                     <b><a class="nav-link" th:href="@{/ventas}">Ventas Realizadas</a></b>
@@ -178,7 +178,6 @@
                 </div>
                 <div class="row">&nbsp;</div>
 
-
         </div>
 
     </div>
@@ -188,16 +187,14 @@
 <script>
 
     var webSocket;
-    var webSocket2;
-    var tiempoReconectar = 3000;
     var id;
 
     function conectar()
     {
         /*<![CDATA[*/
+        console.log("ws://"+location.hostname+":"+location.port+"/comentarios/[(@{${producto.id}})]")
         webSocket = new WebSocket("ws://"+location.hostname+":"+location.port+"/comentarios/[(@{${producto.id}})]");
         /*]]>*/
-        webSocket2 = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
         webSocket.onopen = function(e){}
         webSocket.onclose = function(e){}
         webSocket.onmessage = function(data){
@@ -211,7 +208,7 @@
                 }
             });
         }
-        webSocket2.on;
+
     }
 
     $(document).ready(function(){
@@ -234,6 +231,34 @@
             conectar();
         }
     }
+
+</script>
+
+<!--Script para el websocket 2 (Usuarios conectados) -->
+<script>
+    var webSocket2;
+    var tiempoReconectar = 1000;
+    function conectarUsuarios()
+    {
+        webSocket2 = new WebSocket("ws://"+location.hostname+":"+location.port+"/sesion");
+        webSocket2.onopen = function(e){webSocket2.send("usuarios")}
+        webSocket2.onclose = function(e){}
+        webSocket2.onmessage = function(data){
+            $(document).ready(function(){
+                var cantidadUsuariosServer = JSON.parse(data.data).length
+                $('#menuUsuario').html("Usuarios("+cantidadUsuariosServer+")");
+            });
+        }
+
+    }
+
+    function verificarConexionUsuarios(){
+        if(!webSocket2 || webSocket2.readyState == 3){
+            conectarUsuarios();
+        }
+    }
+
+    setInterval(verificarConexionUsuarios, tiempoReconectar);
 
 </script>
 
